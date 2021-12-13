@@ -1,0 +1,32 @@
+on: [push]
+name: Playground
+
+jobs:
+  playground:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ "ubuntu-latest", "windows-latest", "macos-latest" ]
+    runs-on: ${{ matrix.os }}
+    steps:      
+      - if: ${{ runner.os == 'Linux' }}
+        run: |
+          PGCONF="$(ls /etc/postgresql/*/main/pg_hba.conf)"
+          sudo sed -i.bak -E "s/peer|scram-sha-256/trust/g" "$PGCONF"
+          sudo cat "$PGCONF"
+          sudo service postgresql start
+        shell: bash
+      - if: ${{ runner.os == 'Windows' }}
+        run: echo "$PGBIN" >> $GITHUB_PATH
+        shell: bash
+      - if: ${{ runner.os == 'macOS' }}
+        run: echo "PGDATA=/usr/local/var/postgres" >> $GITHUB_ENV
+        shell: bash
+      - if: ${{ runner.os == 'Windows' || runner.os == 'macOS' }}
+        run: pg_ctl -D "$PGDATA" -l "$PGDATA/server.log" start
+        shell: bash
+      - if: ${{ runner.os == 'macOS' }}
+        run: createuser -s postgres
+        shell: bash
+      - run: psql -U postgres -c "\du"
+        shell: bash
