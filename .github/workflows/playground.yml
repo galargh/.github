@@ -1,12 +1,23 @@
-on: 
-  push:
-    tags:
-      - t*
+on: [push]
 name: Playground
 
 jobs:
   playground:
+    strategy:
+      fail-fast: false
+      matrix:
+        number: [ 1, 2, 3 ]
     runs-on: ubuntu-latest
+    outputs:
+      number-${{ matrix.number }}: ${{ steps.number.outputs.number }}
+    name: job-${{ matrix.number }}
     steps:      
-      - run: cat "$GITHUB_EVENT_PATH" | jq -M .
+      - id: number
+        run: echo "::set-output name=number::${{ matrix.number }}"
         shell: bash
+  followup:
+    runs-on: ubuntu-latest
+    needs: playground
+    steps:
+    - run: echo "${{ toJson(needs.playground.outputs) }}"
+      shell: bash
