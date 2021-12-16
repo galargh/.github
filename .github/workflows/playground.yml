@@ -2,22 +2,85 @@ on: [push]
 name: Playground
 
 jobs:
-  playground:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      batches: ${{ steps.matrix.outputs.batches }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: matrix
+        run: |
+          targets=()
+          for config in configs/*.json; do
+            echo "::group::$config"
+            defaults=$(jq -c '.defaults' $config)
+            targets+=($(jq -c ".repositories[] | $defaults + ." $config))
+            echo "::endgroup::"
+          done
+          batches=$(jq -sc '[. | _nwise(256)] | to_entries' <<< "${targets[@]}")
+          echo "::set-output name=batches::$batches"
+  dispatch:
+    name: Deploy changes(batch ${{ matrix.cfg.key }})
+    needs: [ matrix ]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        number: [ 1, 2, 3 ]
-    runs-on: ubuntu-latest
-    outputs:
-      number-${{ matrix.number }}: ${{ steps.number.outputs.number }}
-    name: job-${{ matrix.number }}
-    steps:      
-      - id: number
-        run: echo "::set-output name=number::${{ matrix.number }}"
-        shell: bash
-  followup:
-    runs-on: ubuntu-latest
-    needs: playground
+        cfg: ${{ fromJson(needs.matrix.outputs.batches) }}
+      max-parallel: 1
     steps:
-    - run: echo "${{ toJson(needs.playground.outputs) }}"
-      shell: bash
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+          WORKFLOW_REF: ${{ env.GITHUB_REF }}
+          WORKFLOW_YML: playground2.yml
+          WORKFLOW_REPO: galargh/.github
+          WORKFLOW_JSON: '{"targets":${{ toJson(toJson(matrix.cfg.value)) }}}'
+          STEP_NAME: NEEDS_UPDATE
+          PR_TITLE: 'sync: update CI config files'
+          PR_BODY: 'Syncing to commit ${{ github.event.head_commit.url }}.'
+          PR_BRANCH: 'web3-bot/sync'
+        run: |
+          echo "::group::Dispatch workflow"
+          start="$(date +%s)"
+          echo "$WORKFLOW_JSON" | gh workflow run "$WORKFLOW_YML" --ref "$WORKFLOW_BRANCH" --repo "$WORKFLOW_REPO" --json
+          echo "::endgroup::"
+          echo "::group::Wait for workflow to start"
+          # checks every 3 seconds until the most recent run of the workflow has started after the dispatch
+          while sleep 3; do
+            # prints 'STATUS NAME WORKFLOW BRANCH EVENT ID ELAPSED AGE'
+            run="$(gh run list --workflow="$WORKFLOW_YML" --repo "$WORKFLOW_REPO" --limit=1)"
+            # will skip this part if there are no runs of the workflow yet
+            if [[ ! -z "$run" ]]; then
+              age="$(echo "$run" | cut -f9)"
+              age="$(echo "$age" | sed 's/s$/ seconds/')"
+              age="$(echo "$age" | sed 's/m$/ minutes/')"
+              age="$(echo "$age" | sed 's/h$/ hours/')"
+              age="$(echo "$age" | sed 's/d$/ days/')"
+              # if the run happened more than a month ago, age is the exact date
+              age="$(date -d "-$age" +%s)"
+              if [[ "$age" > "$start" ]]; then
+                run_id="$(echo "$run" | cut -f7)"
+                break
+              fi
+            fi
+          done
+          echo "::endgroup::"
+          echo "::group::Wait for workflow to complete"
+          # refreshes run status every 3 seconds until completion
+          # we're redirecting the stdout to /dev/null because this call is very chatty
+          # we might want to consider writing out this check ourselves to make the interval longer
+          gh run watch "$run_id" --repo "$WORKFLOW_REPO" > /dev/null
+          echo "::endgroup::"
+          echo "::group::Create PRs if update needed"
+          # looking for lines like '✓ $job_name in $job_elapsed (ID $job_id)' and looping over '$job_name $job_id'
+          gh run view "$run_id" --repo "$WORKFLOW_REPO" | sed -nr 's/✓ (.+) in .+ \(ID (.+)\)/\1\t\2/p' | while read line; do 
+            job_name="$(echo "$line" | cut -f1)"
+            job_id="$(echo "$line" | cut -f2)"
+            # check if step called $STEP_NAME has been executed
+            if gh run view --job "$job_id" --repo "$WORKFLOW_REPO" | grep -q "✓ $STEP_NAME"; then
+              echo "gh pr create --body \"$PR_BODY\" --head \"$PR_BRANCH\" --title \"$PR_TITLE\" --repo \"$job_name\""
+              sleep 3
+            fi
+          done
+          echo "::endgroup::"
+        shell: bash

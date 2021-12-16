@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:
+    inputs:
+      targets:
+        description: "List of repositories"
+        required: true
+name: Other playground
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg: ${{ fromJson(github.event.inputs.targets) }}
+      max-parallel: 10
+    name: ${{ matrix.cfg.target }}
+    steps:
+    - id: random
+      run: echo "::set-output name=number::$(expr $RANDOM % 2)"
+      shell: bash
+    - if: ${{ always() }} #${{ steps.random.outputs.number == '0' }}
+      name: NEEDS_UPDATE
+      run: true
