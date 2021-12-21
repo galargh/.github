@@ -1,0 +1,30 @@
+# This workflow is triggered by the dispatch workflow.
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      targets:
+        description: "List of repositories to deploy to"
+        required: true
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg: ${{ fromJson(github.event.inputs.targets) }}
+      max-parallel: 10
+    name: ${{ matrix.cfg.target }}
+    env:
+      GITHUB_USER: web3-bot
+    steps:
+    - name: Check if we need to update the branch
+      run: echo "NEEDS_UPDATE=1" >> $GITHUB_ENV
+    - name: Force push ${{ env.GITHUB_USER }}/sync branch
+      if: ${{ env.NEEDS_UPDATE != 0 }}
+      run: |
+        echo 'Would have executed git checkout -B ${{ env.GITHUB_USER }}/sync'
+        echo 'Would have executed git push origin ${{ env.GITHUB_USER }}/sync -f'

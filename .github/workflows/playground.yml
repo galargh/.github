@@ -1,17 +1,139 @@
-on: [workflow_dispatch]
+# Trigger the execution of copy-workflow.yml, in batches of 256 repositories.
+# This workflow is needed since GitHub Actions limits the matrix size to 256 jobs.
+# We use one job per repository per batch.
+
 name: Playground
+on: [workflow_dispatch]
+
+env:
+  # Number of repositories in a batch.
+  # Deployment jobs in the same batch are run sequentially.
+  # 256 is the upper limit on the number of matrix jobs.
+  MAX_REPOS_PER_WORKFLOW: 100
 
 jobs:
-  checkout:
+  matrix:
+    name: Batch targets
     runs-on: ubuntu-latest
+    outputs:
+      batches: ${{ steps.set-matrix.outputs.batches }}
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          git config user.name web3-bot
-          git config user.email web3-bot@users.noreply.github.com
-          echo "goodbye" > hello.txt
-          git add .
-          git commit -m "goodbye"
-          git checkout -B web3/bot-sync
-          git push origin web3/bot-sync -f
+      - id: set-matrix
+        run: |
+          targets=()
+          for config in configs/*.json; do
+            echo "::group::$config"
+            if [[ $GITHUB_REF == refs/heads/testing && $config != configs/testing.json ]]; then
+              continue
+            fi
+            if [[ $GITHUB_REF != refs/heads/testing && $config == configs/testing.json ]]; then
+              continue
+            fi
+            defaults=$(jq -c '.defaults' $config)
+            # values defined in the repository object will override the default values
+            # e.g. { "files": ["a", "b"] } + { "files": ["c"] } = { "files": ["c"] }
+            targets+=($(jq -c ".repositories[] | $defaults + ." $config))
+            echo "::endgroup::"
+          done
+          batches=$(jq -sc '[. | _nwise(${{ env.MAX_REPOS_PER_WORKFLOW }})] | to_entries' <<< "${targets[@]}")
+          echo "::set-output name=batches::$batches"
+  dispatch:
+    needs: [ matrix ]
+    name: Dispatch copy workflow(batch ${{ matrix.cfg.key }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # We end up with multiple "dispatch" jobs,
+        # one per BATCHES "key" chunk above with a "value" array.
+        # For each "dispatch" job, matrix.cfg.value is an array, like:
+        #
+        #   [
+        #     {"target": "repo1", "files": [".github/workflows/go-check.yml"]},
+        #     {"target": "repo2", "files": [".github/workflows/go-check.yml", ".github/workflows/go-test.yml"]}
+        #   ]
+        #
+        # The triggered copy-workflow jobs use that final array as their matrix.
+        # Since max-parallel here is 1, we'll end up with at most copy-workflow@max-parallel + 1 parallel jobs.
+        cfg: ${{ fromJson(needs.matrix.outputs.batches) }}
+      max-parallel: 1
+    env:
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+      WORKFLOW_YML: copy-workflow.yml
+      WORKFLOW_REPO: galargh/.github
+    defaults:
+      run:
         shell: bash
+    steps:
+      - id: dispatch
+        name: Dispatch workflow
+        run: |
+          start_date="$(date +%s)"
+          # 2 toJson calls are needed to turn the array of targets into a string
+          echo '{"targets":${{ toJson(toJson(matrix.cfg.value)) }}}' | jq -c '.' | gh workflow run "${{ env.WORKFLOW_YML }}" --ref "${{ github.ref }}" --repo "${{ env.WORKFLOW_REPO }}" --json
+          echo "::set-output name=start_date::$start_date"
+      - id: run
+        name: Wait for run to start
+        run: |
+          # checks every 3 seconds until the most recent workflow's age
+          # is smaller than the time passed since this job has started
+          while sleep 3; do
+            # output format: STATUS NAME WORKFLOW BRANCH EVENT ID ELAPSED AGE
+            run="$(gh run list --workflow="${{ env.WORKFLOW_YML }}" --repo "${{ env.WORKFLOW_REPO }}" --limit=1)"
+
+            # nothing to check if no run was returned
+            if [[ ! -z "$run" ]]; then
+              # retrieve age and format it for use with date
+              # if the run happened more than a month ago, age is the exact date
+              age="$(echo "$run" | cut -f9 | sed 's/s$/ seconds/' | sed 's/m$/ minutes/' | sed 's/h$/ hours/' |  sed 's/d$/ days/')"
+
+
+              run_start_date="$(date -d "-$age" +%s)"
+              if [[ "$run_start_date" > "${{ steps.dispatch.outputs.start_date }}" ]]; then
+                echo "::set-output name=id::$(echo "$run" | cut -f7)"
+                break
+              fi
+            fi
+          done
+      - name: Wait for run to complete
+        run: |
+          # refreshes run status every 3 seconds until completion
+          # we're redirecting the stdout to /dev/null because this call is very chatty
+          # we might want to consider writing this check ourselves to make the interval longer
+          gh run watch "${{ steps.run.outputs.id }}" --repo "${{ env.WORKFLOW_REPO }}" > /dev/null
+      - id: jobs
+        name: Retrieve jobs from the run
+        env:
+          STEP_NAME: 'Force push web3-bot/sync branch'
+        run: |
+          targets=()
+          page=1
+          per_page=100
+          while jobs="$(gh api -X GET "/repos/${{ env.WORKFLOW_REPO }}/actions/runs/${{ steps.run.outputs.id }}/jobs" -f page="$page" -f per_page="$per_page")"; do
+            # add jobs that successfully executed $STEP_NAME to targets
+            targets+=($(jq -r '.jobs[] | select(.steps[] | select(.name == "${{ env.STEP_NAME }}") and select(.conclusion == "success")) | .name' <<< "$jobs" ))
+            if (( page * per_page >= $(jq -r '.total_count' <<< "$jobs") )); then
+              break
+            fi
+            (( page+=1 ))
+          done
+          echo "::set-output name=targets::$(jq -nc '$ARGS.positional' --args ${targets[@]})"
+      - name: Create PRs if needed
+        env:
+          PR_TITLE: 'sync: update CI config files'
+          PR_BODY: 'Syncing to commit ${{ github.event.head_commit.url }}.'
+          PR_BRANCH: 'web3-bot/sync'
+        run: |
+          for target in $(jq -r '.[]' <<< ${{ toJson(steps.jobs.outputs.targets) }}); do
+            base="$(gh api "/repos/${target}" --jq '.default_branch')"
+            # try to create a PR
+            if echo 'Would have executed gh api "/repos/$target/pulls" -f title="${{ env.PR_TITLE }}" -f body="${{ env.PR_BODY }}" -f head="${{ env.PR_BRANCH }}" -f base="$base"'; then
+              echo ""
+              echo "::debug::Successfully created a PR for '$target'"
+            else
+              echo ""
+              echo "::error ::Failed to create a PR for '$target'"
+            fi
+            sleep 3
+          done
