@@ -1,0 +1,69 @@
+name: Add Issues to Project
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_organization:
+        description: The name of the organization the project belongs to
+        required: true
+      project:
+        description: The name of the project
+        required: true
+      repository_organization:
+        description: The name of the organization the repository belongs to
+        required: true
+      repository:
+        description: The name of the repository
+        required: true
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    name: Add Issues to Project
+    env:
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+    steps:
+    - run: |
+        project_id="$(gh api graphql -f query='
+          query{
+            organization(login: "${{ github.event.inputs.project_organization }}"){
+              projectsNext(first: 1, query: "${{ github.event.inputs.project }}") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }' --jq '.data.organization.projectsNext.nodes[0].id')"
+        issue_ids=()
+        after="null"
+        has_next_page=true
+        while $has_next_page; do
+          result="$(gh api graphql -f query='
+            query{
+              organization(login: "${{ github.event.inputs.repository_organization }}"){
+                repository(name: "${{ github.event.inputs.repository }}"){
+                  issues(first: 100, after: '$after') {
+                    pageInfo {
+                      hasNextPage
+                      endCursor
+                    }
+                    nodes {
+                      id
+                    }
+                  }
+                }
+              }
+            }')"
+          has_next_page=$(jq -r '.data.organization.repository.issues.pageInfo.hasNextPage' <<< "$result")
+          after=$(jq '.data.organization.repository.issues.pageInfo.endCursor' <<< "$result")
+          issue_ids+=($(jq -r '.data.organization.repository.issues.nodes[] | .id' <<< "$result"))
+        done
+        for issue_id in ${issue_ids[@]}; do
+          gh api graphql -f query='
+            mutation {
+              addProjectNextItem(input: {projectId: "'$project_id'" contentId: "'$issue_id'"}) {
+                projectNextItem {
+                  id
+                }
+              }
+            }'
+        done
