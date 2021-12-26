@@ -1,20 +1,27 @@
 name: Add Issues to Project
 
+# is:issue repo:protocol/.github
+# is:issue label:topic/devexp,topic/ci org:protocol org:ipfs org:ipfs-shipyard org:libp2p org:ipld org:multiformats org:filecoin-project org:filecoin-shipyard
+# is:issue mentions:galargh org:protocol org:ipfs org:ipfs-shipyard org:libp2p org:ipld org:multiformats org:filecoin-project org:filecoin-shipyard
+# is:pr is:open author:web3-bot
+
 on:
   workflow_dispatch:
     inputs:
-      project_organization:
+      organization:
         description: The name of the organization the project belongs to
         required: true
       project:
-        description: The name of the project
+        description: The name or the number of the project
         required: true
-      repository_organization:
-        description: The name of the organization the repository belongs to
+      query:
+        # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests
+        description: The issue search string to look for
         required: true
-      repository:
-        description: The name of the repository
-        required: true
+      dry_run:
+        description: Is it a dry run? If true, it will NOT add any issues to the project(defaults to false)
+        required: false
+        default: false
 jobs:
   add:
     runs-on: ubuntu-latest
@@ -22,48 +29,99 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
-    - run: |
-        project_id="$(gh api graphql -f query='
-          query{
-            organization(login: "${{ github.event.inputs.project_organization }}"){
-              projectsNext(first: 1, query: "${{ github.event.inputs.project }}") {
-                nodes {
+      - id: project
+        name: Get project
+        run: |
+          id=null
+          if [[ "${{ github.event.inputs.project }}" =~ ^[0-9]+$ ]]; then
+            id="$(gh api graphql -f query='{
+              organization(login: "${{ github.event.inputs.organization }}"){
+                projectNext(number: ${{ github.event.inputs.project }}) {
                   id
                 }
               }
-            }
-          }' --jq '.data.organization.projectsNext.nodes[0].id')"
-        issue_ids=()
-        after="null"
-        has_next_page=true
-        while $has_next_page; do
-          result="$(gh api graphql -f query='
-            query{
-              organization(login: "${{ github.event.inputs.repository_organization }}"){
-                repository(name: "${{ github.event.inputs.repository }}"){
-                  issues(first: 100, after: '$after') {
-                    pageInfo {
-                      hasNextPage
-                      endCursor
-                    }
-                    nodes {
-                      id
-                    }
+            }' --jq '.data.organization.projectNext.id')"
+          else
+            id="$(gh api graphql -f query='{
+              organization(login: "${{ github.event.inputs.organization }}"){
+                projectsNext(first: 1, query: "${{ github.event.inputs.project }}") {
+                  nodes {
+                    id
                   }
                 }
               }
-            }')"
-          has_next_page=$(jq -r '.data.organization.repository.issues.pageInfo.hasNextPage' <<< "$result")
-          after=$(jq '.data.organization.repository.issues.pageInfo.endCursor' <<< "$result")
-          issue_ids+=($(jq -r '.data.organization.repository.issues.nodes[] | .id' <<< "$result"))
-        done
-        for issue_id in ${issue_ids[@]}; do
-          gh api graphql -f query='
-            mutation {
-              addProjectNextItem(input: {projectId: "'$project_id'" contentId: "'$issue_id'"}) {
-                projectNextItem {
-                  id
+            }' --jq '.data.organization.projectsNext.nodes[0].id')"
+          fi
+          echo "::set-output name=id::$id"
+      - id: issues
+        name: Get issues
+        run: |
+          nodes=()
+          paths=()
+          after=null
+          has_next_page=true
+          while $has_next_page; do
+            result="$(gh api graphql -f query='query($after: String){
+              search(
+                query: "${{ github.event.inputs.query }}",
+                first: 100,
+                type: ISSUE,
+                after: $after
+              ) {
+                pageInfo {
+                  hasNextPage
+                  endCursor
+                }
+                nodes {
+                  ... on Node {
+                    id
+                  }
+                  ... on UniformResourceLocatable {
+                    url
+                  }
                 }
               }
-            }'
-        done
+            }' -F after="$after")"
+            has_next_page=$(jq -r '.data.search.pageInfo.hasNextPage' <<< "$result")
+            after=$(jq -r '.data.search.pageInfo.endCursor' <<< "$result")
+            nodes+=($(jq -rc '.data.search.nodes[]' <<< "$result"))
+          done
+          echo "::set-output name=nodes::$(jq -nc '$ARGS.positional' --args ${nodes[@]})"
+      - id: items
+        name: Add issues
+        run: |
+          added_ids=()
+          failed_ids=()
+          failed_urls=()
+          for node in $(jq -rc '.[]' <<< "${{ toJson(steps.issues.outputs.nodes) }}"); do
+            content_url="$(jq -r '.url' <<< "$node")"
+            content_id="$(jq -r '.id' <<< "$node")"
+            echo "::group::$content_url"
+            if [[ '${{ github.event.inputs.dry_run }}' != 'true' ]]; then
+              if result="$(gh api graphql -f query='mutation($contentId: ID!){
+                  addProjectNextItem(input: {projectId: "${{ steps.project.outputs.id }}", contentId: $contentId}){
+                    projectNextItem{
+                      id
+                    }
+                  }
+                }' -f contentId="$content_id")"; then
+                item_id="$(jq '.data.addProjectNextItem.id' <<< "$result")"
+                echo "Added item $item_id for $content_id"
+                added_ids+=("$item_id")
+              else
+                error_message="$(jq '.errors[0].message' <<< "$result")"
+                echo "Failed to add an item for $content_id: $error_message"
+                failed_ids+=("$content_id")
+                failed_urls+=("$content_url")
+              fi
+            else
+              echo "Skipped because it is a dry run"
+            fi
+            echo "::endgroup::"
+          done
+          echo "::set-output name=added::$(jq -nc '$ARGS.positional' --args ${added_ids[@]})"
+          echo "::set-output name=failed::$(jq -nc '$ARGS.positional' --args ${failed_ids[@]})"
+          if ((${#failed_urls[@]})); then
+            echo "::error ::Failed to add items for: ${failed_urls[@]}"
+            exit 1
+          fi
