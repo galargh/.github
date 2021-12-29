@@ -1,0 +1,33 @@
+name: Update Recent References
+
+on:
+  workflow_dispatch:
+    inputs:
+      since:
+        description: The date when the references were last updated
+        required: true
+        default: -7days
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    name: Update recent references
+    env:
+      ORGANIZATION: protocol
+      PROJECT: 14
+      FIELD: References
+      MAX: 3
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+    steps:
+      - id: items
+        uses: protocol/github-api-action-library/update-project-field-with-recent-references@v1
+        with:
+          organization: ${{ env.ORGANIZATION }}
+          project: ${{ env.PROJECT }}
+          field: ${{ env.FIELD }}
+          max: ${{ env.MAX }}
+          since: ${{ github.event.inputs.since }}
+      - if: ${{ steps.items.outputs.failed-item-ids != '[]' }}
+        run: |
+          echo "${{ steps.items.outputs.failed-item-ids }}"
+          exit 1
