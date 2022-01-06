@@ -1,0 +1,17 @@
+# This workflow is triggered by the dispatch workflow.
+
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      job:
+        required: true
+        type: string
+
+jobs:
+  reusable-workflow:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo '${{ inputs.job }} / ${{ github.job }}'
