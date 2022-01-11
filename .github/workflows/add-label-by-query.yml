@@ -27,7 +27,7 @@ jobs:
             if [ -z '${{ github.event.inputs.label }}' ]; then
               echo "Would have added a label to $nameWithOwner#$number"
             else
-              if gh issue edit '$number' --repo='$nameWithOwner' --add-label='${{ github.event.inputs.label }}'; then
+              if gh issue edit "$number" --repo="$nameWithOwner" --add-label='${{ github.event.inputs.label }}'; then
                 echo "Successfully added label ${{ github.event.inputs.label }} to $nameWithOwner#$number"
               else
                 echo "Failed to add label ${{ github.event.inputs.label }} to $nameWithOwner#$number"
