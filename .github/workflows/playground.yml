@@ -3,6 +3,10 @@ on: [workflow_dispatch]
 
 jobs:
   playground:
-    uses: galargh/.github/.github/workflows/reusable-workflow.yml@master
-    with:
-      job: '${{ github.job }}'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cfg: ${{ fromJson('[{"inner":{"array":["abc","def"]}},{"inner":{"array":["1","2","3"]}}]') }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/action

@@ -1,0 +1,13 @@
+name: action
+description: Perform action
+
+runs:
+  using: "composite"
+  steps:
+    - id: go
+      run: |
+        echo "::set-output name=version::$(jq '.[-1]' <<< '${{ toJson(matrix.cfg.inner.array) }}')"
+      shell: bash
+    - run: |
+        echo "${{ steps.go.outputs.version }}"
+      shell: bash
