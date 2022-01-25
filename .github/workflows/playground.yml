@@ -4,9 +4,8 @@ on: [workflow_dispatch]
 jobs:
   playground:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        cfg: ${{ fromJson('[{"inner":{"array":["abc","def"]}},{"inner":{"array":["1","2","3"]}}]') }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/action
+      - run: |
+          ls /usr/lib
+          ls /usr/lib/x86_64-linux-gnu
+        shell: bash
