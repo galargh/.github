@@ -1,4 +1,4 @@
-# Workflow Dispatch Configs
+# **Workflow Dispatch Configs**
 
 This directory contains config files used for workflow dispatch.
 
