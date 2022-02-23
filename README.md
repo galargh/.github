@@ -1,3 +1,3 @@
-# playground
+# Playground
 
 This is a playground.
