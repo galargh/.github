@@ -1,0 +1,28 @@
+name: Add Project Items By Content Query
+on:
+  workflow_dispatch:
+    inputs:
+      organization:
+        description: The organization name
+        required: true
+      project:
+        description: The project name or number
+        required: true
+      query:
+        description: The content(issue or pull request) query
+        required: true
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    name: Add project items by content query
+    env:
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+    steps:
+      - id: action
+        uses: protocol/github-api-action-library/add-project-items-by-content-query@v1
+        with:
+          organization: ${{ github.event.inputs.organization }}
+          project: ${{ github.event.inputs.project }}
+          query: ${{ github.event.inputs.query }}
+      - name: echo outputs
+        run: echo '${{ toJSON(steps.action.outputs) }}'
