@@ -1,0 +1,22 @@
+name: Update Status History
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron:  '35 * * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - owner: protocol
+            project_name: IP Productivity 🆙
+    env:
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+    steps:
+      - uses: galargh/projects-status-history@main
+        with:
+          owner: ${{ matrix.owner }}
+          project_name: ${{ matrix.project_name }}
