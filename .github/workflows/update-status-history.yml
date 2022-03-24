@@ -2,8 +2,9 @@ name: Update Status History
 
 on:
   workflow_dispatch:
-  #schedule:
-  #  - cron:  '35 * * * *'
+  schedule:
+    # “At minute 25 past every 8th hour.” - https://crontab.guru/#25_*/8_*_*_*
+    - cron:  '25 */8 * * *'
 
 jobs:
   update:
@@ -13,6 +14,10 @@ jobs:
         include:
           - owner: protocol
             project_name: IP Productivity 🆙
+          - owner: ipfs
+            project_name: Go IPFS Stewards (PL EngRes)
+          - owner: ipfs
+            project_name: JS IP Board (PL EngRes)
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
