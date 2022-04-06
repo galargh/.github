@@ -1,11 +1,21 @@
 name: Playground
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: Draft
+        required: true
+      tag_name:
+        description: Tag Name
+        required: true
+
 
 jobs:
   playground:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - run: |
-          ls /usr/lib
-          ls /usr/lib/x86_64-linux-gnu
+          gh api '/repos/${{ github.repository }}/releases' -F 'draft=${{ github.event.inputs.draft }}' -f 'tag_name=${{ github.event.inputs.tag_name }}' -F 'generate_release_notes=true'
         shell: bash
