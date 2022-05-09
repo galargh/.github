@@ -9,6 +9,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - run: |
-          head -c 16 < /dev/zero | tr '\0' '\141' >> COMMENT
+          COMMENT="$(head -c 70000 < /dev/zero | tr '\0' '\141')"
           echo "${#COMMENT}"
         shell: bash
