@@ -9,5 +9,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - run: |
-          echo '${{ github.event.workflow_run.head_commit.id || github.sha }}'
+          head -c 16 < /dev/zero | tr '\0' '\141' >> COMMENT
+          echo "${#COMMENT}"
         shell: bash
