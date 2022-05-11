@@ -1,6 +1,7 @@
 name: Playground
 on:
   workflow_dispatch:
+  pull_request:
 
 jobs:
   playground:
@@ -8,9 +9,9 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: |
-          COMMENT="$(head -c 70000 < /dev/zero | tr '\0' '\141')"
-          if [ ${#COMMENT} -ge 65000 ];
-            echo "COMMENT=Terraform plans are too long to post as a comment. You can inspect them in full in [Plan > Comment > Show terraform plans](${github.server_url}/${github.repository}/actions/runs/${github.run_id}) instead." >> $GITHUB_ENV
-          then
-        shell: bash
+      - uses: actions/checkout@v2
+        with:
+          path: v2
+      - uses: actions/checkout@v3
+        with:
+          path: v3
