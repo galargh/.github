@@ -3,6 +3,8 @@
     "files": []
   },
   "repositories": [
-    { "target": "protocol/.github-test-target" }
+    {
+      "target": "protocol/.github-test-target"
+    }
   ]
 }
