@@ -11,8 +11,5 @@
     "deploy_versioning": true,
     "deploy_go": true
   },
-  "repositories": [
-    { "target": "filecoin-project/go-amt-ipld" },
-    { "target": "filecoin-project/go-bitfield" }
-  ]
+  "repositories": []
 }

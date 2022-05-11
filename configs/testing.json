@@ -2,9 +2,5 @@
   "defaults": {
     "files": []
   },
-  "repositories": [
-    {
-      "target": "protocol/.github-test-target"
-    }
-  ]
+  "repositories": []
 }
