@@ -1,18 +1,17 @@
 name: Playground
 on:
   workflow_dispatch:
-  pull_request:
-    paths: [ 'README.md' ]
 
 jobs:
   playground:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: v2
-      - uses: actions/checkout@v3
-        with:
-          path: v3
+      - run: |
+          if [[ "${{ secrets.NPM_TOKEN }}" == "rubbish" ]]; then
+            echo "bummer";
+          elif [[ "${{ secrets.NPM_TOKEN }}" == "test" ]]; then
+            echo "hooray";
+          else
+            echo "wtf";
+          fi
+        shell: bash
