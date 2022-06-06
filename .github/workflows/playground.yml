@@ -7,10 +7,5 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: |
-          echo "1"
-          ls /c/msys64/mingw64/bin
-          echo "2"
-          ls /c/msys64/mingw64
-          echo "3"
-          ls /c/msys64
+          find /c/msys64 -name pkg-config.exe
         shell: bash
