@@ -12,5 +12,5 @@ jobs:
           echo "2"
           ls /c/msys64/mingw64
           echo "3"
-          ls /c/msys64/bin
+          ls /c/msys64
         shell: bash
