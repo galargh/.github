@@ -7,5 +7,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: |
+          pacman -S mingw-w64-x86_64-toolchain
+          ls /c/msys64
+          echo ""
+          ls /c/msys64/mingw64
+          echo ""
+          ls /c/msys64/mingw64/bin
+          echo ""
           find /c/msys64 -name pkg-config.exe
         shell: bash
