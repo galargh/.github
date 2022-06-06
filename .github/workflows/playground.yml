@@ -3,15 +3,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  playground1:
+  playground:
     runs-on: windows-latest
     steps:
       - run: |
+          echo "1"
           ls /c/msys64/mingw64/bin
-        shell: bash
-  playground2:
-    runs-on: windows-2019
-    steps:
-      - run: |
-          ls /c/msys64/mingw64/bin
+          echo "2"
+          ls /c/msys64/mingw64
+          echo "3"
+          ls /c/msys64/bin
         shell: bash
