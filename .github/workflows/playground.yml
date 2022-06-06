@@ -14,12 +14,12 @@ jobs:
         #   subsequent 'shell: bash' steps will use msys2 instead of gitbash
         run: echo "C:/msys64/usr/bin" >> $GITHUB_PATH
       - run: |
-          pacman -S --noconfirm pkg-config
-          ls /c/msys64
-          echo ""
-          ls /c/msys64/mingw64
+          pacman -S --noconfirm mingw-w64-x86_64-pkg-config
+          pacman -S --noconfirm mingw-w64-i686-pkg-config
           echo ""
           ls /c/msys64/mingw64/bin
+          echo ""
+          ls /c/msys64/mingw32/bin
           echo ""
           find /c/msys64 -name pkg-config.exe
         shell: bash
