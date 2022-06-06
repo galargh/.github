@@ -15,7 +15,7 @@ jobs:
         #   subsequent 'shell: bash' steps will use msys2 instead of gitbash
         run: echo "C:/msys64/usr/bin" >> $GITHUB_PATH
       - run: |
-          pacman -S mingw-w64-x86_64-toolchain
+          pacman -S pkg-config
           ls /c/msys64
           echo ""
           ls /c/msys64/mingw64
