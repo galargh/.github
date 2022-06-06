@@ -3,15 +3,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  playground:
-    runs-on: ubuntu-latest
+  playground1:
+    runs-on: windows-latest
     steps:
       - run: |
-          if [[ "${{ secrets.NPM_TOKEN }}" == "rubbish" ]]; then
-            echo "bummer";
-          elif [[ "${{ secrets.NPM_TOKEN }}" == "test" ]]; then
-            echo "hooray";
-          else
-            echo "wtf";
-          fi
+          ls /c/msys64/mingw64/bin
+        shell: bash
+  playground2:
+    runs-on: windows-2019
+    steps:
+      - run: |
+          ls /c/msys64/mingw64/bin
         shell: bash
