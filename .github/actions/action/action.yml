@@ -5,8 +5,6 @@ runs:
   using: "composite"
   steps:
     - id: go
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       run: |
         echo "${#GITHUB_TOKEN}"
       shell: bash
