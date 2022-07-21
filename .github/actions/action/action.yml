@@ -1,10 +1,17 @@
 name: action
 description: Perform action
 
+inputs:
+  token:
+    description: GitHub Token
+    default: ${{ github.token }}
+
 runs:
   using: "composite"
   steps:
     - id: go
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
       run: |
         echo "${#GITHUB_TOKEN}"
       shell: bash
