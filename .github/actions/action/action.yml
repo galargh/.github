@@ -5,9 +5,8 @@ runs:
   using: "composite"
   steps:
     - id: go
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       run: |
-        echo "::set-output name=version::$(jq '.[-1]' <<< '${{ toJson(matrix.cfg.inner.array) }}')"
-      shell: bash
-    - run: |
-        echo "${{ steps.go.outputs.version }}"
+        echo "${#GITHUB_TOKEN}"
       shell: bash
