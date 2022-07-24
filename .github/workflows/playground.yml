@@ -21,6 +21,6 @@ jobs:
           echo "hello" > README.md
           git add --all
           git commit -m "test"
-          git remote add ${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.repo.git_url }}
-          git push ${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.ref }}
+          git remote add pr ${{ github.event.pull_request.head.repo.git_url }}
+          git push pr ${{ github.event.pull_request.head.ref }}
 
