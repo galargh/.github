@@ -15,7 +15,7 @@ jobs:
           - owner: pl-strflt
             project_name: InterPlanetary Developer Experience
           - owner: ipfs
-            project_name: Go IPFS Stewards (PL EngRes)
+            project_name: Kubo IPFS Stewards (PL EngRes)
           - owner: ipfs
             project_name: JS IP Board (PL EngRes)
     env:
