@@ -21,13 +21,6 @@ jobs:
           echo "hello" > README.md
           git add --all
           git commit -m "test"
-          git_branch="pr-${{ github.event.pull_request.number }}-act"
-          git checkout -B "$git_branch"
-          git push origin "$git_branch" --force
-          if [[ ! -z "$(git diff --name-only '${{ github.event.pull_request.head.sha }}')" ]]; then
-            state="$(gh pr view "$git_branch" --json state --jq .state 2> /dev/null || echo '')"
-            if [[ "$state" != 'OPEN' ]]; then
-              gh pr create --title 'TEST' --body 'The changes in this PR were made by a bot. Please review carefully.' --head "$git_branch" --base '${{ github.event.pull_request.head.label }}'
-            fi
-          fi
+          git remote add ${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.repo.git_url }}
+          git push ${{ github.event.pull_request.head.repo.full_name }} ${{ github.event.pull_request.head.ref }}
 
