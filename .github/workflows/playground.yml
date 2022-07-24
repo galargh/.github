@@ -27,7 +27,7 @@ jobs:
           if [[ ! -z "$(git diff --name-only '${{ github.event.pull_request.head.sha }}')" ]]; then
             state="$(gh pr view "$git_branch" --json state --jq .state 2> /dev/null || echo '')"
             if [[ "$state" != 'OPEN' ]]; then
-              gh pr create --body 'The changes in this PR were made by a bot. Please review carefully.' --head "$git_branch" --base '${{ github.event.pull_request.head.label }}' --fill
+              gh pr create --title 'TEST' --body 'The changes in this PR were made by a bot. Please review carefully.' --head "$git_branch" --base '${{ github.event.pull_request.head.label }}'
             fi
           fi
 
