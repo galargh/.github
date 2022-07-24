@@ -1,10 +1,11 @@
 name: Playground
 on:
   workflow_dispatch:
+  pull_request:
 
 jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/action
+      - run: echo "${{ toJSON(github.event.pull_request) }}"
+        shell: bash
