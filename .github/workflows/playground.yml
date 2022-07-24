@@ -7,6 +7,22 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: echo "${{ toJSON(github) }}"
-        shell: bash
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: ./.github/actions/git-config-user
+      - run: |
+          echo "hello" > README.md
+          git add --all
+          git commit -m "test"
+          workspace_branch="pr-${{ github.event.pull_request.number }}-act"
+          git checkout -B "$git_branch"
+          git push origin "$git_branch" --force
+          if [[ ! -z "$(git diff --name-only '${{ github.event.pull_request.head.sha }}')" ]]; then
+            state="$(gh pr view "$git_branch" --json state --jq .state 2> /dev/null || echo '')"
+            if [[ "$state" != 'OPEN' ]]; then
+              gh pr create --body 'The changes in this PR were made by a bot. Please review carefully.' --head "$git_branch" --base '${{ github.event.pull_request.head.label }}' --fill
+            fi
+          fi
+
