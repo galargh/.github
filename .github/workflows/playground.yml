@@ -19,7 +19,7 @@ jobs:
           echo "hello" > README.md
           git add --all
           git commit -m "test"
-          workspace_branch="pr-${{ github.event.pull_request.number }}-act"
+          git_branch="pr-${{ github.event.pull_request.number }}-act"
           git checkout -B "$git_branch"
           git push origin "$git_branch" --force
           if [[ ! -z "$(git diff --name-only '${{ github.event.pull_request.head.sha }}')" ]]; then
