@@ -12,6 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          repository: ${{ github.event.pull_request.head.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
       - run: |
           git config --global user.email '${{ github.actor }}@users.noreply.github.com>'
@@ -24,6 +25,5 @@ jobs:
           git add --all
           git commit -m "test"
           git checkout -B ${{ github.event.pull_request.head.ref }}
-          git remote add pr ${{ github.event.pull_request.head.repo.git_url }}
-          git push pr ${{ github.event.pull_request.head.ref }} --force
+          git push origin ${{ github.event.pull_request.head.ref }} --force
 
