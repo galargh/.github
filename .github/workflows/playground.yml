@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          repository: ${{ github.event.pull_request.head.full_name }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
       - run: |
           git config --global user.email '${{ github.actor }}@users.noreply.github.com>'
