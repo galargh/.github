@@ -7,7 +7,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ fromJSON(github) }}"
+      - run: echo "${{ toJSON(github) }}"
         shell: bash
       - name: Checkout
         uses: actions/checkout@v2
