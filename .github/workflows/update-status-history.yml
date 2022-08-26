@@ -18,6 +18,8 @@ jobs:
             project_name: Kubo IPFS Stewards (PL EngRes)
           - owner: ipfs
             project_name: JS IP Board (PL EngRes)
+          - owner: libp2p
+            project_name: Go libp2p Stewards (PL EngRes)
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
