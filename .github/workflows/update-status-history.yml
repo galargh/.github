@@ -21,7 +21,7 @@ jobs:
           - owner: libp2p
             project_name: Go libp2p Stewards (PL EngRes)
           - owner: ipld
-            project_name: IPLD team's weekly tracker
+            project_name: "IPLD team's weekly tracker"
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
