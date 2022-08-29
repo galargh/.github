@@ -25,7 +25,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
-      - uses: galargh/projects-status-history@main
+      - uses: pl-strflt/projects-status-history@main
         with:
           owner: ${{ matrix.owner }}
           project_name: ${{ matrix.project_name }}
