@@ -12,6 +12,6 @@ jobs:
       - run: sudo touch /continue
       - uses: mxschmitt/action-tmate@v3
       - run: sleep 60
-      - run: last
+      - run: sudo last -w
 
       
