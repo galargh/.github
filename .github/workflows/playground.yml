@@ -9,8 +9,13 @@ jobs:
       run:
         shell: bash
     steps:
-      # - run: sudo touch /continue
+      - run: sudo touch /continue
       - uses: mxschmitt/action-tmate@v3
+      - run: /tmp/tmate/tmate -S /tmp/tmate.sock display -p '#{tmate_num_clients}'
+      - run: sleep 30
+      - run: /tmp/tmate/tmate -S /tmp/tmate.sock display -p '#{tmate_num_clients}'
+      - run: sleep 30
+      - run: /tmp/tmate/tmate -S /tmp/tmate.sock display -p '#{tmate_num_clients}'
       # - run: docker ps
       # - run: /tmp/tmate/tmate -S /tmp/tmate.sock show-messages
 
