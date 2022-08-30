@@ -6,6 +6,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{ toJSON(env) }}'
-        shell: bash
+      - if: runner.debug == '1'
+        uses: mxschmitt/action-tmate@v3
       
