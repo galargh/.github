@@ -12,7 +12,7 @@ jobs:
       - run: sudo touch /continue
       - uses: mxschmitt/action-tmate@v3
       - run: sleep 60
-      - run: /tmp/tmate/tmate list-clients
-      - run: /tmp/tmate/tmate show-messages
+      - run: /tmp/tmate/tmate -S /tmp/tmate.sock list-clients
+      - run: /tmp/tmate/tmate -S /tmp/tmate.sock show-messages
 
       
