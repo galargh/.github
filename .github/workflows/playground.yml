@@ -5,7 +5,15 @@ on:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - if: runner.debug == '1'
+        run: sudo touch /continue
+      - if: runner.debug == '1'
         uses: mxschmitt/action-tmate@v3
+      - if: runner.debug == '1'
+        run: sleep 120
+
       
