@@ -9,11 +9,12 @@ jobs:
       run:
         shell: bash
     steps:
-      - if: runner.debug == '1'
+      - if: true // runner.debug == '1'
         run: sudo touch /continue
-      - if: runner.debug == '1'
+      - if: true // runner.debug == '1'
         uses: mxschmitt/action-tmate@v3
-      - if: runner.debug == '1'
-        run: sleep 120
+      - if: true // runner.debug == '1'
+        run: sleep 60
+      - run: last
 
       
