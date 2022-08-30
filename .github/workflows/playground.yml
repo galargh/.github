@@ -10,7 +10,7 @@ jobs:
         shell: bash
     steps:
       - run: sudo touch /continue
-      - uses: mxschmitt/action-tmate@v3
+      # - uses: mxschmitt/action-tmate@v3
       - run: sleep 60
       - run: sudo last -w
 
