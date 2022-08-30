@@ -1,15 +1,11 @@
 name: Playground
 on:
   workflow_dispatch:
-    inputs:
-      test:
-        description: test
-        required: false
 
 jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{ github.event.inputs.test }}'
+      - run: echo '${{ fromJSON(env) }}'
         shell: bash
       
