@@ -11,8 +11,7 @@ jobs:
     steps:
       - run: sudo touch /continue
       - uses: mxschmitt/action-tmate@v3
-      - run: sleep 30
-      - run: sudo /tmp/tmate/tmate -S /tmp/tmate.sock list-clients
-      - run: sudo /tmp/tmate/tmate -S /tmp/tmate.sock show-messages
+      - run: docker ps
+      # - run: /tmp/tmate/tmate -S /tmp/tmate.sock show-messages
 
       
