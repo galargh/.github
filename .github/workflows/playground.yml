@@ -9,16 +9,23 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Setup tmate session
-        uses: pl-strflt/action-tmate@circleci
-        if: runner.debug == '1'
+      - run: mkdir -p cmd/ipfs
+      - run: touch cmd/ipfs/ipfs
+      - uses: actions/upload-artifact@v3
         with:
-          check-num-clients: true
-          limit-access-to-actor: true
-          wait: false
-          wait-in-post: true
-          wait-interval: '60000'
-      - run: echo 'hello'
+          name: kubo
+          path: cmd/ipfs/ipfs
+  playground2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: kubo
+      - run: ls -R
+        
 
 
       
