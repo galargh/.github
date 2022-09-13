@@ -25,6 +25,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: kubo
+          path: cmd/ipfs
       - run: ls -R
         
 
