@@ -16,6 +16,7 @@ jobs:
           name: kubo
           path: cmd/ipfs/ipfs
   playground2:
+    needs: [playground]
     runs-on: ubuntu-latest
     defaults:
       run:
