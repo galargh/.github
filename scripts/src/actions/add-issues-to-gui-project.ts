@@ -3,7 +3,7 @@ import { orgs } from '../config'
 import * as core from '@actions/core'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import { parse } from 'ts-command-line-args'
-import { addIssuesOrPullRequestsToProject } from './shared/add-issues-or-pull-requests-to-project'
+import { addIssuesToProject } from './shared/add-issues-to-project'
 
 type Repos = GetResponseDataTypeFromEndpointMethod<
   typeof Endpoints.search.repos
@@ -36,7 +36,7 @@ async function assIssuesToGUIProject(args: IArgs) {
 
   // Add all open issues from the found projects which are not yet in the GUI project
   for (const repo of repos) {
-    await addIssuesOrPullRequestsToProject({
+    await addIssuesToProject({
       org: 'ipfs',
       projectNumber: 17,
       dryRun: args.dryRun,

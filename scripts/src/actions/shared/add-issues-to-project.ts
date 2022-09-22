@@ -1,6 +1,7 @@
 import { GitHub, Endpoints } from '../../github'
 import * as core from '@actions/core'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
+import assert from 'assert'
 
 type Issues = GetResponseDataTypeFromEndpointMethod<
   typeof Endpoints.search.issuesAndPullRequests
@@ -13,7 +14,12 @@ export interface IArgs {
   query: string
 }
 
-export async function addIssuesOrPullRequestsToProject(args: IArgs) {
+export async function addIssuesToProject(args: IArgs) {
+  assert(
+    args.query.length <= 256,
+    `Query must be less than 256 characters, got ${args.query}`
+  )
+
   const github = await GitHub.getGitHub()
 
   core.info(`Searching for project: ${args.org}/${args.projectNumber}`)
