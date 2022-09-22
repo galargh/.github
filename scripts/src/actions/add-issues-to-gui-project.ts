@@ -51,7 +51,7 @@ async function assIssuesToGUIProject() {
   // Find the project (we need its' id)
   const {
     organization: { projectV2: project }
-  } = await github.graphqlClient(
+  } = (await github.graphqlClient(
     `query($login: String!, $number: Int!) {
       organization(login: $login) {
         projectV2(number: $number) {
@@ -63,7 +63,7 @@ async function assIssuesToGUIProject() {
       login: org,
       number: projectNumber
     }
-  )
+  )) as any
 
   // Add all the found issues to the project
   // If the issue is in a repo that is in the same org as the project, add the issue to the project
@@ -73,7 +73,7 @@ async function assIssuesToGUIProject() {
     } else {
       const {
         addProjectV2ItemById: { item: item }
-      } = await github.graphqlClient(
+      } = (await github.graphqlClient(
         `mutation($projectId: ID!, $contentId: ID!) {
           addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
             item {
@@ -85,7 +85,7 @@ async function assIssuesToGUIProject() {
           projectId: project.id,
           contentId: issue.id
         }
-      )
+      )) as any
       core.info(
         `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id}`
       )
@@ -100,7 +100,7 @@ async function assIssuesToGUIProject() {
     } else {
       const {
         addProjectV2DraftIssue: { projectItem: item }
-      } = await github.graphqlClient(
+      } = (await github.graphqlClient(
         `mutation($projectId: ID!, $title: String!) {
           addProjectV2DraftIssue(input: {
             projectId: $projectId,
@@ -115,7 +115,7 @@ async function assIssuesToGUIProject() {
           projectId: project.id,
           title: issue.html_url
         }
-      )
+      )) as any
       core.info(
         `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id} (draft)`
       )
