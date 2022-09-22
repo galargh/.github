@@ -8,7 +8,7 @@ on:
         required: false
         default: 'true'
       query:
-        description: Query multiplier to use when looking for issues
+        description: Query modifier to use when looking for issues
         required: false
         default: ''
 
