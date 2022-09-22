@@ -5,29 +5,5 @@ on:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
     steps:
-      - run: mkdir -p cmd/ipfs
-      - run: touch cmd/ipfs/ipfs
-      - uses: actions/upload-artifact@v3
-        with:
-          name: kubo
-          path: cmd/ipfs/ipfs
-  playground2:
-    needs: [playground]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: kubo
-          path: cmd/ipfs
-      - run: ls -R
-        
-
-
-      
+      - uses: galargh/.github/.github/actions/action@master

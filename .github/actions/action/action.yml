@@ -9,4 +9,5 @@ runs:
     - id: go
       run: |
         echo "${#GITHUB_TOKEN}"
+        pwd
       shell: bash
