@@ -7,8 +7,12 @@ interface IArgs {
   query: string
 }
 
-function evenIndex(_: any, index: number) { return index % 2 === 0 }
-function oddIndex(_: any, index: number) { return index % 2 === 1 }
+function evenIndex(_: any, index: number) {
+  return index % 2 === 0
+}
+function oddIndex(_: any, index: number) {
+  return index % 2 === 1
+}
 
 async function addIssuesToIPDXProject(args: IArgs) {
   const org = 'pl-strflt'
@@ -38,23 +42,35 @@ async function addIssuesToIPDXProject(args: IArgs) {
     .filter(o => !orgsWithoutIPDX.includes(o))
     .map(o => `team:${o}/ipdx`)
     .join(' ')
-  const repoQ1 = repos.filter(evenIndex).map(r => `repo:${r}`).join(' ')
-  const repoQ2 = repos.filter(oddIndex).map(r => `repo:${r}`).join(' ')
-  const githubManagementRepoQ1 = orgs.filter(evenIndex).map(o => `repo:${o}/github-mgmt`).join(' ')
-  const githubManagementRepoQ2 = orgs.filter(oddIndex).map(o => `repo:${o}/github-mgmt`).join(' ')
+  const repoQ1 = repos
+    .filter(evenIndex)
+    .map(r => `repo:${r}`)
+    .join(' ')
+  const repoQ2 = repos
+    .filter(oddIndex)
+    .map(r => `repo:${r}`)
+    .join(' ')
+  const githubManagementRepoQ1 = orgs
+    .filter(evenIndex)
+    .map(o => `repo:${o}/github-mgmt`)
+    .join(' ')
+  const githubManagementRepoQ2 = orgs
+    .filter(oddIndex)
+    .map(o => `repo:${o}/github-mgmt`)
+    .join(' ')
 
   const queries = [
-    //`${orgQ} ${involvesQ}`,
-    //`${orgQ} ${userReviewRequestedQ}`,
-    //teamQ,
-    //'label:team/ipdx',
-    //repoQ1,
-    //repoQ2,
-    //`is:issue ${githubManagementRepoQ1}`,
-    //`is:issue ${githubManagementRepoQ2}`,
+    `${orgQ} ${involvesQ}`,
+    `${orgQ} ${userReviewRequestedQ}`,
+    teamQ,
+    'label:team/ipdx',
+    repoQ1,
+    repoQ2,
+    `is:issue ${githubManagementRepoQ1}`,
+    `is:issue ${githubManagementRepoQ2}`,
     `is:pr is:open ${githubManagementRepoQ1}`,
     `is:pr is:open ${githubManagementRepoQ2}`,
-    //'involves:web3-bot is:open'
+    'involves:web3-bot is:open'
   ]
 
   for (const query of queries) {
