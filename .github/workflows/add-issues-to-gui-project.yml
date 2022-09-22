@@ -25,12 +25,14 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
       - id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: |
+          echo "::set-output name=today::$(date +'%Y-%m-%d')"
+          echo "::set-output name=yesterday::$(date -d 'yesterday' +'%Y-%m-%d')"
       - uses: actions/checkout@v3
       - run: npm install && npm run build
         working-directory: scripts
       - run: |
           node lib/actions/add-issues-to-gui-project.js \
             --dryRun ${{ github.event.inputs.dry-run || 'false' }} \
-            --query ${{ github.event.inputs.query || format('created:{0}', steps.date.outputs.date) }}
+            --query ${{ github.event.inputs.query || format('created:>={0}', steps.date.outputs.yesterday) }}
         working-directory: scripts
