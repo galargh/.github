@@ -1,13 +1,12 @@
 name: action
 description: Perform action
-
 runs:
   using: "composite"
-  env:
-    GITHUB_TOKEN: ${{ github.token }}
   steps:
     - id: go
+      env:
+        GITHUB_TOKEN: ${github.token}
       run: |
-        echo "${#GITHUB_TOKEN}"
+        echo "${GITHUB_TOKEN}"
         pwd
       shell: bash
