@@ -50,11 +50,11 @@ async function addIssuesToIPDXProject(args: IArgs) {
     //'label:team/ipdx',
     //repoQ1,
     //repoQ2,
-    `is:issue ${githubManagementRepoQ1}`,
-    `is:issue ${githubManagementRepoQ2}`,
+    //`is:issue ${githubManagementRepoQ1}`,
+    //`is:issue ${githubManagementRepoQ2}`,
     `is:pr is:open ${githubManagementRepoQ1}`,
     `is:pr is:open ${githubManagementRepoQ2}`,
-    'involves:web3-bot is:open'
+    //'involves:web3-bot is:open'
   ]
 
   for (const query of queries) {
