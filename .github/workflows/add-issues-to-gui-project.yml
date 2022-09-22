@@ -33,6 +33,6 @@ jobs:
         working-directory: scripts
       - run: |
           node lib/actions/add-issues-to-gui-project.js \
-            --dryRun ${{ github.event.inputs.dry-run || 'false' }} \
-            --query ${{ github.event.inputs.query || format('created:>={0}', steps.date.outputs.yesterday) }}
+            --dryRun "${{ github.event.inputs.dry-run || 'false' }}" \
+            --query "${{ github.event.inputs.query || format('created:>={0}', steps.date.outputs.yesterday) }}"
         working-directory: scripts
