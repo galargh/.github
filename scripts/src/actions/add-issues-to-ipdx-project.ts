@@ -35,15 +35,17 @@ async function addIssuesToIPDXProject(args: IArgs) {
     .filter(o => !orgsWithoutIPDX.includes(o))
     .map(o => `team:${o}/ipdx`)
     .join(' ')
-  const repoQ = repos.map(r => `repo:${r}`).join(' ')
+  const repoQ1 = repos.filter((_, index) => index % 2 === 0).map(r => `repo:${r}`).join(' ')
+  const repoQ2 = repos.filter((_, index) => index % 2 === 1).map(r => `repo:${r}`).join(' ')
   const githubManagementRepoQ = orgs.map(o => `repo:${o}/github-mgmt`).join(' ')
 
   const queries = [
     //`${orgQ} ${involvesQ}`,
     //`${orgQ} ${userReviewRequestedQ}`,
     //teamQ,
-    'label:team/ipdx',
-    repoQ,
+    //'label:team/ipdx',
+    repoQ1,
+    repoQ2,
     `is:issue ${githubManagementRepoQ}`,
     `is:pr is:open ${githubManagementRepoQ}`,
     'involves:web3-bot is:open'
