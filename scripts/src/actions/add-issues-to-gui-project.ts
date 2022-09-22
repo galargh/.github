@@ -2,125 +2,63 @@ import { GitHub, Endpoints } from '../github'
 import { orgs } from '../config'
 import * as core from '@actions/core'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
-import env from '../env'
+import { parse } from 'ts-command-line-args'
+import { addIssuesOrPullRequestsToProject } from './shared/add-issues-or-pull-requests-to-project'
 
 type Repos = GetResponseDataTypeFromEndpointMethod<
   typeof Endpoints.search.repos
 >
-type Issues = GetResponseDataTypeFromEndpointMethod<
-  typeof Endpoints.search.issuesAndPullRequests
->
 
-async function assIssuesToGUIProject() {
-  const org = 'ipfs'
-  const projectNumber = 17
+interface IArgs {
+  dryRun: boolean
+  query: string
+}
+
+async function assIssuesToGUIProject(args: IArgs) {
   const topics = ['ipfs-gui']
 
   const github = await GitHub.getGitHub()
 
+  core.info(`Searching for repos with topics: ${topics.join(', ')}`)
   // Find all repos matching the topics in the PL orgs
-  const repos: Repos['items'] = []
+  const repos: string[] = []
   for (const topic of topics) {
     const result = await github.client.paginate(github.client.search.repos, {
       q: `${orgs.map(o => `org:${o}`).join(' ')} archived:false topic:${topic}`
     })
     for (const repo of result) {
-      if (!repos.map(r => r.full_name).includes(repo.full_name)) {
-        repos.push(repo)
+      if (!repos.includes(repo.full_name)) {
+        repos.push(repo.full_name)
       }
     }
   }
+  core.info(`Found ${repos.join(', ')}`)
 
-  // Find all open issues not yet in the project in the found repos
-  const sameOrgIssues: Issues['items'] = []
-  const otherOrgIssues: Issues['items'] = []
+  // Add all open issues from the found projects which are not yet in the GUI project
   for (const repo of repos) {
-    const result = await github.client.paginate(
-      github.client.search.issuesAndPullRequests,
-      {
-        q: `repo:${repo.full_name} is:issue -project:${org}/${projectNumber} is:open`
-      }
-    )
-    if (repo.owner?.login === org) {
-      sameOrgIssues.push(...result)
-    } else {
-      otherOrgIssues.push(...result)
-    }
-  }
-
-  // Find the project (we need its' id)
-  const {
-    organization: { projectV2: project }
-  } = await github.graphqlClient(
-    `query($login: String!, $number: Int!) {
-      organization(login: $login) {
-        projectV2(number: $number) {
-          id
-        }
-      }
-    }`,
-    {
-      login: org,
-      number: projectNumber
-    }
-  )
-
-  // Add all the found issues to the project
-  // If the issue is in a repo that is in the same org as the project, add the issue to the project
-  for (const issue of sameOrgIssues) {
-    if (env.DRY_RUN) {
-      core.info(`Would have added ${issue.html_url} to ${org}/${projectNumber}`)
-    } else {
-      const {
-        addProjectV2ItemById: { item: item }
-      } = await github.graphqlClient(
-        `mutation($projectId: ID!, $contentId: ID!) {
-          addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
-            item {
-              id
-            }
-          }
-        }`,
-        {
-          projectId: project.id,
-          contentId: issue.id
-        }
-      )
-      core.info(
-        `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id}`
-      )
-    }
-  }
-  // Otherwise, create a new draft item in the project with a link to the issue
-  for (const issue of otherOrgIssues) {
-    if (env.DRY_RUN) {
-      core.info(
-        `Would have added ${issue.html_url} to ${org}/${projectNumber} (draft)`
-      )
-    } else {
-      const {
-        addProjectV2DraftIssue: { projectItem: item }
-      } = await github.graphqlClient(
-        `mutation($projectId: ID!, $title: String!) {
-          addProjectV2DraftIssue(input: {
-            projectId: $projectId,
-            title: $title
-          }) {
-            projectItem {
-              id
-            }
-          }
-        }`,
-        {
-          projectId: project.id,
-          title: issue.html_url
-        }
-      )
-      core.info(
-        `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id} (draft)`
-      )
-    }
+    await addIssuesOrPullRequestsToProject({
+      org: 'ipfs',
+      projectNumber: 17,
+      dryRun: args.dryRun,
+      query: `repo:${repo} is:issue ${args.query}`
+    })
   }
 }
 
-assIssuesToGUIProject()
+const args = parse<IArgs & { help?: boolean }>(
+  {
+    dryRun: Boolean,
+    query: String,
+    help: {
+      type: Boolean,
+      optional: true,
+      alias: 'h',
+      description: 'Prints this usage guide'
+    }
+  },
+  {
+    helpArg: 'help'
+  }
+)
+
+assIssuesToGUIProject(args)
