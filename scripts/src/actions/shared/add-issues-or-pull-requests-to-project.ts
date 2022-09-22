@@ -72,7 +72,7 @@ export async function addIssuesOrPullRequestsToProject(args: IArgs) {
           }`,
           {
             projectId: project.id,
-            contentId: issue.id
+            contentId: issue.node_id
           }
         )) as any
         core.info(
