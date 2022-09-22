@@ -7,8 +7,8 @@ interface IArgs {
   query: string
 }
 
-function evenIndex(_: any, index: number) { index % 2 === 0 }
-function oddIndex(_: any, index: number) { index % 2 === 1 }
+function evenIndex(_: any, index: number) { return index % 2 === 0 }
+function oddIndex(_: any, index: number) { return index % 2 === 1 }
 
 async function addIssuesToIPDXProject(args: IArgs) {
   const org = 'pl-strflt'
