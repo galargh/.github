@@ -12,10 +12,9 @@ on:
         required: false
         default: ''
 
-#  schedule:
-#    # “At minute 25 past every 12th hour.” - https://crontab.guru/#25_*/12_*_*_*
-#    - cron:  '25 */12 * * *'
-
+  schedule:
+    # “At minute 25 past every 12th hour.” - https://crontab.guru/#25_*/12_*_*_*
+    - cron:  '25 */12 * * *'
 
 jobs:
   add:
