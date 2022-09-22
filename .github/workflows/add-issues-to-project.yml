@@ -1,0 +1,36 @@
+name: Add Issues to project
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Wether to perform a dry run
+        required: false
+        default: 'true'
+      query:
+        description: Query to use when looking for issues
+        required: true
+      org:
+        description: GitHub org name where the project is
+        required: true
+      projectNumber:
+        description: The number of the project
+        required: true
+
+jobs:
+  add:
+    name: Add Issues to project
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install && npm run build
+        working-directory: scripts
+      - run: |
+          node lib/actions/add-issues-to-project.js \
+            --dryRun "${{ github.event.inputs.dry-run || 'true' }}" \
+            --query "${{ github.event.inputs.query }}" \
+            --org "${{ github.event.inputs.org }}" \
+            --projectNumber "${{ github.event.inputs.projectNumber }}"
+        working-directory: scripts
