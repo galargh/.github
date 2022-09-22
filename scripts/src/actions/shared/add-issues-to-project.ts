@@ -52,6 +52,8 @@ export async function addIssuesToProject(args: IArgs) {
   )
   core.info(`Found ${issues.length} issues`)
 
+  assert(issues.length <= 500, 'Too many issues, please refine your query')
+
   core.info(`Adding issues to ${args.org}/${args.projectNumber}`)
   // Add all the found issues to the project
   for (const issue of issues) {
