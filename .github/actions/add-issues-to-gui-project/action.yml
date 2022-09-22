@@ -1,0 +1,13 @@
+name: add-issues-to-gui-project
+description: Add Issues to GUI Project
+inputs:
+  dry-run:
+    description: Wether to perform a dry run
+  query:
+    description: Query modifier to use when looking for issues
+runs:
+  using: "composite"
+  steps:
+    - run: node lib/actions/add-issues-to-gui-project.js
+      working-directory: scripts
+      shell: bash

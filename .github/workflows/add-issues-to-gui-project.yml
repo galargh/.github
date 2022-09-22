@@ -3,10 +3,14 @@ name: Add Issues to GUI project
 on:
   workflow_dispatch:
     inputs:
-      dry-run:
+      d:
         description: Wether to perform a dry run
         required: false
         default: 'true'
+      q:
+        description: Query modifier to use when looking for issues
+        required: false
+        default: ''
 #  schedule:
 #    # “At minute 25 past every 12th hour.” - https://crontab.guru/#25_*/12_*_*_*
 #    - cron:  '25 */12 * * *'
@@ -18,10 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
-      DRY_RUN: ${{ github.event.inputs.dry-run || 'false' }}
     steps:
       - uses: actions/checkout@v3
       - run: npm install && npm run build
         working-directory: scripts
-      - run: node lib/actions/add-issues-to-gui-project.js
-        working-directory: scripts
+      - uses: ./.github/actions/add-issues-to-gui-project
+        with:
+          dry-run: ${ github.event.inputs.d }
+          query: ${ github.event.inputs.q }
