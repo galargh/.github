@@ -58,11 +58,9 @@ export class GitHub {
             `Request quota exhausted for request ${options.method} ${options.url}`
           )
 
-          if (!options.request.retryCount || options.request.retryCount < 3) {
-            // only retries once
-            core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
-            return true
-          }
+          // retry forever
+          core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
+          return true
         },
         onSecondaryRateLimit: (
           retryAfter: number,
@@ -76,11 +74,9 @@ export class GitHub {
             `SecondaryRateLimit detected for request ${options.method} ${options.url}`
           )
 
-          if (!options.request.retryCount || options.request.retryCount < 3) {
-            // only retries once
-            core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
-            return true
-          }
+          // retry forever
+          core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
+          return true
         }
       }
     })
