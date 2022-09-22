@@ -59,7 +59,9 @@ export class GitHub {
           )
 
           // retry forever
-          core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
+          core.info(
+            `Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`
+          )
           return true
         },
         onSecondaryRateLimit: (
@@ -75,7 +77,9 @@ export class GitHub {
           )
 
           // retry forever
-          core.info(`Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`)
+          core.info(
+            `Retrying attempt ${options.request.retryCount} after ${retryAfter} seconds!`
+          )
           return true
         }
       }

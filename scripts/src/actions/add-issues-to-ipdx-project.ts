@@ -11,6 +11,7 @@ async function addIssuesToIPDXProject(args: IArgs) {
   const org = 'pl-strflt'
   const projectNumber = 1
   const members = ['galargh', 'laurentsenta']
+  const orgsWithoutIPDX = ['filecoin-project', 'ipfs-examples']
   const repos = [
     'galargh/gadder',
     'ipfs/download-ipfs-distribution-action',
@@ -30,14 +31,17 @@ async function addIssuesToIPDXProject(args: IArgs) {
   const userReviewRequestedQ = members
     .map(m => `user-review-requested:${m}`)
     .join(' ')
-  const teamQ = orgs.map(o => `team:${o}/ipdx`).join(' ')
+  const teamQ = orgs
+    .filter(o => !orgsWithoutIPDX.includes(o))
+    .map(o => `team:${o}/ipdx`)
+    .join(' ')
   const repoQ = repos.map(r => `repo:${r}`).join(' ')
   const githubManagementRepoQ = orgs.map(o => `repo:${o}/github-mgmt`).join(' ')
 
   const queries = [
-    `${orgQ} ${involvesQ}`,
-    `${orgQ} ${userReviewRequestedQ}`,
-    teamQ,
+    //`${orgQ} ${involvesQ}`,
+    //`${orgQ} ${userReviewRequestedQ}`,
+    //teamQ,
     'label:team/ipdx',
     repoQ,
     `is:issue ${githubManagementRepoQ}`,
