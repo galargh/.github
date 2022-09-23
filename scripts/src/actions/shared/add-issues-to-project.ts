@@ -7,22 +7,32 @@ type Issues = GetResponseDataTypeFromEndpointMethod<
   typeof Endpoints.search.issuesAndPullRequests
 >
 
-export interface IArgs {
-  org: string
-  projectNumber: number
-  dryRun: boolean
-  query: string
+export function joinQueryParts(arr: string[], limit: number = 192): string[] {
+  if (arr.length === 0) {
+    return []
+  } else {
+    return arr.slice(1).reduce(
+      (acc, s) =>
+        `${acc.at(-1)} ${s}`.length <= limit
+          ? [...acc.slice(0, -1), `${acc.at(-1)} ${s}`]
+          : [...acc, s],
+      [arr[0]]
+    )
+  }
 }
 
-export async function addIssuesToProject(args: IArgs) {
-  assert(
-    args.query.length <= 256,
-    `Query must be less than 256 characters, got ${args.query}`
-  )
+export async function addIssuesToProject(
+  org: string,
+  projectNumber: number,
+  query: string,
+  dryRun: boolean
+) {
+  const q = `${query} -project:${org}/${projectNumber}`
+  assert(q.length <= 256, `Query must be less than 256 characters, got ${q}`)
 
   const github = await GitHub.getGitHub()
 
-  core.info(`Searching for project: ${args.org}/${args.projectNumber}`)
+  core.info(`Searching for project: ${org}/${projectNumber}`)
   // Find the project (we need its' id)
   const {
     organization: { projectV2: project }
@@ -35,13 +45,12 @@ export async function addIssuesToProject(args: IArgs) {
       }
     }`,
     {
-      login: args.org,
-      number: args.projectNumber
+      login: org,
+      number: projectNumber
     }
   )) as any
   core.info(`Found project: ${project.id}`)
 
-  const q = `${args.query} -project:${args.org}/${args.projectNumber}`
   core.info(`Searching for issues with query: ${q}`)
   // Find that are not yet in the project
   const issues: Issues['items'] = await github.client.paginate(
@@ -54,20 +63,18 @@ export async function addIssuesToProject(args: IArgs) {
 
   assert(issues.length <= 500, 'Too many issues, please refine your query')
 
-  core.info(`Adding issues to ${args.org}/${args.projectNumber}`)
+  core.info(`Adding issues to ${org}/${projectNumber}`)
   // Add all the found issues to the project
   for (const issue of issues) {
     // If the issue is in a repo that is in the same org as the project, add the issue to the project
     // Otherwise, create a new draft item in the project with a link to the issue (it will get automatically turned into a proper item)
-    if (issue.repository_url.split('/').reverse()[1] === args.org) {
-      if (args.dryRun) {
+    if (issue.repository_url.split('/').reverse()[1] === org) {
+      if (dryRun) {
         core.info(
-          `Would have added ${issue.html_url} to ${args.org}/${args.projectNumber}`
+          `Would have added ${issue.html_url} to ${org}/${projectNumber}`
         )
       } else {
-        core.info(
-          `Adding ${issue.html_url} to ${args.org}/${args.projectNumber}`
-        )
+        core.info(`Adding ${issue.html_url} to ${org}/${projectNumber}`)
         const {
           addProjectV2ItemById: { item: item }
         } = (await github.graphqlClient(
@@ -84,18 +91,16 @@ export async function addIssuesToProject(args: IArgs) {
           }
         )) as any
         core.info(
-          `Added ${issue.html_url} to ${args.org}/${args.projectNumber} as ${item.id}`
+          `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id}`
         )
       }
     } else {
-      if (args.dryRun) {
+      if (dryRun) {
         core.info(
-          `Would have added ${issue.html_url} to ${args.org}/${args.projectNumber} (draft)`
+          `Would have added ${issue.html_url} to ${org}/${projectNumber} (draft)`
         )
       } else {
-        core.info(
-          `Adding ${issue.html_url} to ${args.org}/${args.projectNumber} (draft)`
-        )
+        core.info(`Adding ${issue.html_url} to ${org}/${projectNumber} (draft)`)
         const {
           addProjectV2DraftIssue: { projectItem: item }
         } = (await github.graphqlClient(
@@ -115,7 +120,7 @@ export async function addIssuesToProject(args: IArgs) {
           }
         )) as any
         core.info(
-          `Added ${issue.html_url} to ${args.org}/${args.projectNumber} as ${item.id} (draft)`
+          `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id} (draft)`
         )
       }
     }

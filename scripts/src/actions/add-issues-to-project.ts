@@ -1,5 +1,12 @@
 import { parse } from 'ts-command-line-args'
-import { IArgs, addIssuesToProject } from './shared/add-issues-to-project'
+import { addIssuesToProject } from './shared/add-issues-to-project'
+
+interface IArgs {
+  org: string
+  projectNumber: number
+  dryRun: boolean
+  query: string
+}
 
 const args = parse<IArgs & { help?: boolean }>(
   {
@@ -19,4 +26,4 @@ const args = parse<IArgs & { help?: boolean }>(
   }
 )
 
-addIssuesToProject(args)
+addIssuesToProject(args.org, args.projectNumber, args.query, args.dryRun)
