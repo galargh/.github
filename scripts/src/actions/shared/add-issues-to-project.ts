@@ -11,13 +11,15 @@ export function joinQueryParts(arr: string[], limit: number = 192): string[] {
   if (arr.length === 0) {
     return []
   } else {
-    return arr.slice(1).reduce(
-      (acc, s) =>
-        `${acc.at(-1)} ${s}`.length <= limit
-          ? [...acc.slice(0, -1), `${acc.at(-1)} ${s}`]
-          : [...acc, s],
-      [arr[0]]
-    )
+    return arr
+      .slice(1)
+      .reduce(
+        (acc, s) =>
+          `${acc.at(-1)} ${s}`.length <= limit
+            ? [...acc.slice(0, -1), `${acc.at(-1)} ${s}`]
+            : [...acc, s],
+        [arr[0]]
+      )
   }
 }
 
@@ -75,24 +77,35 @@ export async function addIssuesToProject(
         )
       } else {
         core.info(`Adding ${issue.html_url} to ${org}/${projectNumber}`)
-        const {
-          addProjectV2ItemById: { item: item }
-        } = (await github.graphqlClient(
-          `mutation($projectId: ID!, $contentId: ID!) {
-            addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
-              item {
-                id
+        try {
+          const {
+            addProjectV2ItemById: { item: item }
+          } = (await github.graphqlClient(
+            `mutation($projectId: ID!, $contentId: ID!) {
+              addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                item {
+                  id
+                }
               }
+            }`,
+            {
+              projectId: project.id,
+              contentId: issue.node_id
             }
-          }`,
-          {
-            projectId: project.id,
-            contentId: issue.node_id
+          )) as any
+          core.info(
+            `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id}`
+          )
+        } catch (e) {
+          if (
+            (e as any)?.errors?.at(0)?.message ===
+            'Content already exists in this project'
+          ) {
+            core.info(
+              `Issue ${issue.html_url} already exists in ${org}/${projectNumber}`
+            )
           }
-        )) as any
-        core.info(
-          `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id}`
-        )
+        }
       }
     } else {
       if (dryRun) {
@@ -101,27 +114,38 @@ export async function addIssuesToProject(
         )
       } else {
         core.info(`Adding ${issue.html_url} to ${org}/${projectNumber} (draft)`)
-        const {
-          addProjectV2DraftIssue: { projectItem: item }
-        } = (await github.graphqlClient(
-          `mutation($projectId: ID!, $title: String!) {
-            addProjectV2DraftIssue(input: {
-              projectId: $projectId,
-              title: $title
-            }) {
-              projectItem {
-                id
+        try {
+          const {
+            addProjectV2DraftIssue: { projectItem: item }
+          } = (await github.graphqlClient(
+            `mutation($projectId: ID!, $title: String!) {
+              addProjectV2DraftIssue(input: {
+                projectId: $projectId,
+                title: $title
+              }) {
+                projectItem {
+                  id
+                }
               }
+            }`,
+            {
+              projectId: project.id,
+              title: issue.html_url
             }
-          }`,
-          {
-            projectId: project.id,
-            title: issue.html_url
+          )) as any
+          core.info(
+            `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id} (draft)`
+          )
+        } catch (e) {
+          if (
+            (e as any)?.errors?.at(0)?.message ===
+            'Content already exists in this project'
+          ) {
+            core.info(
+              `Issue ${issue.html_url} already exists in ${org}/${projectNumber}`
+            )
           }
-        )) as any
-        core.info(
-          `Added ${issue.html_url} to ${org}/${projectNumber} as ${item.id} (draft)`
-        )
+        }
       }
     }
   }

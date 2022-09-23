@@ -17,10 +17,10 @@ async function addIssuesToIPDXProject(args: IArgs) {
   const members = ['galargh', 'laurentsenta']
 
   const orgQ = orgs.map(o => `org:${o}`).join(' ')
-  const involvesQs = joinQueryParts(members.map(m => `involves:${m}`), 192 - orgQ.length).map(
-    q => `${orgQ} ${q}`,
-
-  )
+  const involvesQs = joinQueryParts(
+    members.map(m => `involves:${m}`),
+    192 - orgQ.length
+  ).map(q => `${orgQ} ${q}`)
   const userReviewRequestedQs = joinQueryParts(
     members.map(m => `user-review-requested:${m}`),
     192 - orgQ.length
