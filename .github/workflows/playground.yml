@@ -4,6 +4,6 @@ on:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      - uses: galargh/.github/.github/actions/action@master
+      - run: command -v
