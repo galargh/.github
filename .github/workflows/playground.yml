@@ -12,4 +12,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(github.event.inputs) }}"
+      - if: true && ! github.event.inputs
+        run: echo "Hello"
