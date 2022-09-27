@@ -6,4 +6,4 @@ jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: command -v
+      - run: command -v xmllint
