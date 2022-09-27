@@ -12,5 +12,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - if: true && (github.event.inputs == null || github.event.inputs == {})
+      - if: true && ! github.event.inputs.test
         run: echo "Hello"
