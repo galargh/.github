@@ -1,11 +1,15 @@
 name: Playground
 on:
   workflow_dispatch:
+    inputs:
+      test:
+        required: false
+        description: Hello
   push:
     paths: [.github/workflows/playground.yml]
 
 jobs:
   playground:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - run: date --help
+      - run: echo "${{ toJSON(github.event.inputs) }}"
