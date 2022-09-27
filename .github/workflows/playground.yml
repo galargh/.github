@@ -1,9 +1,11 @@
 name: Playground
 on:
   workflow_dispatch:
+  push:
+    paths: [.github/workflows/playground.yml]
 
 jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: date +%s%N
+      - run: date --help
