@@ -8,10 +8,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: |
-          echo $TERM
-          echo "$(tput sgr0)"
-      - run: |
-          echo $TERM
-          echo "$(tput sgr0)"
-        shell: bash
+          chmod +x file.sh
+          ./file.sh
