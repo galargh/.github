@@ -1,10 +1,6 @@
 name: Playground
 on:
   workflow_dispatch:
-    inputs:
-      test:
-        required: false
-        description: Hello
   push:
     paths: [.github/workflows/playground.yml]
 
@@ -12,5 +8,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - if: true && ! github.event.inputs.test
-        run: echo "Hello"
+      - run: echo $TERM
