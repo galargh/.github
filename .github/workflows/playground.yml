@@ -11,4 +11,4 @@ jobs:
     steps:
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh --repo "${{ github.repository }}" pr comment ${{ github.event.pull_request.number }} --body "Hello"
+        run: gh --repo "${{ github.repository }}" pr comment ${{ github.event.pull_request.number }} --body "WOW"
