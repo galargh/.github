@@ -1,14 +1,14 @@
 name: Playground
 on:
-  workflow_dispatch:
-  push:
-    paths: [.github/workflows/playground.yml]
+  pull_request:
+#  workflow_dispatch:
+#  push:
+#    paths: [.github/workflows/playground.yml]
 
 jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: |
-          chmod +x file.sh
-          ./file.sh
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr comment {{ github.event.pull_request.number }} --body "Hello!" --repo "${{ github.repository }}"
