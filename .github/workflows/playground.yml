@@ -8,4 +8,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo $TERM
+      - run: |
+          echo $TERM
+          echo "$(tput sgr0)"
+      - run: |
+          echo $TERM
+          echo "$(tput sgr0)"
+        shell: bash
