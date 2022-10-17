@@ -16,8 +16,6 @@ jobs:
             project_name: InterPlanetary Developer Experience
           - owner: ipfs
             project_name: Kubo IPFS Stewards (PL EngRes)
-          - owner: ipfs
-            project_name: JS IP Board (PL EngRes)
           - owner: libp2p
             project_name: Go libp2p Stewards (PL EngRes)
           - owner: ipld
