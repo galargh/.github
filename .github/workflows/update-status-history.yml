@@ -14,12 +14,12 @@ jobs:
         include:
           - owner: pl-strflt
             project_number: 1
-          # - owner: ipfs
-          #   project_number: Kubo IPFS Stewards (PL EngRes)
-          # - owner: libp2p
-          #   project_number: Go libp2p Stewards (PL EngRes)
-          # - owner: ipld
-          #   project_number: "IPLD team's weekly tracker"
+          - owner: ipfs
+            project_number: 16
+          - owner: libp2p
+            project_number: 3
+          - owner: ipld
+            project_number: 3
     env:
       GITHUB_TOKEN: ${{ secrets.GALARGH_GITHUB_TOKEN }}
     steps:
