@@ -3,7 +3,12 @@ import * as core from '@actions/core'
 import assert from 'assert'
 import { GraphQlResponse } from '@octokit/graphql/dist-types/types'
 
-async function updateProjectV2ItemFieldValue(projectId: string, itemId: string, fieldId: string, value: string): GraphQlResponse<unknown> {
+async function updateProjectV2ItemFieldValue(
+  projectId: string,
+  itemId: string,
+  fieldId: string,
+  value: string
+): GraphQlResponse<unknown> {
   const github = await GitHub.getGitHub()
   return github.client.graphql(
     `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
@@ -86,25 +91,47 @@ export async function updateStatusHistory(
   core.info(`Found project: ${project.id}`)
 
   core.info(`Checking if required fields exist`)
-  const statusField = project.fields.nodes.find((field: any) => field.name === 'Status')
+  const statusField = project.fields.nodes.find(
+    (field: any) => field.name === 'Status'
+  )
   assert(statusField, `Project must have a field named 'Status'`)
-  const statusDateField = project.fields.nodes.find((field: any) => field.name === 'Status Date')
+  const statusDateField = project.fields.nodes.find(
+    (field: any) => field.name === 'Status Date'
+  )
   assert(statusDateField, `Project must have a field named 'Status Date'`)
-  const statusHistoryField = project.fields.nodes.find((field: any) => field.name === 'Status History')
+  const statusHistoryField = project.fields.nodes.find(
+    (field: any) => field.name === 'Status History'
+  )
   assert(statusHistoryField, `Project must have a field named 'Status History'`)
-  const statusTimestampField = project.fields.nodes.find((field: any) => field.name === 'Status Timestamp')
-  assert(statusTimestampField, `Project must have a field named 'Status Timestamp'`)
+  const statusTimestampField = project.fields.nodes.find(
+    (field: any) => field.name === 'Status Timestamp'
+  )
+  assert(
+    statusTimestampField,
+    `Project must have a field named 'Status Timestamp'`
+  )
   core.info(`Found all required fields`)
 
   core.info(`Updating status history for all items`)
   for (const item of project.items.nodes) {
     if (item.title === "You can't see this item") {
-      core.warning(`The following item is inaccessible: ${JSON.stringify(item)}`)
+      core.warning(
+        `The following item is inaccessible: ${JSON.stringify(item)}`
+      )
       continue
     }
-    core.debug(`Checking if item needs to be updated: ${item.id} (${item.title})`)
-    const status = item.fieldValues.nodes.find((field: any) => field.projectField.id === statusField.id)?.value
-    const statusHistory = JSON.parse(item.fieldValues.nodes.find((fieldValue: any) => fieldValue.projectField.id === statusHistoryField.id)?.value || '[]')
+    core.debug(
+      `Checking if item needs to be updated: ${item.id} (${item.title})`
+    )
+    const status = item.fieldValues.nodes.find(
+      (field: any) => field.projectField.id === statusField.id
+    )?.value
+    const statusHistory = JSON.parse(
+      item.fieldValues.nodes.find(
+        (fieldValue: any) =>
+          fieldValue.projectField.id === statusHistoryField.id
+      )?.value || '[]'
+    )
     if (status === statusHistory.at(0)) {
       core.debug(`Item is up to date: ${item.id} (${item.title})`)
       continue
@@ -115,11 +142,25 @@ export async function updateStatusHistory(
     }
     core.info(`Updating item: ${item.id} (${item.title})`)
     const newStatusHistory = [status.value, ...statusHistory.slice(0, 1)]
-    await updateProjectV2ItemFieldValue(project.id, item.id, statusHistoryField.id, JSON.stringify(newStatusHistory))
-    await updateProjectV2ItemFieldValue(project.id, item.id, statusTimestampField.id, timestamp)
-    await updateProjectV2ItemFieldValue(project.id, item.id, statusDateField.id, simpleDate)
+    await updateProjectV2ItemFieldValue(
+      project.id,
+      item.id,
+      statusHistoryField.id,
+      JSON.stringify(newStatusHistory)
+    )
+    await updateProjectV2ItemFieldValue(
+      project.id,
+      item.id,
+      statusTimestampField.id,
+      timestamp
+    )
+    await updateProjectV2ItemFieldValue(
+      project.id,
+      item.id,
+      statusDateField.id,
+      simpleDate
+    )
     core.info(`Updated item: ${item.id} (${item.title})`)
-
   }
   core.info(`Done`)
 }
