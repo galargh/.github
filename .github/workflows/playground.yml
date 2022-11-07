@@ -12,7 +12,7 @@ jobs:
         id: pull_request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QUERY: repository:ipfs/github-mgmt 57b7cc84250006c5a11284a97d3977ca72f70a5d
+          QUERY: repository:ipfs/github-mgmt 7f76bd2009912a9d0ff2ea475a7f007dafefefc0
         uses: actions/github-script@v6
         with:
           script: |
