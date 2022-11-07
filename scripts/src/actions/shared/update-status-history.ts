@@ -41,7 +41,7 @@ export async function updateStatusHistory(
 ) {
   const date = new Date()
   const datetime = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}`
-  const dateonly = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`
+  const dateonly = `${date.getUTCFullYear()}-${('0' + date.getUTCMonth()).slice(-2)}-${('0' + date.getUTCDate()).slice(-2)}`
   const github = await GitHub.getGitHub()
 
   core.info(`Searching for project: ${org}/${projectNumber}`)
