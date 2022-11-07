@@ -20,4 +20,4 @@ jobs:
               q: process.env.QUERY,
               per_page: 1
             })
-      - run: echo ${{ toJSON(steps.pull_request) }}
+      - run: echo ${{ toJSON(steps.pull_request.outputs.result.data) }}
