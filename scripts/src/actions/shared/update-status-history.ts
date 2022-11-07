@@ -7,19 +7,17 @@ async function updateProjectV2ItemFieldValue(
   projectId: string,
   itemId: string,
   fieldId: string,
-  value: string
+  value: any
 ): GraphQlResponse<unknown> {
   const github = await GitHub.getGitHub()
   return github.client.graphql(
-    `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+    `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ProjectV2FieldValue!) {
       updateProjectV2ItemFieldValue(
         input: {
           projectId: $projectId
           itemId: $itemId
           fieldId: $fieldId
-          value: {
-            text: $value
-          }
+          value: $value
         }
       ) {
         projectV2Item {
@@ -42,8 +40,8 @@ export async function updateStatusHistory(
   dryRun: boolean
 ) {
   const date = new Date()
-  const timestamp = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}`
-  const simpleDate = `${date.getUTCDate()}/${date.getUTCMonth()}/${date.getUTCFullYear()}`
+  const datetime = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}`
+  const dateonly = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`
   const github = await GitHub.getGitHub()
 
   core.info(`Searching for project: ${org}/${projectNumber}`)
@@ -163,19 +161,25 @@ export async function updateStatusHistory(
       project.id,
       item.id,
       statusHistoryField.id,
-      JSON.stringify(newStatusHistory)
+      {
+        text: JSON.stringify(newStatusHistory)
+      }
     )
     await updateProjectV2ItemFieldValue(
       project.id,
       item.id,
       statusTimestampField.id,
-      timestamp
+      {
+        text: datetime
+      }
     )
     await updateProjectV2ItemFieldValue(
       project.id,
       item.id,
       statusDateField.id,
-      simpleDate
+      {
+        date: dateonly
+      }
     )
     core.info(`Updated item: ${item.id} (${title})`)
   }
