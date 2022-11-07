@@ -156,7 +156,7 @@ export async function updateStatusHistory(
       continue
     }
     core.info(`Updating item: ${item.id} (${title})`)
-    const newStatusHistory = [status.value, ...statusHistory.slice(0, 1)]
+    const newStatusHistory = [status, ...statusHistory.slice(0, 1)]
     await updateProjectV2ItemFieldValue(
       project.id,
       item.id,
