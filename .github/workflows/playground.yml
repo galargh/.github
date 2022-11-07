@@ -16,8 +16,9 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            return await github.rest.search.issuesAndPullRequests({
+            const { data: result } = await github.rest.search.issuesAndPullRequests({
               q: process.env.QUERY,
               per_page: 1
-            })
-      - run: echo ${{ toJSON(steps.pull_request.outputs.result.data) }}
+            });
+            return result;
+      - run: echo ${{ fromJSON(steps.pull_request.outputs.result).total_count }}
