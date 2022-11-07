@@ -1,14 +1,23 @@
 name: Playground
 on:
-  pull_request:
-#  workflow_dispatch:
-#  push:
-#    paths: [.github/workflows/playground.yml]
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/playground.yml]
 
 jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - env:
+      - name: Find pull request number
+        id: pull_request
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh --repo "${{ github.repository }}" pr comment ${{ github.event.pull_request.number }} --body "Hello"
+          QUERY: repository:ipfs/github-mgmt 57b7cc84250006c5a11284a97d3977ca72f70a5d
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return await github.rest.search.issuesAndPullRequests({
+              q: process.env.QUERY,
+              per_page: 1
+            })
+      - run: echo ${{ toJSON(steps.pull_request) }}
