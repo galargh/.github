@@ -51,26 +51,38 @@ export async function updateStatusHistory(
   const {
     organization: { projectV2: project }
   } = (await github.client.graphql.paginate(
-    `query($login: String!, $number: Int!) {
+    `query($login: String!, $number: Int!, $cursor: String) {
       organization(login: $login) {
         projectV2(number: $number) {
           id
           fields(first: 100) {
             nodes {
-              id
-              name
-              settings
+              ... on Node {
+                id
+              }
+              ... on ProjectV2FieldCommon {
+                name
+              }
             }
           }
           items(first: 100, after: $cursor) {
             nodes {
               id
-              title
+              isArchived
               fieldValues(first: 100) {
                 nodes {
-                  value
-                  projectField {
-                    id
+                  ... on ProjectV2ItemFieldTextValue {
+                    text
+                  }
+                  ... on ProjectV2ItemFieldSingleSelectValue {
+                    name
+                  }
+                  ... on ProjectV2ItemFieldValueCommon {
+                    field {
+                      ... on Node {
+                        id
+                      }
+                    }
                   }
                 }
               }
@@ -114,33 +126,28 @@ export async function updateStatusHistory(
 
   core.info(`Updating status history for all items`)
   for (const item of project.items.nodes) {
-    if (item.title === "You can't see this item") {
-      core.warning(
-        `The following item is inaccessible: ${JSON.stringify(item)}`
-      )
+    if (item.isArchived) {
+      core.debug(`Item is archived: ${item.id}`)
       continue
     }
-    core.debug(
-      `Checking if item needs to be updated: ${item.id} (${item.title})`
-    )
+    core.debug(`Checking if item needs to be updated: ${item.id}`)
     const status = item.fieldValues.nodes.find(
-      (field: any) => field.projectField.id === statusField.id
-    )?.value
+      (fieldValue: any) => fieldValue.field.id === statusField.id
+    )?.name
     const statusHistory = JSON.parse(
       item.fieldValues.nodes.find(
-        (fieldValue: any) =>
-          fieldValue.projectField.id === statusHistoryField.id
-      )?.value || '[]'
+        (fieldValue: any) => fieldValue.field.id === statusHistoryField.id
+      )?.text || '[]'
     )
     if (status === statusHistory.at(0)) {
-      core.debug(`Item is up to date: ${item.id} (${item.title})`)
+      core.debug(`Item is up to date: ${item.id}`)
       continue
     }
     if (dryRun) {
-      core.info(`Would have updated item: ${item.id} (${item.title})`)
+      core.info(`Would have updated item: ${item.id}`)
       continue
     }
-    core.info(`Updating item: ${item.id} (${item.title})`)
+    core.info(`Updating item: ${item.id}`)
     const newStatusHistory = [status.value, ...statusHistory.slice(0, 1)]
     await updateProjectV2ItemFieldValue(
       project.id,
@@ -160,7 +167,7 @@ export async function updateStatusHistory(
       statusDateField.id,
       simpleDate
     )
-    core.info(`Updated item: ${item.id} (${item.title})`)
+    core.info(`Updated item: ${item.id}`)
   }
   core.info(`Done`)
 }
