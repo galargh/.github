@@ -1,13 +1,12 @@
 import * as core from '@actions/core'
 import { Octokit } from '@octokit/rest'
-import { graphql } from '@octokit/graphql'
 import { retry } from '@octokit/plugin-retry'
 import { throttling } from '@octokit/plugin-throttling'
 import { createAppAuth } from '@octokit/auth-app'
 import env from './env'
-import { graphql as GraphQL } from '@octokit/graphql/dist-types/types' // eslint-disable-line import/no-unresolved
+import { paginateGraphql } from '@octokit/plugin-paginate-graphql'
 
-const Client = Octokit.plugin(retry, throttling)
+const Client = Octokit.plugin(retry, throttling, paginateGraphql)
 export const Endpoints = new Octokit()
 
 export class GitHub {
@@ -39,8 +38,7 @@ export class GitHub {
     return GitHub.github
   }
 
-  client: Octokit
-  graphqlClient: GraphQL
+  client: InstanceType<typeof Client>
 
   private constructor(token: string) {
     this.client = new Client({
@@ -82,11 +80,6 @@ export class GitHub {
           )
           return true
         }
-      }
-    })
-    this.graphqlClient = graphql.defaults({
-      headers: {
-        authorization: `token ${token}`
       }
     })
   }

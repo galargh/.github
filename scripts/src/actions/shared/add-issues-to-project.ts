@@ -38,7 +38,7 @@ export async function addIssuesToProject(
   // Find the project (we need its' id)
   const {
     organization: { projectV2: project }
-  } = (await github.graphqlClient(
+  } = (await github.client.graphql(
     `query($login: String!, $number: Int!) {
       organization(login: $login) {
         projectV2(number: $number) {
@@ -80,7 +80,7 @@ export async function addIssuesToProject(
         try {
           const {
             addProjectV2ItemById: { item: item }
-          } = (await github.graphqlClient(
+          } = (await github.client.graphql(
             `mutation($projectId: ID!, $contentId: ID!) {
               addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
                 item {
@@ -117,7 +117,7 @@ export async function addIssuesToProject(
         try {
           const {
             addProjectV2DraftIssue: { projectItem: item }
-          } = (await github.graphqlClient(
+          } = (await github.client.graphql(
             `mutation($projectId: ID!, $title: String!) {
               addProjectV2DraftIssue(input: {
                 projectId: $projectId,
