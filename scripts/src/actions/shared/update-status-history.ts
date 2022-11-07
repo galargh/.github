@@ -132,11 +132,11 @@ export async function updateStatusHistory(
     }
     core.debug(`Checking if item needs to be updated: ${item.id}`)
     const status = item.fieldValues.nodes.find(
-      (fieldValue: any) => fieldValue.field.id === statusField.id
+      (fieldValue: any) => fieldValue.field?.id === statusField.id
     )?.name
     const statusHistory = JSON.parse(
       item.fieldValues.nodes.find(
-        (fieldValue: any) => fieldValue.field.id === statusHistoryField.id
+        (fieldValue: any) => fieldValue.field?.id === statusHistoryField.id
       )?.text || '[]'
     )
     if (status === statusHistory.at(0)) {
