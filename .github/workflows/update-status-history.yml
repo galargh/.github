@@ -28,7 +28,7 @@ jobs:
         working-directory: scripts
       - run: |
           node lib/actions/update-status-history.js \
-            --dryRun "true" \
+            --dryRun "false" \
             --org "${{ matrix.owner }}" \
             --projectNumber "${{ matrix.project_number }}"
         working-directory: scripts
