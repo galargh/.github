@@ -122,15 +122,25 @@ export async function updateStatusHistory(
     statusTimestampField,
     `Project must have a field named 'Status Timestamp'`
   )
+  const titleField = project.fields.nodes.find(
+    (field: any) => field.name === 'Title'
+  )
   core.info(`Found all required fields`)
 
   core.info(`Updating status history for all items`)
   for (const item of project.items.nodes) {
-    if (item.isArchived) {
-      core.debug(`Item is archived: ${item.id}`)
+    const title = item.fieldValues.nodes.find(
+      (fieldValue: any) => fieldValue.field?.id === titleField.id
+    )?.text
+    if (title === "You can't see this item") {
+      core.warning(`Item is inaccessible: ${item.id} (${title})`)
       continue
     }
-    core.debug(`Checking if item needs to be updated: ${item.id}`)
+    if (item.isArchived) {
+      core.debug(`Item is archived: ${item.id} (${title})`)
+      continue
+    }
+    core.debug(`Checking if item needs to be updated: ${item.id} (${title})`)
     const status = item.fieldValues.nodes.find(
       (fieldValue: any) => fieldValue.field?.id === statusField.id
     )?.name
@@ -140,14 +150,14 @@ export async function updateStatusHistory(
       )?.text || '[]'
     )
     if (status === statusHistory.at(0)) {
-      core.debug(`Item is up to date: ${item.id}`)
+      core.debug(`Item is up to date: ${item.id} (${title})`)
       continue
     }
     if (dryRun) {
-      core.info(`Would have updated item: ${item.id}`)
+      core.info(`Would have updated item: ${item.id} (${title})`)
       continue
     }
-    core.info(`Updating item: ${item.id}`)
+    core.info(`Updating item: ${item.id} (${title})`)
     const newStatusHistory = [status.value, ...statusHistory.slice(0, 1)]
     await updateProjectV2ItemFieldValue(
       project.id,
@@ -167,7 +177,7 @@ export async function updateStatusHistory(
       statusDateField.id,
       simpleDate
     )
-    core.info(`Updated item: ${item.id}`)
+    core.info(`Updated item: ${item.id} (${title})`)
   }
   core.info(`Done`)
 }
