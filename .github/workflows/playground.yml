@@ -8,17 +8,35 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - name: Find pull request number
-        id: pull_request
+      - name: Find sha for plan
+        id: sha
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QUERY: repository:ipfs/github-mgmt 7f76bd2009912a9d0ff2ea475a7f007dafefefc0
+          QUERY: repository:pl-strflt/github-mgmt e7198be749f69b821e7a3849e59b6c2039e70455
+          GITHUB_REPOSITORY: pl-strflt/github-mgmt
+          GITHUB_REPOSITORY_OWNER: pl-strflt
+          GITHUB_EVENT_NAME: push
+          GITHUB_SHA: e7198be749f69b821e7a3849e59b6c2039e70455
         uses: actions/github-script@v6
         with:
+          result-encoding: string
           script: |
-            const { data: result } = await github.rest.search.issuesAndPullRequests({
-              q: process.env.QUERY,
-              per_page: 1
-            });
-            return result;
-      - run: echo ${{ fromJSON(steps.pull_request.outputs.result).total_count }}
+            if (process.env.GITHUB_EVENT_NAME === 'push') {
+              const { data: search } = await github.rest.search.issuesAndPullRequests({
+                q: process.env.QUERY,
+                per_page: 1
+              });
+              if (search.total_count !== 0) {
+                const result = await github.rest.pulls.listCommits({
+                  owner: process.env.GITHUB_REPOSITORY_OWNER,
+                  repo: process.env.GITHUB_REPOSITORY.slice(process.env.GITHUB_REPOSITORY_OWNER.length + 1),
+                  pull_number: search.items[0].number,
+                  per_page: 1
+                });
+                console.log(result);
+                const pulls = result.data;
+                return pulls.items[0].sha;
+              }
+            } else {
+              return process.env.GITHUB_SHA;
+            }
