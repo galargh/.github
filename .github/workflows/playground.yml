@@ -8,35 +8,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - name: Find sha for plan
-        id: sha
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QUERY: repository:pl-strflt/github-mgmt e7198be749f69b821e7a3849e59b6c2039e70455
-          _GITHUB_REPOSITORY: pl-strflt/github-mgmt
-          _GITHUB_REPOSITORY_OWNER: pl-strflt
-          _GITHUB_EVENT_NAME: push
-          _GITHUB_SHA: e7198be749f69b821e7a3849e59b6c2039e70455
-        uses: actions/github-script@v6
-        with:
-          result-encoding: string
-          script: |
-            if (process.env._GITHUB_EVENT_NAME === 'push') {
-              const { data: search } = await github.rest.search.issuesAndPullRequests({
-                q: process.env.QUERY,
-                per_page: 1
-              });
-              if (search.total_count !== 0) {
-                const result = await github.rest.pulls.listCommits({
-                  owner: process.env._GITHUB_REPOSITORY_OWNER,
-                  repo: process.env._GITHUB_REPOSITORY.slice(process.env._GITHUB_REPOSITORY_OWNER.length + 1),
-                  pull_number: search.items[0].number,
-                  per_page: 1
-                });
-                console.log(result);
-                const pulls = result.data;
-                return pulls.items[0].sha;
-              }
-            } else {
-              return process.env._GITHUB_SHA;
-            }
+      - run: gh release download --repo ipfs/kubo v0.17.0-RC1
