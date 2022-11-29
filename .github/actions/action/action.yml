@@ -47,7 +47,7 @@ runs:
           const repo = REPOSITORY.split('/')[1]
           
           // if (RUN_ID === LATEST) {
-            const runs = await octokit.rest.actions.listWorkflowRuns({
+            const runs = await github.rest.actions.listWorkflowRuns({
               owner,
               repo,
               workflow_id: WORKFLOW,
@@ -57,7 +57,7 @@ runs:
           // }
           
           // if (RUN_ATTEMPT === LATEST) {
-            const run = await octokit.rest.actions.getWorkflowRun({
+            const run = await github.rest.actions.getWorkflowRun({
               owner,
               repo,
               workflow_id,
