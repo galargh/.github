@@ -1,22 +1,83 @@
 name: action
 description: Perform action
+
+inputs:
+  repository:
+    description: 'The owner and repository name. Defaults to `env.GITHUB_REPOSITORY`.'
+    required: false
+  server_url:
+    description: 'The URL of the GitHub server. Defaults to `env.GITHUB_SERVER_URL`.'
+    required: false
+  workflow:
+    description: 'The name or the id of the workflow. Defaults to `env.GITHUB_WORKFLOW`.'
+    required: false
+  run_id:
+    description: 'The id of the workflow run. Or `latest`. Defaults to `env.GITHUB_RUN_ID`.'
+    required: false
+  run_attempt:
+    description: 'The number of the attempt of the workflow run. Or `latest`. Defaults to `env.GITHUB_RUN_ATTEMPT`.'
+    required: false
+  job:
+    description: 'A unique string for the workflow run job. Or `latest`. Defaults to `latest`.'
+    required: false
+
 runs:
   using: "composite"
   steps:
     - uses: actions/github-script@v6
       with:
+        env:
+          REPOSITORY: ${{ inputs.repository || env.GITHUB_REPOSITORY }}
+          SERVER_URL: ${{ inputs.server_url || env.GITHUB_SERVER_URL }}
+          WORKFLOW: ${{ inputs.workflow || env.GITHUB_WORKFLOW }}
+          RUN_ID: ${{ inputs.run_id || env.GITHUB_RUN_ID }}
+          RUN_ATTEMPT: ${{ inputs.run_attempt || env.GITHUB_RUN_ATTEMPT }}
+          JOB_NAME: ${{ inputs.job_name || 'latest' }}
         script: |
-          const {GITHUB_REPOSITORY, GITHUB_SERVER_URL, GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT} = process.env
-          const owner = GITHUB_REPOSITORY.split('/')[0]
-          const repo = GITHUB_REPOSITORY.split('/')[1]
-          const run_url = `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}`
+          console.log(process.env.GITHUB_WORKFLOW)
+          console.log(process.env.GITHUB_JOB)
+        
+          const LATEST = 'latest'
+          let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB_NAME} = process.env
+          
+          const owner = REPOSITORY.split('/')[0]
+          const repo = REPOSITORY.split('/')[1]
+          
+          if (RUN_ID === LATEST) {
+            const runs = await octokit.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: WORKFLOW,
+            });
+            console.log(runs)
+            RUN_ID = runs.data.runs[0].id
+          }
+          
+          if (RUN_ATTEMPT === LATEST) {
+            const run = await octokit.rest.actions.getWorkflowRun({
+              owner,
+              repo,
+              workflow_id,
+            })
+            console.log(run)
+            RUN_ATTEMPT = run.data.attempt
+          }
+         
           const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
             owner,
             repo,
-            run_id: GITHUB_RUN_ID,
-            attempt_number: GITHUB_RUN_ATTEMPT
+            run_id: RUN_ID,
+            attempt_number: RUN_ATTEMPT
           })
-          const job = jobs.data.jobs[jobs.data.jobs.length - 1]
+          
+          let job
+          if (JOB_NAME === LATEST) {
+            job = jobs.data.jobs[jobs.data.jobs.length - 1]
+          } else {
+            job = jobs.data.jobs.find(j => j.name === JOB_NAME)
+          }
+          
+          const run_url = `${SERVER_URL}/${REPOSITORY}/actions/runs/${RUN_ID}/attempts/${RUN_ATTEMPT}`
           
           core.exportVariable('GITHUB_RUN_URL', run_url)
           core.exportVariable('GITHUB_JOB_URL', job.html_url)
