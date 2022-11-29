@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: galargh/.github/.github/actions/action@master
-      - run: echo ${{ fromJSON(env) }}
+      - run: echo ${{ toJSON(env) }}
