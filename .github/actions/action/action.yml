@@ -25,7 +25,7 @@ inputs:
   job:
     description: 'A unique string for the workflow run job. Or `latest`. Defaults to `latest`.'
     required: true
-    default: 'latest'
+    default: ${{ github.job }}
 
 runs:
   using: "composite"
@@ -37,11 +37,11 @@ runs:
         WORKFLOW: ${{ inputs.workflow }}
         RUN_ID: ${{ inputs.run_id }}
         RUN_ATTEMPT: ${{ inputs.run_attempt }}
-        JOB_NAME: ${{ inputs.job_name }}
+        JOB: ${{ inputs.job }}
       with:
         script: |
           const LATEST = 'latest'
-          let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB_NAME} = process.env
+          let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB} = process.env
           
           const owner = REPOSITORY.split('/')[0]
           const repo = REPOSITORY.split('/')[1]
@@ -73,17 +73,14 @@ runs:
             run_id: RUN_ID,
             attempt_number: RUN_ATTEMPT
           })
-          console.log(jobs.data.jobs)
-          console.log(JOB_NAME)
-          console.log(LATEST)
           
           let job
-          if (JOB_NAME === LATEST) {
+          if (JOB === LATEST) {
             console.log('picking latest')
             job = jobs.data.jobs[jobs.data.jobs.length - 1]
           } else {
             console.log('looking for job name')
-            job = jobs.data.jobs.find(j => j.name === JOB_NAME)
+            job = jobs.data.jobs.find(j => j.name === JOB)
           }
           
           const run_url = `${SERVER_URL}/${REPOSITORY}/actions/runs/${RUN_ID}/attempts/${RUN_ATTEMPT}`
