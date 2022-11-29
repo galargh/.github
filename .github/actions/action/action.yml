@@ -5,7 +5,6 @@ inputs:
   repository:
     description: 'The owner and repository name. Defaults to `env.GITHUB_REPOSITORY`.'
     required: false
-    default: ${{ env.GITHUB_REPOSITORY }}
   server_url:
     description: 'The URL of the GitHub server. Defaults to `env.GITHUB_SERVER_URL`.'
     required: false
@@ -37,6 +36,7 @@ runs:
         script: |
           console.log(process.env.GITHUB_WORKFLOW)
           console.log(process.env.GITHUB_JOB)
+          console.log(process.env)
         
           const LATEST = 'latest'
           let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB_NAME} = process.env
