@@ -58,15 +58,14 @@ runs:
             RUN_ATTEMPT = run.attempt
           }
           
-          // if (RUN_ATTEMPT === LATEST) {
+          if (RUN_ATTEMPT === LATEST) {
             const run = await github.rest.actions.getWorkflowRun({
               owner,
               repo,
               run_id: RUN_ID,
             })
-            console.log(run)
-          //  RUN_ATTEMPT = run.data.run_attempt
-          // }
+            RUN_ATTEMPT = run.data.run_attempt
+          }
          
           const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
             owner,
