@@ -25,14 +25,14 @@ runs:
   using: "composite"
   steps:
     - uses: actions/github-script@v6
+      env:
+        REPOSITORY: ${{ inputs.repository || env.GITHUB_REPOSITORY }}
+        SERVER_URL: ${{ inputs.server_url || env.GITHUB_SERVER_URL }}
+        WORKFLOW: ${{ inputs.workflow || env.GITHUB_WORKFLOW }}
+        RUN_ID: ${{ inputs.run_id || env.GITHUB_RUN_ID }}
+        RUN_ATTEMPT: ${{ inputs.run_attempt || env.GITHUB_RUN_ATTEMPT }}
+        JOB_NAME: ${{ inputs.job_name || 'latest' }}
       with:
-        env:
-          REPOSITORY: ${{ inputs.repository || env.GITHUB_REPOSITORY }}
-          SERVER_URL: ${{ inputs.server_url || env.GITHUB_SERVER_URL }}
-          WORKFLOW: ${{ inputs.workflow || env.GITHUB_WORKFLOW }}
-          RUN_ID: ${{ inputs.run_id || env.GITHUB_RUN_ID }}
-          RUN_ATTEMPT: ${{ inputs.run_attempt || env.GITHUB_RUN_ATTEMPT }}
-          JOB_NAME: ${{ inputs.job_name || 'latest' }}
         script: |
           console.log(process.env.GITHUB_WORKFLOW)
           console.log(process.env.GITHUB_JOB)
