@@ -8,7 +8,7 @@ runs:
         script: |
           const owner = process.env.GITHUB_REPOSITORY.split('/')[0]
           const repo = process.env.GITHUB_REPOSITORY.split('/')[1]
-          const run = github.rest.actions.getWorkflowRun({
+          const run = await github.rest.actions.getWorkflowRun({
             owner,
             repo,
             run_id: process.env.GITHUB_RUN_ID
