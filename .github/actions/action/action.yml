@@ -73,12 +73,16 @@ runs:
             run_id: RUN_ID,
             attempt_number: RUN_ATTEMPT
           })
-          console.log(jobs)
+          console.log(jobs.data.jobs)
+          console.log(JOB_NAME)
+          console.log(LATEST)
           
           let job
           if (JOB_NAME === LATEST) {
+            console.log('picking latest')
             job = jobs.data.jobs[jobs.data.jobs.length - 1]
           } else {
+            console.log('looking for job name')
             job = jobs.data.jobs.find(j => j.name === JOB_NAME)
           }
           
