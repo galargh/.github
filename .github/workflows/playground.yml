@@ -10,3 +10,4 @@ jobs:
     steps:
       - uses: galargh/.github/.github/actions/action@master
       - run: echo ${{ toJSON(toJSON(env)) }}
+      - run: echo '### Hello world! :rocket:' >> $GITHUB_STEP_SUMMARY
