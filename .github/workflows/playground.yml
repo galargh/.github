@@ -8,5 +8,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/action@master
+      - uses: galargh/.github/.github/actions/action@master
       - run: echo ${{ fromJSON(env) }}
