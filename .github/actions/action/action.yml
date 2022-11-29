@@ -3,10 +3,6 @@ description: Perform action
 runs:
   using: "composite"
   steps:
-    - id: go
-      env:
-        GITHUB_TOKEN: ${github.token}
-      run: |
-        echo "${GITHUB_TOKEN}"
-        pwd
+    - run: |
+        echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
       shell: bash
