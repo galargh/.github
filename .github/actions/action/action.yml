@@ -3,26 +3,22 @@ description: Perform action
 runs:
   using: "composite"
   steps:
-    - run: echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
     - uses: actions/github-script@v6
       with:
         script: |
-          const owner = process.env.GITHUB_REPOSITORY.split('/')[0]
-          const repo = process.env.GITHUB_REPOSITORY.split('/')[1]
-          const run = await github.rest.actions.getWorkflowRunAttempt({
-            owner,
-            repo,
-            run_id: process.env.GITHUB_RUN_ID,
-            attempt_number: process.env.GITHUB_RUN_ATTEMPT
-          })
+          cosnt {GITHUB_REPOSITORY, GITHUB_SERVER_URL, GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT} = process.env
+          const owner = GITHUB_REPOSITORY.split('/')[0]
+          const repo = GITHUB_REPOSITORY.split('/')[1]
+          const run_url = `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}`
           const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
             owner,
             repo,
-            run_id: process.env.GITHUB_RUN_ID,
-            attempt_number: process.env.GITHUB_RUN_ATTEMPT
+            run_id: GITHUB_RUN_ID,
+            attempt_number: GITHUB_RUN_ATTEMPT
           })
           const job = jobs.data.jobs[jobs.data.jobs.length - 1]
           
+          core.exportVariable('GITHUB_RUN_URL', run_url)
           core.exportVariable('GITHUB_JOB_URL', job.html_url)
-          core.exportVariable('GITHUB_JOB_SUMMARY_URL', `${process.env.GITHUB_RUN_URL}#summary-${job.id}`)
+          core.exportVariable('GITHUB_JOB_SUMMARY_URL', `${run_url}#summary-${job.id}`)
           core.exportVariable('GITHUB_JOB_SUMMARY_RAW_URL', `${job.html_url}/summary_raw`)
