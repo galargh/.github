@@ -3,6 +3,17 @@ description: Perform action
 runs:
   using: "composite"
   steps:
+    - uses: actions/github-script@v6
+      with:
+        script: |
+          const owner = process.env.GITHUB_REPOSITORY.split('/')[0]
+          const repo = process.env.GITHUB_REPOSITORY.split('/')[1]
+          const run = github.rest.actions.getWorkflowRun({
+            owner,
+            repo,
+            run_id: process.env.GITHUB_RUN_ID
+          })
+          console.log(run)
     - run: |
         echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
       shell: bash
