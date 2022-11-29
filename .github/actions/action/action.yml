@@ -3,9 +3,7 @@ description: Perform action
 runs:
   using: "composite"
   steps:
-    - run: |
-        echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
-      shell: bash
+    - run: echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
     - uses: actions/github-script@v6
       with:
         script: |
