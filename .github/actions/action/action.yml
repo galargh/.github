@@ -6,7 +6,7 @@ runs:
     - uses: actions/github-script@v6
       with:
         script: |
-          cosnt {GITHUB_REPOSITORY, GITHUB_SERVER_URL, GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT} = process.env
+          const {GITHUB_REPOSITORY, GITHUB_SERVER_URL, GITHUB_RUN_ID, GITHUB_RUN_ATTEMPT} = process.env
           const owner = GITHUB_REPOSITORY.split('/')[0]
           const repo = GITHUB_REPOSITORY.split('/')[1]
           const run_url = `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}`
