@@ -46,24 +46,26 @@ runs:
           const owner = REPOSITORY.split('/')[0]
           const repo = REPOSITORY.split('/')[1]
           
-          // if (RUN_ID === LATEST) {
+          if (RUN_ID === LATEST) {
             const runs = await github.rest.actions.listWorkflowRuns({
               owner,
               repo,
               workflow_id: WORKFLOW,
+              per_page: 1
             });
-            console.log(runs)
-            // RUN_ID = runs.data.runs[0].id
-          // }
+            const run = runs.data.workflow_runs[0].id
+            RUN_ID = run.id
+            RUN_ATTEMPT = run.attempt
+          }
           
           // if (RUN_ATTEMPT === LATEST) {
             const run = await github.rest.actions.getWorkflowRun({
               owner,
               repo,
-              workflow_id,
+              run_id: RUN_ID,
             })
             console.log(run)
-          //  RUN_ATTEMPT = run.data.attempt
+          //  RUN_ATTEMPT = run.data.run_attempt
           // }
          
           const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
