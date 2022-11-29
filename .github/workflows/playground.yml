@@ -8,4 +8,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: gh release download --repo ipfs/kubo v0.17.0-RC1
+      - uses: ./.github/actions/action@master
+      - run: echo ${{ fromJSON(env) }}
