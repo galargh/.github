@@ -21,6 +21,7 @@ runs:
             run_id: process.env.GITHUB_RUN_ID,
             attempt_number: process.env.GITHUB_RUN_ATTEMPT
           })
+          console.log(jobs)
     - run: |
         echo "GITHUB_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}" >> $GITHUB_ENV
       shell: bash
