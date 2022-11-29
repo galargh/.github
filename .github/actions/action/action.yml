@@ -3,67 +3,68 @@ description: Perform action
 
 inputs:
   repository:
-    description: 'The owner and repository name. Defaults to `env.GITHUB_REPOSITORY`.'
-    required: false
+    description: 'The owner and repository name. Defaults to `GITHUB_REPOSITORY`.'
+    required: true
     default: ${{ github.repository }}
   server_url:
-    description: 'The URL of the GitHub server. Defaults to `env.GITHUB_SERVER_URL`.'
-    required: false
+    description: 'The URL of the GitHub server. Defaults to `GITHUB_SERVER_URL`.'
+    required: true
+    default: ${{ github.server_url }}
   workflow:
-    description: 'The name or the id of the workflow. Defaults to `env.GITHUB_WORKFLOW`.'
-    required: false
+    description: 'The name or the id of the workflow. Defaults to `GITHUB_WORKFLOW`.'
+    required: true
+    default: ${{ github.workflow }}
   run_id:
-    description: 'The id of the workflow run. Or `latest`. Defaults to `env.GITHUB_RUN_ID`.'
-    required: false
+    description: 'The id of the workflow run. Or `latest`. Defaults to `GITHUB_RUN_ID`.'
+    required: true
+    default: ${{ github.run_id }}
   run_attempt:
-    description: 'The number of the attempt of the workflow run. Or `latest`. Defaults to `env.GITHUB_RUN_ATTEMPT`.'
-    required: false
+    description: 'The number of the attempt of the workflow run. Or `latest`. Defaults to `GITHUB_RUN_ATTEMPT`.'
+    required: true
+    default: ${{ github.run_attempt }}
   job:
     description: 'A unique string for the workflow run job. Or `latest`. Defaults to `latest`.'
-    required: false
+    required: true
+    default: 'latest'
 
 runs:
   using: "composite"
   steps:
     - uses: actions/github-script@v6
       env:
-        REPOSITORY: ${{ inputs.repository || env.GITHUB_REPOSITORY }}
-        SERVER_URL: ${{ inputs.server_url || env.GITHUB_SERVER_URL }}
-        WORKFLOW: ${{ inputs.workflow || env.GITHUB_WORKFLOW }}
-        RUN_ID: ${{ inputs.run_id || env.GITHUB_RUN_ID }}
-        RUN_ATTEMPT: ${{ inputs.run_attempt || env.GITHUB_RUN_ATTEMPT }}
-        JOB_NAME: ${{ inputs.job_name || 'latest' }}
+        REPOSITORY: ${{ inputs.repository }}
+        SERVER_URL: ${{ inputs.server_url }}
+        WORKFLOW: ${{ inputs.workflow }}
+        RUN_ID: ${{ inputs.run_id }}
+        RUN_ATTEMPT: ${{ inputs.run_attempt }}
+        JOB_NAME: ${{ inputs.job_name }}
       with:
         script: |
-          console.log(process.env.GITHUB_WORKFLOW)
-          console.log(process.env.GITHUB_JOB)
-          console.log(process.env)
-        
           const LATEST = 'latest'
           let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB_NAME} = process.env
           
           const owner = REPOSITORY.split('/')[0]
           const repo = REPOSITORY.split('/')[1]
           
-          if (RUN_ID === LATEST) {
+          // if (RUN_ID === LATEST) {
             const runs = await octokit.rest.actions.listWorkflowRuns({
               owner,
               repo,
               workflow_id: WORKFLOW,
             });
             console.log(runs)
-            RUN_ID = runs.data.runs[0].id
-          }
+            // RUN_ID = runs.data.runs[0].id
+          // }
           
-          if (RUN_ATTEMPT === LATEST) {
+          // if (RUN_ATTEMPT === LATEST) {
             const run = await octokit.rest.actions.getWorkflowRun({
               owner,
               repo,
               workflow_id,
             })
             console.log(run)
-            RUN_ATTEMPT = run.data.attempt
-          }
+          //  RUN_ATTEMPT = run.data.attempt
+          // }
          
           const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
             owner,
@@ -71,6 +72,7 @@ runs:
             run_id: RUN_ID,
             attempt_number: RUN_ATTEMPT
           })
+          console.log(jobs)
           
           let job
           if (JOB_NAME === LATEST) {
