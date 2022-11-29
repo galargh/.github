@@ -5,6 +5,7 @@ inputs:
   repository:
     description: 'The owner and repository name. Defaults to `env.GITHUB_REPOSITORY`.'
     required: false
+    default: ${{ github.repository }}
   server_url:
     description: 'The URL of the GitHub server. Defaults to `env.GITHUB_SERVER_URL`.'
     required: false
