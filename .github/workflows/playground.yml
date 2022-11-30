@@ -10,7 +10,6 @@ jobs:
       matrix:
         runner:
           - ubuntu-latest
-          - windows-latest
     runs-on: ubuntu-latest
     steps:
       - uses: galargh/.github/.github/actions/action@master
