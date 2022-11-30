@@ -2,7 +2,7 @@ name: Update Badge
 
 on:
   workflow_run:
-    workflows: [playground.yml]
+    workflows: [Playground]
     types: [completed]
 
 jobs:
