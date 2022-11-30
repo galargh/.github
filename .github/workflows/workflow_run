@@ -1,0 +1,12 @@
+name: Update Badge
+
+on:
+  workflow_run:
+    workflows: [playground.yml]
+    types: [completed]
+
+jobs:
+  update-badge:
+    steps:
+      - run: echo ${{ toJSON(toJSON(github.event)) }}
+        shell: bash
