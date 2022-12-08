@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          goarch=amd64-v1
-          IFS="-"; read -ar arr <<<"$goarch"
+          goarch="amd64-v1"
+          IFS="-" read -ra arr <<< "$goarch"
           export GOARCH="${arr[0]}"
           export GOAMD64="${arr[1]}"
           echo $GOARCH
