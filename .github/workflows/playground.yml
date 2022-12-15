@@ -6,14 +6,9 @@ on:
 
 jobs:
   playground:
+    timeout-minutes: 1
     runs-on: ubuntu-latest
     steps:
       - run: |
-          export goarch="amd64-v1"
-          IFS="-"; read -ar arr <<<"$goarch"
-          export GOARCH="${arr[0]}"
-          export GOAMD64="${arr[1]}"
-          echo $GOARCH
-          echo $GOAMD64
-          echo $IFS
+          sleep 120
         shell: bash
