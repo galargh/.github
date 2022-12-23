@@ -6,9 +6,8 @@ on:
 
 jobs:
   playground:
-    timeout-minutes: 1
     runs-on: ubuntu-latest
     steps:
       - run: |
-          sleep 120
+          go --version
         shell: bash
