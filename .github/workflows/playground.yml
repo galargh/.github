@@ -9,5 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          go --version
+          docker system info
         shell: bash
