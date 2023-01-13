@@ -9,5 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          docker system info
+          echo "${{ vars['RUNNER_ubuntu'] || 'ubuntu-latest' }}"
         shell: bash
