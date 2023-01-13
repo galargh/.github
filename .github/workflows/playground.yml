@@ -6,7 +6,7 @@ on:
 
 jobs:
   playground:
-    runs-on: ${{ vars['RUNNER_ubuntu'] || 'ubuntu-latest' }}
+    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu']) || 'ubuntu-latest' }}
     steps:
       - run: |
           echo "hello"
