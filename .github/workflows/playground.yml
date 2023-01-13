@@ -6,8 +6,8 @@ on:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars['RUNNER_ubuntu'] || 'ubuntu-latest' }}
     steps:
       - run: |
-          echo "${{ vars['RUNNER_ubuntu'] || 'ubuntu-latest' }}"
+          echo "hello"
         shell: bash
