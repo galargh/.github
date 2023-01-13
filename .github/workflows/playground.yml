@@ -9,5 +9,5 @@ jobs:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"???"') }}
     steps:
       - run: |
-          echo "${{ fromJSON(vars['RUNNER_ubuntu'] || '"???"') }}"
+          echo "${{ toJSON(fromJSON(vars['RUNNER_ubuntu'] || '"???"')) }}"
         shell: bash
