@@ -6,8 +6,8 @@ on:
 
 jobs:
   playground:
-    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"???"') }}
+    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
     steps:
       - run: |
-          echo "${{ toJSON(fromJSON(vars['RUNNER_ubuntu'] || '"???"')) }}"
+          echo "${{ toJSON(fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"')) }}"
         shell: bash
