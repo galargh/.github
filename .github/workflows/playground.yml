@@ -9,5 +9,7 @@ jobs:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
     steps:
       - run: |
-          echo "${{ toJSON(fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"')) }}"
+          echo "value=<<EOF" >> $GITHUB_OUTPUT
+          echo "hello" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         shell: bash
