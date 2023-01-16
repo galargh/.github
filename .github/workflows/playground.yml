@@ -7,7 +7,7 @@ on:
         default: latest
         required: true
   push:
-    paths: [.github/workflows/playground.yml]
+    paths-ignore: ['!.github/workflows/playground.yml']
 
 defaults:
   run:
