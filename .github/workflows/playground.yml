@@ -1,4 +1,5 @@
 name: Playground
+
 on:
   workflow_dispatch:
     inputs:
