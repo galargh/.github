@@ -4,6 +4,7 @@ on:
     inputs:
       test:
         description: test
+        default: latest
         required: true
   push:
     paths: [.github/workflows/playground.yml]
