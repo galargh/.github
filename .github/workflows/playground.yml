@@ -1,6 +1,10 @@
 name: Playground
 on:
   workflow_dispatch:
+    inputs:
+      test:
+        description: test
+        required: true
   push:
     paths: [.github/workflows/playground.yml]
 
