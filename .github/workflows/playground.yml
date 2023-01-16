@@ -9,6 +9,10 @@ on:
   push:
     paths: [.github/workflows/playground.yml]
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
