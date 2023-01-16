@@ -13,7 +13,7 @@ jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
     steps:
-      - run: echo "EOF=$(uuid)" >> $GITHUB_ENV
+      - run: echo "EOF=$(uuidgen)" >> $GITHUB_ENV
       - run: echo "EOF=$EOF"
       - id: step
         run: |
