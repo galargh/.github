@@ -13,8 +13,14 @@ jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
     steps:
-      - run: |
-          echo "value<<EOF" >> $GITHUB_OUTPUT
+      - run: echo "EOF=$(uuid)" >> $GITHUB_ENV
+      - run: echo "EOF=$EOF"
+      - id: step
+        run: |
+          echo "value<<$EOF" >> $GITHUB_OUTPUT
           echo "hello" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
         shell: bash
+      - run: echo "value=$VALUE"
+        env:
+          VALUE: ${{ steps.step.outputs.value }}
