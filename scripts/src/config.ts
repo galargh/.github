@@ -9,5 +9,6 @@ export const orgs = [
   'multiformats',
   'pl-strflt',
   'protocol',
-  'testground'
+  'testground',
+  'pln-planning-tools'
 ]
