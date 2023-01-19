@@ -16,7 +16,7 @@ async function addIssuesToIPDXProject(args: IArgs) {
   const projectNumber = 1
   const members = ['galargh', 'laurentsenta']
 
-  const orgQ = orgs.map(o => `org:${o}`).join(' ')
+  const orgQ = orgs.filter(o => !['pln-planning-tools'].includes(o)).map(o => `org:${o}`).join(' ')
   const involvesQs = joinQueryParts(
     members.map(m => `involves:${m}`),
     192 - orgQ.length
