@@ -27,7 +27,7 @@ async function addIssuesToIPDXProject(args: IArgs) {
   ).map(q => `${orgQ} ${q}`)
   const teamQs = joinQueryParts(
     orgs
-      .filter(o => !['filecoin-project', 'ipfs-examples'].includes(o))
+      .filter(o => !['filecoin-project', 'ipfs-examples', 'pln-planning-tools'].includes(o))
       .map(o => `team:${o}/ipdx`)
   )
   const repoQs = joinQueryParts(
