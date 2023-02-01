@@ -18,12 +18,11 @@ jobs:
           repository: protocol/.github-test-target
           ref: web3-bot/sync
       - id: config
-        env:
-          GITHUB_WORKFLOW_REF: .github/workflows/go-test
         run: |
           eof="EOF$RANDOM"
           path="${GITHUB_WORKFLOW_REF%.yml@*}"
           path="./${path#*/*/}-config.json"
+          path="./.github/workflows/go-test-config.json"
           printf "json<<$eof\n%s\n$eof" "$(cat "$path" || echo '{}')" >> $GITHUB_OUTPUT
         shell: bash
       - env:
