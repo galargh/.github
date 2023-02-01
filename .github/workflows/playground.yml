@@ -13,4 +13,20 @@ jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"ubuntu-latest"') }}
     steps:
-      - run: echo "${{ contains(fromJSON('{"skipOSes":["ubuntu"]}').skipOSes, 'ubuntu') }}"
+      - uses: actions/checkout@v3
+        with:
+          repository: protocol/.github-test-target
+          ref: web3-bot/sync
+      - id: config
+        env:
+          GITHUB_WORKFLOW_REF: .github/workflows/go-test
+        run: |
+          eof="EOF$RANDOM"
+          path="${GITHUB_WORKFLOW_REF%.yml@*}"
+          path="./${path#*/*/}-config.json"
+          printf "json<<$eof\n%s\n$eof" "$(cat "$path" || echo '{}')" >> $GITHUB_OUTPUT
+        shell: bash
+      - env:
+          CONFIG: ${{ steps.config.outputs.json }}
+        run: echo "$CONFIG"
+        shell: bash
