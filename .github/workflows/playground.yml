@@ -13,4 +13,4 @@ jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"ubuntu-latest"') }}
     steps:
-      - run: echo "${{ contains(fromJSON('{}').skipOSes, 'ubuntu') }}"
+      - run: echo "${{ contains(fromJSON('{"skipOSes":["ubuntu"]}').skipOSes, 'ubuntu') }}"
