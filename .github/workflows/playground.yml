@@ -2,13 +2,8 @@ name: Playground
 
 on:
   workflow_dispatch:
-    inputs:
-      test:
-        description: test
-        default: latest
-        required: true
   push:
-    paths-ignore: ['!.github/workflows/playground.yml']
+    paths: ['.github/workflows/playground.yml']
 
 defaults:
   run:
@@ -16,16 +11,6 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"windows-latest"') }}
+    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"ubuntu-latest"') }}
     steps:
-      - run: echo "EOF=$RANDOM" >> $GITHUB_ENV
-      - run: echo "EOF=$EOF"
-      - id: step
-        run: |
-          echo "value<<$EOF" >> $GITHUB_OUTPUT
-          echo "hello" >> $GITHUB_OUTPUT
-          echo "$EOF" >> $GITHUB_OUTPUT
-        shell: bash
-      - run: echo "value=$VALUE"
-        env:
-          VALUE: ${{ steps.step.outputs.value }}
+      - run: echo "${{ contains(fromJSON('{}').skipOSes, 'ubuntu') }}"
