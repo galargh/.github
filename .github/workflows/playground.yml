@@ -13,19 +13,5 @@ jobs:
   playground:
     runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"ubuntu-latest"') }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: protocol/.github-test-target
-          ref: web3-bot/sync
-      - id: config
-        run: |
-          eof="EOF$RANDOM"
-          path="${GITHUB_WORKFLOW_REF%.yml@*}"
-          path="./${path#*/*/}-config.json"
-          path="./.github/workflows/go-test-config.json"
-          printf "json<<$eof\n%s\n$eof" "$(cat "$path" || echo '{}')" >> $GITHUB_OUTPUT
-        shell: bash
-      - env:
-          CONFIG: ${{ steps.config.outputs.json }}
-        run: echo "$CONFIG"
-        shell: bash
+      - run: echo ${{ vars.abc }}
+      - run: echo ${{ vars.ABC }}
