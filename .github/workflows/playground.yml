@@ -13,6 +13,6 @@ jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: pg_ctl -D "$PGDATA" -l "$PGDATA/server.log" start
-        env:
-          PGDATA: /usr/local/share/postgresql@14
+      - run: |
+          initdb -D "/usr/local/var/postgres"
+          pg_ctl -D "/usr/local/var/postgres" -l "/usr/local/var/postgres/server.log" start
