@@ -11,7 +11,6 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ${{ fromJSON(vars['RUNNER_ubuntu'] || '"ubuntu-latest"') }}
+    runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ vars.abc }}
-      - run: echo ${{ vars.ABC }}
+      - run: pg_config
