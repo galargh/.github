@@ -15,4 +15,4 @@ jobs:
     steps:
       - run: pg_ctl -D "$PGDATA" -l "$PGDATA/server.log" start
         env:
-          PG_DATA: /usr/local/share/postgresql@14
+          PGDATA: /usr/local/share/postgresql@14
