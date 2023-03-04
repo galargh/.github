@@ -4,12 +4,15 @@ description: Perform action
 inputs:
   repository:
     description: 'Repository'
+    default: ${{ github.repository }}
+  action_repository:
+    description: 'Action Repository'
     default: ${{ github.action_repository }}
 
 runs:
   using: "composite"
   steps:
-    - run: |
-        echo "$INPUT_REPOSITORY"
-        echo "$PWD"
+    - run: echo "$PWD"
+      shell: bash
+    - run: env
       shell: bash
