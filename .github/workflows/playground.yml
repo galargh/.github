@@ -14,5 +14,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          env
-      - run: cat $GITHUB_ENV
+          env | grep -e ^GITHUB
+        shell: bash
