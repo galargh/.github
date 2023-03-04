@@ -14,5 +14,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          env | grep -E '^(ACTIONS|GITHUB|INPUT|RUNNER)'
+          env | grep -E '^(ACTIONS|GITHUB|HOME|INPUT|RUNNER)'
         shell: bash
