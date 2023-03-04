@@ -13,6 +13,5 @@ jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: |
-          env | grep -E '^(ACTIONS|GITHUB|HOME|INPUT|RUNNER)'
-        shell: bash
+      - uses: galargh/.github/.github/actions/action@master
+      
