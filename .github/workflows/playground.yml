@@ -14,4 +14,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: galargh/.github/.github/actions/action@master
+      - uses: galargh/.github/.github/actions/action2@master
       
