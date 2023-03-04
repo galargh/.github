@@ -15,3 +15,4 @@ jobs:
     steps:
       - run: |
           env
+      - run: cat $GITHUB_ENV
