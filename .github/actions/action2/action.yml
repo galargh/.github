@@ -1,0 +1,8 @@
+name: action
+description: Perform action
+
+runs:
+  using: "composite"
+  steps:
+    - uses: galargh/.github/.github/actions/action@master
+      shell: bash
