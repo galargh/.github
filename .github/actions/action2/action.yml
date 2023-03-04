@@ -4,4 +4,4 @@ description: Perform action
 runs:
   using: "composite"
   steps:
-    - uses: galargh/.github/.github/actions/action@master
+    - uses: galorgh/.github/.github/actions/action@master
