@@ -11,5 +11,5 @@ runs:
   steps:
     - run: |
         echo "$INPUT_REPOSITORY"
-        echo "PWD"
+        echo "$PWD"
       shell: bash
