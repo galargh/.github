@@ -3,92 +3,13 @@ description: Perform action
 
 inputs:
   repository:
-    description: 'The owner and repository name. Defaults to `GITHUB_REPOSITORY`.'
-    required: true
-    default: ${{ github.repository }}
-  server_url:
-    description: 'The URL of the GitHub server. Defaults to `GITHUB_SERVER_URL`.'
-    required: true
-    default: ${{ github.server_url }}
-  workflow:
-    description: 'The name or the id of the workflow. Defaults to `GITHUB_WORKFLOW`.'
-    required: true
-    default: ${{ github.workflow }}
-  run_id:
-    description: 'The id of the workflow run. Or `latest`. Defaults to `GITHUB_RUN_ID`.'
-    required: true
-    default: ${{ github.run_id }}
-  run_attempt:
-    description: 'The number of the attempt of the workflow run. Or `latest`. Defaults to `GITHUB_RUN_ATTEMPT`.'
-    required: true
-    default: ${{ github.run_attempt }}
-  job:
-    description: 'A unique string for the workflow run job. Or `latest`. Defaults to `latest`.'
-    required: true
-    default: ${{ github.job }}
+    description: 'Repository'
+    default: ${{ github.action_repository }}
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/github-script@v6
-      env:
-        REPOSITORY: ${{ inputs.repository }}
-        SERVER_URL: ${{ inputs.server_url }}
-        WORKFLOW: ${{ inputs.workflow }}
-        RUN_ID: ${{ inputs.run_id }}
-        RUN_ATTEMPT: ${{ inputs.run_attempt }}
-        JOB: ${{ inputs.job }}
-      with:
-        script: |
-          console.log(process.env)
-          const LATEST = 'latest'
-          let {REPOSITORY, SERVER_URL, WORKFLOW, RUN_ID, RUN_ATTEMPT, JOB} = process.env
-          
-          const owner = REPOSITORY.split('/')[0]
-          const repo = REPOSITORY.split('/')[1]
-          
-          if (RUN_ID === LATEST) {
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner,
-              repo,
-              workflow_id: WORKFLOW,
-              per_page: 1
-            });
-            const run = runs.data.workflow_runs[0].id
-            RUN_ID = run.id
-            RUN_ATTEMPT = run.attempt
-          }
-          
-          if (RUN_ATTEMPT === LATEST) {
-            const run = await github.rest.actions.getWorkflowRun({
-              owner,
-              repo,
-              run_id: RUN_ID,
-            })
-            RUN_ATTEMPT = run.data.run_attempt
-          }
-         
-          const jobs = await github.rest.actions.listJobsForWorkflowRunAttempt({
-            owner,
-            repo,
-            run_id: RUN_ID,
-            attempt_number: RUN_ATTEMPT
-          })
-          
-          console.log(jobs.data.jobs[0])
-          
-          let job
-          if (JOB === LATEST) {
-            console.log('picking latest')
-            job = jobs.data.jobs[jobs.data.jobs.length - 1]
-          } else {
-            console.log('looking for job name')
-            job = jobs.data.jobs.find(j => j.name === JOB)
-          }
-          
-          const run_url = `${SERVER_URL}/${REPOSITORY}/actions/runs/${RUN_ID}/attempts/${RUN_ATTEMPT}`
-          
-          core.exportVariable('GITHUB_RUN_URL', run_url)
-          core.exportVariable('GITHUB_JOB_URL', job.html_url)
-          core.exportVariable('GITHUB_JOB_SUMMARY_URL', `${run_url}#summary-${job.id}`)
-          core.exportVariable('GITHUB_JOB_SUMMARY_RAW_URL', `${job.html_url}/summary_raw`)
+    - run: |
+        echo "$INPUT_REPOSITORY"
+        echo "PWD"
+      shell: bash
