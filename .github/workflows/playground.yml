@@ -11,8 +11,9 @@ defaults:
 
 jobs:
   playground:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: galargh/.github/.github/actions/action@master
-      - uses: galargh/.github/.github/actions/action2@master
+      - uses: actions/github-script@master
+        with:
+          script: console.log('lehhlo')
       
