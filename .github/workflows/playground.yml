@@ -13,4 +13,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - run: echo '${{ fromJSON(github) }}'
+    - run: echo '${{ toJSON(github) }}'
