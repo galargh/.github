@@ -12,7 +12,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo "$PWD"
+    - run: |
+        ls
+        ls .git
+        cat .git/*
       shell: bash
-    - run: env
-      shell: bash
+      working-directory: ${{ github.action_path }}
