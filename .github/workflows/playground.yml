@@ -13,6 +13,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - uses: pl-strflt/junit-xml-to-html@v1
       with:
         mode: ''
