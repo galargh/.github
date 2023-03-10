@@ -13,8 +13,6 @@ runs:
   using: "composite"
   steps:
     - run: |
-        ls
-        ls .git
-        cat .git/*
+        pwd
       shell: bash
       working-directory: ${{ github.action_path }}
