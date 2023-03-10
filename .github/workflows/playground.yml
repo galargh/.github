@@ -1,4 +1,4 @@
-name: Playground
+name: Playground 1
 
 on:
   workflow_dispatch:
