@@ -14,4 +14,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: galargh/.github/.github/actions/action@master
+    - uses: pl-strflt/junit-xml-to-html@release-v1.0.5
