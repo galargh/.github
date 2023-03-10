@@ -13,4 +13,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - uses: pl-strflt/junit-xml-to-html@galargh-patch-1
+    - uses: pl-strflt/junit-xml-to-html@ref
