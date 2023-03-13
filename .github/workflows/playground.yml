@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths: ['.github/workflows/playground.yml']
+    tags:
+      - '*'
 
 defaults:
   run:
@@ -13,5 +15,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: pl-strflt/junit-xml-to-html@release-v1.0.5
+    - run: echo '${{ toJSON(github) }}'
