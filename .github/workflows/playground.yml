@@ -17,8 +17,10 @@ jobs:
     - id: run
       uses: pl-strflt/rich-workflow-run@v1
       with:
-        jobs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/jobs
+        jobs-url: ''
         logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
         artifacts-url: '' 
         # https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
-    - run: echo '${{ toJSON(steps.run.outputs) }}'
+    - env:
+        LOGS: ${{ fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message }}
+      run: grep 'tag:' <<< "$LOGS"
