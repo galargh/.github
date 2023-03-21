@@ -19,9 +19,14 @@ jobs:
       with:
         jobs-url: ''
         logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
-        artifacts-url: '' 
-        # https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
-    - env:
+        artifacts-url: ''
+    - id: release
+      env:
         MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) }}
       run: |
-        jq 'map(select(contains("tag_name:"))) | .[0] | sub("\\s*tag_name:\\s*";"")' <<< "$MESSAGES"
+        echo "draft=$(jq 'map(select(contains("draft:"))) | .[0] | sub("\\s*draft:\\s*";"")' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
+        echo "tag_name=$(jq 'map(select(contains("tag_name:"))) | .[0] | sub("\\s*tag_name:\\s*";"")' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
+    - env:
+        DRAFT: ${{ steps.release.outputs.draft }}
+        TAG_NAME: ${{ steps.release.outputs.tag_name }}
+      run: echo Hello
