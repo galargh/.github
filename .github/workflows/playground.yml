@@ -19,5 +19,6 @@ jobs:
       with:
         jobs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/jobs
         logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
-        artifacts-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
+        artifacts-url: '' 
+        # https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
     - run: echo '${{ fromJSON(steps.run.outputs) }}'
