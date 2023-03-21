@@ -14,13 +14,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - run: echo 10 > ten.txt
-    - run: echo "This is eleven" > eleven.txt
-    - uses: actions/upload-artifact@v3
+    - id: run
+      uses: pl-strflt/rich-workflow-run@v1
       with:
-        name: ten
-        path: ten.txt
-    - uses: actions/upload-artifact@v3
-      with:
-        name: eleven
-        path: eleven.txt
+        jobs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/jobs
+        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
+        artifacts-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
+    - run: echo '${{ fromJSON(steps.run.outputs) }}'
