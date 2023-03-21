@@ -61,6 +61,9 @@ runs:
         gh api "$LOGS_URL" > "$zip"
         unzip "$zip" -d "$dir"
         while read file; do
+          if [[ -z "$file" ]]; then
+            continue
+          fi
           key="$(jq -nr '$file | sub($dir;"") | sub("/\\d+_";"/") | sub("^/";"") | sub("\\.txt";"")' --arg dir "$dir" --arg file "$file")"
           value="$(jq -Rs 'split("\r\n") | map(select(. == "" | not)) | map(split(" ")) | map({"time": .[0], "message": .[1:] | join(" ")})' "$file")"
           logs="$(jq -n '$logs | .[$key] = $value' --arg key "$key" --argjson value "$value" --argjson logs "$logs")"
@@ -85,6 +88,9 @@ runs:
 
         artifacts="{}"
         while read name; do
+          if [[ -z "$name" ]]; then
+            continue
+          fi
           artifact="$(jq -n '$artifacts | .artifacts | map(select(.name == $name)) | .[0]' --arg name "$name" --argjson artifacts "$raw_artifacts")"
           jq -n "$artifact" --argjson artifact "$artifact"
           url="$(jq -nr '$artifact | select(.name as $name | $names | split(",") | index($name)) | .archive_download_url' --argjson artifact "$artifact" --arg names "$ARTIFACT_NAMES")"
