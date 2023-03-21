@@ -23,4 +23,5 @@ jobs:
         # https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/artifacts
     - env:
         MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) }}
-      run: jq 'map(select(contains("tag: ")))' <<< "$MESSAGES"
+      run: |
+        jq 'map(select(contains("tag: ")))' <<< "$MESSAGES"
