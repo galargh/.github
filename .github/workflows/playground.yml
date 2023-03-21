@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths: ['.github/workflows/playground.yml']
-    tags:
-      - '*'
+
 
 defaults:
   run:
@@ -15,4 +14,13 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - run: echo '${{ toJSON(github) }}'
+    - run: echo 10 > ten.txt
+    - run: echo "This is eleven" > eleven.txt
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ten
+        path: ten.txt
+    - uses: actions/upload-artifact@v3
+      with:
+        name: eleven
+        path: eleven.txt

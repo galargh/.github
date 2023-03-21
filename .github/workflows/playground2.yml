@@ -1,0 +1,23 @@
+name: Playground 2
+
+on:
+  workflow_run:
+    workflows: ["Playground"]
+    types:
+      - completed
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  playground:
+    runs-on: ubuntu-latest
+    steps:
+    - id: event
+      uses: galargh/.github/.github/actions/action@master
+      with:
+        artifact-names: ten,eleven
+    - run: echo '${{ steps.event.outputs.jobs }}'
+    - run: echo '${{ steps.event.outputs.logs }}'
+    - run: echo '${{ steps.event.outputs.artifacts }}'
