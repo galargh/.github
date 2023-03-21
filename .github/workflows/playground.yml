@@ -18,7 +18,7 @@ jobs:
       uses: pl-strflt/rich-workflow-run@v1
       with:
         jobs-url: ''
-        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
+        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4442655187/logs
         artifacts-url: ''
     - id: release
       env:
