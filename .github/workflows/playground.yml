@@ -24,4 +24,4 @@ jobs:
     - env:
         MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) }}
       run: |
-        jq 'map(select(contains("tag_name: ")))' <<< "$MESSAGES"
+        jq 'map(select(contains("tag_name:"))) | .[0] | sub("\\s*tag_name:\\s*";"")' <<< "$MESSAGES"
