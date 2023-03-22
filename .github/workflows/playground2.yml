@@ -18,6 +18,8 @@ jobs:
       uses: galargh/.github/.github/actions/action@master
       with:
         artifact-names: ten,eleven
-    - run: echo '${{ steps.event.outputs.jobs }}'
-    - run: echo '${{ steps.event.outputs.logs }}'
-    - run: echo '${{ steps.event.outputs.artifacts }}'
+    - env:
+        JOBS: ${{ steps.event.outputs.jobs }}
+        LOGS: ${{ steps.event.outputs.logs }}
+        ARTIFACTS: ${{ steps.event.outputs.artifacts }}
+      run: echo Goodbye
