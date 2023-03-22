@@ -15,8 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: event
-      uses: galargh/.github/.github/actions/action@master
+      uses: pl-strflt/rich-workflow-run@v1
       with:
+        jobs-url: ${{ github.event.workflow-run.jobs-url }}
+        logs-url: ${{ github.event.workflow-run.logs-url }}
+        artifacts-url: ${{ github.event.workflow-run.artifacts-url }}
         artifact-names: ten,eleven
     - env:
         JOBS: ${{ steps.event.outputs.jobs }}
