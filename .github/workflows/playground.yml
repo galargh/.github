@@ -17,7 +17,7 @@ jobs:
     - id: run
       uses: pl-strflt/rich-workflow-run@v1
       with:
-        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4442655187/logs
+        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
     - id: release
       env:
         MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) || '[]' }}
