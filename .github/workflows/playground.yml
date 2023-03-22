@@ -22,7 +22,7 @@ jobs:
         artifacts-url: ''
     - id: release
       env:
-        MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) }}
+        MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) || '[]' }}
       run: |
         echo "draft=$(jq -r 'map(select(contains("draft:"))) | .[0] | sub("\\s*draft:\\s*";"")' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
         echo "tag_name=$(jq -r 'map(select(contains("tag_name:"))) | .[0] | sub("\\s*tag_name:\\s*";"")' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
