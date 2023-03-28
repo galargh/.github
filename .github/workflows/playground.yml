@@ -14,17 +14,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - id: run
-      uses: pl-strflt/rich-workflow-run@v1
-      with:
-        logs-url: https://api.github.com/repos/libp2p/go-libp2p/actions/runs/4443086189/logs
-    - id: release
-      env:
-        MESSAGES: ${{ toJSON(fromJSON(steps.run.outputs.logs)['releaser  releaser/Create release'].*.message) || '[]' }}
-      run: |
-        echo "draft=$(jq -r 'map(select(contains("draft:"))) | map(sub("\\s*draft:\\s*";"")) | .[0]' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
-        echo "tag_name=$(jq -r 'map(select(contains("tag_name:"))) | map(sub("\\s*tag_name:\\s*";"")) | .[0]' <<< "$MESSAGES")" >> $GITHUB_OUTPUT
-    - env:
-        DRAFT: ${{ steps.release.outputs.draft }}
-        TAG_NAME: ${{ steps.release.outputs.tag_name }}
-      run: echo Hello
+    - uses: actions/checkout@v3
+    - run: git tag v0.0.0 && git push --tags

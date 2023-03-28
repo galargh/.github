@@ -1,10 +1,9 @@
 name: Playground 2
 
 on:
-  workflow_run:
-    workflows: ["Playground"]
-    types:
-      - completed
+  push:
+    tags:
+      - v0.0.0
 
 defaults:
   run:
@@ -14,15 +13,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - id: event
-      uses: pl-strflt/rich-workflow-run@v1
-      with:
-        jobs-url: ${{ github.event.workflow-run.jobs-url }}
-        logs-url: ${{ github.event.workflow-run.logs-url }}
-        artifacts-url: ${{ github.event.workflow-run.artifacts-url }}
-        artifact-names: ten,eleven
-    - env:
-        JOBS: ${{ steps.event.outputs.jobs }}
-        LOGS: ${{ steps.event.outputs.logs }}
-        ARTIFACTS: ${{ steps.event.outputs.artifacts }}
-      run: echo Goodbye
+    - run: echo "$GITHUB_EVENT"
+      env:
+        GITHUB_EVENT: ${{ github.event }}
