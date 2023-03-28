@@ -3,7 +3,7 @@ name: Playground 2
 on:
   push:
     tags:
-      - v0.0.0
+      - playground
 
 defaults:
   run:
