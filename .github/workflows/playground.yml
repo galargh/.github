@@ -13,5 +13,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "$(exit 1)"
+      - run: |
+          set -e
+          echo "$(exit 1)"
       
