@@ -17,5 +17,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 60
+      - run: sleep 10
       
