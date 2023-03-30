@@ -13,5 +13,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "$(test -f README.md)"
+      - run: echo "$(exit 1)"
       
