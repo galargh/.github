@@ -13,5 +13,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: a="$(exit 1)"
+      - run: protected_branches="$(gh api -X GET "/repos/$REPO/branches" -f protected=true | jq -c 'map(.name)')"
       
