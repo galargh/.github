@@ -56,7 +56,7 @@ jobs:
 
       # 4. Populate the Kubo gateway with the gateway-conformance fixtures
       - name: Import fixtures
-        run: find ./fixtures -name '*.car' -exec kubo-gateway/cmd/ipfs dag import --pin-roots=false {} \;
+        run: find ./fixtures -name '*.car' -exec kubo-gateway/cmd/ipfs/ipfs dag import --pin-roots=false {} \;
 
       # 5. Run the gateway-conformance tests
       - name: Run gateway-conformance tests
