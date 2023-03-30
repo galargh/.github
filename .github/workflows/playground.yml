@@ -5,10 +5,6 @@ on:
   push:
     paths: ['.github/workflows/playground.yml']
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'push' && github.sha || github.ref }}
-  cancel-in-progress: true
-  
 defaults:
   run:
     shell: bash
@@ -17,5 +13,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 10
+      - run: echo "$(test -f README.md)"
       
