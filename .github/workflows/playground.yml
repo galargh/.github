@@ -17,5 +17,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'push' && github.sha || github.ref }}'
+      - run: sleep 60
       
