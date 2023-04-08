@@ -13,5 +13,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: sysctl -a
+      - run: ip a
+      - run: sudo iptables -L -v -n
       
