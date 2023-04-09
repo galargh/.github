@@ -11,9 +11,8 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest      
     steps:
-      - run: ip a
-      - run: sudo iptables -L -v -n
-      - run: ethtool -g eth0
+      - run: echo "$ACTIONS_CACHE_URL"
+      - run: echo "$ACTIONS_RUNTIME_TOKEN"
       
