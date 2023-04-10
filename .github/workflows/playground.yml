@@ -13,6 +13,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest      
     steps:
-      - run: echo "$ACTIONS_CACHE_URL"
-      - run: echo "$ACTIONS_RUNTIME_TOKEN"
+      - env:
+          GOPROXY: direct
+        run: go get github.com/libp2p/go-libp2p-kad-dht@v0.20.1-0.20230209220319-6c2045abad23
       
