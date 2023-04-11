@@ -11,7 +11,7 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ${{ fromJSON(true && '"ubuntu-latest"' || '"ubuntu-latest"') }}
+    runs-on: ${{ fromJSON(github.repository == 'ipfs/kubo' && '["ubuntu-latest"]' || '"ubuntu-latest"') }}
     steps:
       - run: go mod init example.com/m
       - run: go get github.com/libp2p/go-libp2p-kad-dht@v0.20.1-0.20230209220319-6c2045abad23
