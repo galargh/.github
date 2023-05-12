@@ -19,15 +19,15 @@ jobs:
       JSON4: '{"shuffle": "true"}'
       JSON5: '{"shuffle": "abc"}'
     steps:
-      - if: fromJSON('{}').shuffle == '' || fromJSON('{}').shuffle != false
+      - if: fromJSON('{}').shuffle == '' || fromJSON('{}').shuffle
         run: echo true
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON).shuffle != 'false'
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON).shuffle
         run: echo '${{fromJSON(env.JSON).shuffle}}'
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON2).shuffle != false
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON2).shuffle
         run: echo true
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON3).shuffle != false
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON3).shuffle
         run: echo true
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON4).shuffle != false
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON4).shuffle
         run: echo true
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON5).shuffle != false
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON5).shuffle
         run: echo true
