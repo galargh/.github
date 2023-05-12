@@ -13,4 +13,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: ls /opt
+      - if: fromJSON('{}').shuffle != false
+        run: echo 123
+      - if: fromJSON('{"shuffle": false}').shuffle != false
+        run: echo 456
