@@ -15,7 +15,7 @@ jobs:
     env:
       JSON: '{"shuffle": false}'
     steps:
-      - if: fromJSON('{}').shuffle != false
+      - if: fromJSON('{}').shuffle == ''
         run: echo 123
-      - if: fromJSON(env.JSON).shuffle != false
+      - if: fromJSON(env.JSON).shuffle != ''
         run: echo 456
