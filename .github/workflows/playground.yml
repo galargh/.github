@@ -22,7 +22,7 @@ jobs:
       - if: fromJSON('{}').shuffle == '' || fromJSON('{}').shuffle != false
         run: echo true
       - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON).shuffle != false
-        run: echo false
+        run: echo '${{fromJSON(env.JSON).shuffle}}'
       - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON2).shuffle != false
         run: echo true
       - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON3).shuffle != false
