@@ -21,7 +21,7 @@ jobs:
     steps:
       - if: fromJSON('{}').shuffle == '' || fromJSON('{}').shuffle != false
         run: echo true
-      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON).shuffle != false
+      - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON).shuffle != 'false'
         run: echo '${{fromJSON(env.JSON).shuffle}}'
       - if: fromJSON(env.JSON).shuffle == '' || fromJSON(env.JSON2).shuffle != false
         run: echo true
