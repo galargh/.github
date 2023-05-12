@@ -12,8 +12,10 @@ defaults:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    env:
+      JSON: '{"shuffle": false}'
     steps:
       - if: fromJSON('{}').shuffle != false
         run: echo 123
-      - if: fromJSON('{"shuffle": false}').shuffle != false
+      - if: fromJSON(env.JSON).shuffle != false
         run: echo 456
