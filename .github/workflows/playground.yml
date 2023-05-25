@@ -12,5 +12,3 @@ defaults:
 jobs:
   playground:
     uses: galargh/.github/.github/workflows/playground2.yml@master
-    with:
-      abc: ${{ vars.ABC }}
