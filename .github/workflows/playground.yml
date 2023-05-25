@@ -4,13 +4,6 @@ on:
   workflow_dispatch:
   push:
     paths: ['.github/workflows/playground.yml']
-  workflow_call:
-    inputs:
-      abc:
-        type: string
-        required: false
-        description: ABC
-        default: ${{ vars.ABC }}
 
 defaults:
   run:
@@ -18,9 +11,4 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ github.event.inputs.abc }}"
-  playground-call:
-    if: github.event_name != 'workflow_call'
-    uses: galargh/.github/.github/workflows/playground.yml@master
+    uses: galargh/.github/.github/workflows/playground2.yml@master
