@@ -7,7 +7,6 @@ on:
         type: string
         required: false
         description: ABC
-        default: ${{ vars.ABC }}
 
 defaults:
   run:
@@ -19,4 +18,4 @@ jobs:
     steps:
     - run: echo "$GITHUB_EVENT"
       env:
-        GITHUB_EVENT: ${{ github.event.inputs.abc }}
+        GITHUB_EVENT: ${{ inputs.abc }}
