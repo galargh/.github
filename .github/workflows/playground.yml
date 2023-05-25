@@ -13,6 +13,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     env:
-      PATH: $GITHUB_REPOSITORY/$GITHUB_RUN_ID/$GITHUB_RUN_ATTEMPT
+      PATH: ${{ github.repository }}/${{ github.run_id }}/${{ github.run_attempt }}/benchmark-results.json
     steps:
       - run: echo "$PATH"
