@@ -22,5 +22,5 @@ jobs:
     steps:
       - run: echo "${{ github.event.inputs.abc }}"
   playground-call:
-    if: github.event_type != 'workflow_call'
+    if: github.event_name != 'workflow_call'
     uses: galargh/.github/.github/workflows/playground.yml@master
