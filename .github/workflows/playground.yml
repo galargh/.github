@@ -13,21 +13,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     env:
-      JSON: '{"shuffle": false}'
-      JSON2: '{"shuffle": "false"}'
-      JSON3: '{"shuffle": true}'
-      JSON4: '{"shuffle": "true"}'
-      JSON5: '{"shuffle": "abc"}'
+      PATH: $GITHUB_REPOSITORY/$GITHUB_RUN_ID/$GITHUB_RUN_ATTEMPT
     steps:
-      - if: toJSON(fromJSON('{}').shuffle) != 'false'
-        run: echo true
-      - if: toJSON(fromJSON(env.JSON).shuffle) != 'false'
-        run: echo '${{fromJSON(env.JSON).shuffle}}'
-      - if: toJSON(fromJSON(env.JSON2).shuffle) != 'false'
-        run: echo true
-      - if: toJSON(fromJSON(env.JSON3).shuffle) != 'false'
-        run: echo true
-      - if: toJSON(fromJSON(env.JSON4).shuffle) != 'false'
-        run: echo true
-      - if: toJSON(fromJSON(env.JSON5).shuffle) != 'false'
-        run: echo true
+      - run: echo "$PATH"
