@@ -13,12 +13,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - id: s3
-        name: Upload results
-        env:
-          AWS_BUCKET: perf-test-bucket-3b153bba
-          AWS_BUCKET_PATH: galorgh/test-plans/5079543401/1/benchmark-results.json
-        run: |
-          touch benchmark-results.json
-          aws s3 cp benchmark-results.json s3://$AWS_BUCKET/$AWS_BUCKET_PATH --acl public-read --region us-west-2
-          echo "url=https://$AWS_BUCKET.s3.amazonaws.com/$AWS_BUCKET_PATH" >> $GITHUB_OUTPUT
+      - name: GH CLI
+        run: which gh
