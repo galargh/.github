@@ -1,21 +1,34 @@
-name: Playground 2
+name: Changelog
 
 on:
-  workflow_call:
-    inputs:
-      abc:
-        type: string
-        required: false
-        description: ABC
-
-defaults:
-  run:
-    shell: bash
-
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
 jobs:
-  playground:
+  changelog:
+    if: contains(github.event.pull_request.title, '[skip changelog]') == false &&
+        contains(github.event.pull_request.labels.*.name, 'skip/changelog') == false
     runs-on: ubuntu-latest
+    name: Changelog
     steps:
-    - run: echo "$GITHUB_EVENT"
-      env:
-        GITHUB_EVENT: ${{ inputs.abc }}
+      - id: changelog
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ENDPOINT: repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files
+          SELECTOR: '.[] | select(.filename == "CHANGELOG.md") | length'
+        run: gh api "$ENDPOINT" --jq "$SELECTOR" | xargs -I{} echo "modified={}" | tee -a $GITHUB_OUTPUT
+      - if: steps.changelog.outputs.modified == '0'
+        env:
+          MESSAGE: |
+            CHANGELOG.md was not modified in this PR. Please do one of the following:
+            - add a changelog entry
+            - add `[skip changelog]` to the PR title
+            - label the PR with `skip/changelog`
+        run: |
+          echo "::error::$MESSAGE" | tee -a $GITHUB_SUMMARY
+          exit 1
