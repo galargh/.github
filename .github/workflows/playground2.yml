@@ -30,5 +30,4 @@ jobs:
             - add a changelog entry
             - add `[skip changelog]` to the PR title
             - label the PR with `skip/changelog`
-        run: |
-          echo "::error::${MESSAGE//$'\n'/%0A}"
+        run: echo "::error::${MESSAGE//$'\n'/%0A}" && exit 1
