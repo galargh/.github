@@ -16,5 +16,5 @@ jobs:
     steps:
       - name: GH CLI
         env:
-          DESCRIPTION: ${{ github.event.pull_request.description }}
+          DESCRIPTION: ${{ github.event.pull_request.body }}
         run: which gh
