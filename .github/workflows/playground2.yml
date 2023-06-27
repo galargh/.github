@@ -30,5 +30,8 @@ jobs:
             - add `[skip changelog]` to the PR title
             - label the PR with `skip/changelog`
         run: |
-          echo "::error::$MESSAGE" | tee -a $GITHUB_SUMMARY
-          exit 1
+          EOF="EOF$RANDOM"
+          echo "::error::<<$EOF"
+          echo "$MESSAGE"
+          echo "$EOF"
+        shell: bash
