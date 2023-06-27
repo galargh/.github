@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths: ['.github/workflows/playground.yml']
+  pull_request:
 
 defaults:
   run:
@@ -14,4 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GH CLI
+        env:
+          DESCRIPTION: ${{ github.event.pull_request.description }}
         run: which gh
