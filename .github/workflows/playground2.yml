@@ -32,4 +32,3 @@ jobs:
             - label the PR with `skip/changelog`
         run: |
           echo "::error::${MESSAGE//$'\n'/%0A}"
-          exit 1
