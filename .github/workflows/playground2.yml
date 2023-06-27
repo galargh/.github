@@ -30,8 +30,5 @@ jobs:
             - add `[skip changelog]` to the PR title
             - label the PR with `skip/changelog`
         run: |
-          EOF="EOF$RANDOM"
-          echo "::error::<<$EOF"
-          echo "$MESSAGE"
-          echo "$EOF"
-        shell: bash
+          echo "$MESSAGE" | tr '\n' '%0A' | xargs -I{} echo "::error::{}"
+          exit 1
