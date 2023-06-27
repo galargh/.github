@@ -9,6 +9,7 @@ on:
       - reopened
       - labeled
       - unlabeled
+
 jobs:
   changelog:
     if: contains(github.event.pull_request.title, '[skip changelog]') == false &&
@@ -29,6 +30,4 @@ jobs:
             - add a changelog entry
             - add `[skip changelog]` to the PR title
             - label the PR with `skip/changelog`
-        run: |
-          echo "::error::$MESSAGE" | tee -a $GITHUB_SUMMARY
-          exit 1
+        run: echo "::error::${MESSAGE//$'\n'/%0A}" && exit 1
