@@ -14,4 +14,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GH CLI
-        run: which gh
+        run: echo "${{ fromJSON([]).length }}"
