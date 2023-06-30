@@ -9,6 +9,8 @@ on:
       - reopened
       - labeled
       - unlabeled
+    paths:
+      - '**/README.md'
 
 jobs:
   changelog:
