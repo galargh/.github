@@ -13,5 +13,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - name: GH CLI
-        run: echo "${{ fromJSON('[]').length }}"
+      - run: env
