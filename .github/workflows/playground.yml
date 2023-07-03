@@ -13,4 +13,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: docker compose --help
+      - run: docker compose build --help
