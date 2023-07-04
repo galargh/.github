@@ -23,10 +23,7 @@ jobs:
             const issues = await github.paginate(github.rest.issues.listForRepo, {owner, repo});
 
             const fs = require('fs');
-            const path = require('path');
-
-            const roadmapPath = path.join(github.workspace, 'ROADMAP.md');
-            const roadmap = fs.readFileSync(roadmapPath, 'utf8');
+            const roadmap = fs.readFileSync('ROADMAP.md', 'utf8');
 
             var title = ''
             var body = ''
