@@ -17,8 +17,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const owner = github.context.repo.owner;
-            const repo = github.context.repo.repo;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
 
             const issues = await github.paginate(github.rest.issues.listForRepo, {owner, repo});
 
