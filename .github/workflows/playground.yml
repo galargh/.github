@@ -12,5 +12,19 @@ defaults:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - a
+          - b
+    outputs:
+      a: ${{ steps.test.outputs.a }}
+      b: ${{ steps.test.outputs.b }}
     steps:
-      - run: docker compose build --help
+      - run: echo "${{ matrix.test }}=I'm from ${{ matrix.test }}" >> $GITHUB_OUTPUT
+  playground-next:
+    runs-on: ubuntu-latest
+    needs: [playground]
+    steps:
+      - run: echo "${{ needs.a }}"
+      - run: echo "${{ needs.b }}"
