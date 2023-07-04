@@ -21,7 +21,8 @@ jobs:
       a: ${{ steps.test.outputs.a }}
       b: ${{ steps.test.outputs.b }}
     steps:
-      - run: echo "${{ matrix.test }}=I'm from ${{ matrix.test }}" >> $GITHUB_OUTPUT
+      - id: test
+        run: echo "${{ matrix.test }}=I'm from ${{ matrix.test }}" >> $GITHUB_OUTPUT
   playground-next:
     runs-on: ubuntu-latest
     needs: [playground]
