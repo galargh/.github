@@ -27,4 +27,4 @@ jobs:
     runs-on: ubuntu-latest
     needs: [playground]
     steps:
-      - run: echo "${{ fromJSON(needs.playground) }}"
+      - run: echo "${{ toJSON(needs.playground) }}"
