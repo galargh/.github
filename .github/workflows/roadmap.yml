@@ -61,15 +61,14 @@ jobs:
                   labels: ['starmaps'],
                 });
               } else {
-                issue = await github.rest.issues.create({
+                issue = (await github.rest.issues.create({
                   owner,
                   repo,
                   title,
                   body: `---\n\n${body}`,
                   labels: ['starmaps'],
-                });
+                })).data;
               }
-              console.log(issue)
               children.push(issue.html_url);
             }
 
