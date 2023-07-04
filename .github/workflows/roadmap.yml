@@ -65,7 +65,7 @@ jobs:
                   owner,
                   repo,
                   title,
-                  body: `---\n\n${body}`,
+                  body: `<!-- The content above will **NOT** be modified by automation. -->\n\n---\n\n${body}`,
                   labels: ['starmaps'],
                 })).data;
               }
@@ -91,7 +91,7 @@ jobs:
                 owner,
                 repo,
                 title,
-                body: '---\n\n' + body,
+                body: '<!-- The content above will **NOT** be modified by automation. -->\n\n---\n\n' + body,
                 labels: ['starmaps'],
               });
             }
