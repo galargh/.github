@@ -74,7 +74,7 @@ jobs:
             title = roadmap.split('\n')[0].replace('# ', '');
             body = `description: https://github.com/${owner}/${repo}/blob/master/ROADMAP.md\n` +
               `children:\n${children.map(child => `  - ${child}`).join('\n')}\n` +
-              `---\n\n${roadmap};
+              `---\n\n${roadmap}`;
 
             var issue = issues.find(issue => issue.title === title);
             if (issue) {
