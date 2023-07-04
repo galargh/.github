@@ -4,6 +4,7 @@ on:
       - master
     paths:
       - ROADMAP.md
+      - .github/workflows/roadmap.yml
   workflow_dispatch:
 
 defaults:
@@ -33,7 +34,7 @@ jobs:
               if (line.startsWith('## ')) {
                 if (title) {
                   const link = title.toLowerCase().replace(/[\s]/g, '-').replace(/[^\w-]/g, '');
-                  body = `description: https://github.com/${owner}/${repo}/blob/master/ROADMAP.md#${link}\n` +
+                  body = `description: https://github.com/${owner}/${repo}/blob/master/ROADMAP.md#${link}\n\n` +
                     `---\n\n${body}`;
                   milestones.push({ title, body });
                 }
@@ -65,6 +66,7 @@ jobs:
                   body: `---\n\n${body}`,
                 });
               }
+              console.log(issue)
               children.push(issue.html_url);
             }
 
