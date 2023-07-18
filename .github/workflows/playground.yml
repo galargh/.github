@@ -26,7 +26,7 @@ jobs:
         with:
           platforms: linux/amd64
           load: true
-          tags: ipfs/kubo:linux/amd64
+          tags: ipfs/kubo:linux-amd64
           context: .
           push: false
           file: ./Dockerfile
@@ -36,10 +36,10 @@ jobs:
         with:
           platforms: linux/arm64
           load: true
-          tags: ipfs/kubo:linux/arm64
+          tags: ipfs/kubo:linux-arm64
           context: .
           push: false
           file: ./Dockerfile
       
-      - run: docker run --rm ipfs/kubo:linux/arm64 uname -a
-      - run: docker run --rm ipfs/kubo:linux/amd64 uname -a
+      - run: docker run --rm ipfs/kubo:linux-arm64 uname -a
+      - run: docker run --rm ipfs/kubo:linux-amd64 uname -a
