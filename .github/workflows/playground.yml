@@ -21,13 +21,25 @@ jobs:
         
       - run: echo "FROM busybox" > Dockerfile
       
-      - id: build
-        name: Build Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
-          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
+          platforms: linux/amd64
+          load: true
+          tags: ipfs/kubo:linux/amd64
           context: .
           push: false
           file: ./Dockerfile
       
-      - run: echo "${{ toJSON(steps.build.outputs) }}"
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/arm64
+          load: true
+          tags: ipfs/kubo:linux/arm64
+          context: .
+          push: false
+          file: ./Dockerfile
+      
+      - run: docker run --rm ipfs/kubo:linux/arm64 uname -a
+      - run: docker run --rm ipfs/kubo:linux/amd64 uname -a
