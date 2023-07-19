@@ -13,33 +13,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - run: echo "FROM busybox" > Dockerfile
-      
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          platforms: linux/amd64
-          load: true
-          tags: ipfs/kubo:linux-amd64
-          context: .
-          push: false
-          file: ./Dockerfile
-      
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          platforms: linux/arm64
-          load: true
-          tags: ipfs/kubo:linux-arm64
-          context: .
-          push: false
-          file: ./Dockerfile
-      
-      - run: docker run --rm ipfs/kubo:linux-arm64 uname -a
-      - run: docker run --rm ipfs/kubo:linux-amd64 uname -a
+      - run: curl ifconfig.me
