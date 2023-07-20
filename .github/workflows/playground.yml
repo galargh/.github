@@ -2,6 +2,7 @@ name: Playground
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     paths: ['.github/workflows/playground.yml']
 
@@ -11,4 +12,4 @@ defaults:
 
 jobs:
   playground:
-    uses: galargh/.github/.github/workflows/playground.yml@master
+    uses: galargh/.github/.github/workflows/playground2.yml@master
