@@ -16,3 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: echo -e "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
+      - run: echo -e "$this\n$(git tag)" | sort -V | tail -n1
+      - run: echo -e "$this\n$(git tag)" | sort -V
+      - run: echo -e "$this\n$(git tag)"
+      - run: git tag
+
+
