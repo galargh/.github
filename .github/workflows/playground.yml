@@ -12,4 +12,6 @@ defaults:
 
 jobs:
   playground:
-    uses: protocol/.github/.github/workflows/tagpush.yml@unified-ci-2.0
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
