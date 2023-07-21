@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: git fetch origin --tags
-      - run: echo -e "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
+      - id: this
+        run: echo -e "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
+      - run: echo "${{ steps.this.outputs.latest == steps.this.outputs.latest }}"
 
 
