@@ -14,4 +14,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
+      - run: echo -e "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
