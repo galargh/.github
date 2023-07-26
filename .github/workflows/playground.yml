@@ -13,11 +13,14 @@ defaults:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    env:
+      DEFAULTS_Go: |
+        {
+          "lang": "Go"
+        }
     steps:
-      - uses: actions/checkout@v3
-      - run: git fetch origin --tags
-      - id: this
-        run: echo -e "$this\n$(git tag)" | sort -V | tail -n1 | xargs -I{} echo "latest={}"
-      - run: echo "${{ steps.this.outputs.latest == steps.this.outputs.latest }}"
-
+      - env:
+          DEFAULTS: ${{ env["DEFAULTS_Go"] || '{}' }}
+          DEFAULTS2: ${{ env["DEFAULTS_Js"] || '{}' }}
+        run: echo "$DEFAULTS" "$DEFAULTS2"
 
