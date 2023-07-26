@@ -14,13 +14,13 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     env:
-      DEFAULTS_Go: |
+      DEFAULTS: |
         {
-          "lang": "Go"
+          "Go": { "lang": "Go" }
         }
     steps:
       - env:
-          DEFAULTS: ${{ env.DEFAULTS_${{ "Go" }} || '{}' }}
-          DEFAULTS2: ${{ env.DEFAULTS_${{ "Js" }} || '{}' }}
+          DEFAULTS: ${{ fromJSON(env.DEFAULTS)["Go"] || '{}' }}
+          DEFAULTS2: ${{ fromJSON(env.DEFAULTS)["Js"] || '{}' }}
         run: echo "$DEFAULTS" "$DEFAULTS2"
 
