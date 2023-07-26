@@ -10,6 +10,10 @@ defaults:
   run:
     shell: bash
 
+env:
+  A: '{"Go": { "a": 1, "b": 2 }}'
+  B: '{"Go": { "a": 3 }}'
+
 jobs:
   playground:
     runs-on: ubuntu-latest
@@ -20,6 +24,6 @@ jobs:
         }
     steps:
       - env:
-          DEFAULTS: ${{ fromJSON('{"Go": { "a": 1, "b": 2 }}') + fromJSON('{"Go": { "a": 3 }}') }}
+          DEFAULTS: ${{ fromJSON(env.A) + fromJSON(env.B) }}
         run: echo "$DEFAULTS"
 
