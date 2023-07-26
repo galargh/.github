@@ -20,7 +20,6 @@ jobs:
         }
     steps:
       - env:
-          DEFAULTS: ${{ fromJSON(env.DEFAULTS)['Go'] || '{}' }}
-          DEFAULTS2: ${{ fromJSON(env.DEFAULTS)['Js'] || '{}' }}
-        run: echo "$DEFAULTS" "$DEFAULTS2"
+          DEFAULTS: ${{ fromJSON('{"Go": { "a": 1, "b": 2 }}') + fromJSON('{"Go": { "a": 3 }}') }}
+        run: echo "$DEFAULTS"
 
