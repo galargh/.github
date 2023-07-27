@@ -10,20 +10,11 @@ defaults:
   run:
     shell: bash
 
-env:
-  A: '{"Go": { "a": 1, "b": 2 }}'
-  B: '{"Go": { "a": 3 }}'
-
 jobs:
   playground:
     runs-on: ubuntu-latest
-    env:
-      DEFAULTS: |
-        {
-          "Go": { "lang": "Go" }
-        }
     steps:
-      - env:
-          DEFAULTS: ${{ fromJSON(env.A) + fromJSON(env.B) }}
-        run: echo "$DEFAULTS"
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/action
+      - uses: ./.github/actions/${{ github.event.inputs.action || 'action' }}
 
