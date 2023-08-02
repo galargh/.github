@@ -5,5 +5,5 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: ls /home/runner/work/_PipelineMapping/galargh
+      - run: cat /home/runner/work/_PipelineMapping/galargh
         shell: bash
