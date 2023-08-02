@@ -12,9 +12,5 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/action
-      - uses: ./.github/actions/${{ 'action' }}
+    uses: galargh/.github/.github/workflows/playground2.yml@master
 
