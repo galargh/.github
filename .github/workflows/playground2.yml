@@ -5,5 +5,5 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(github.event) }}"
+      - run: ls /home/runner/work/
         shell: bash
