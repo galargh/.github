@@ -5,5 +5,5 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: find /home -type d -name "galargh"
+      - run: ls /home/runner/work/_PipelineMapping/galargh
         shell: bash
