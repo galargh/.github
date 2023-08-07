@@ -12,5 +12,7 @@ defaults:
 
 jobs:
   playground:
-    uses: galargh/.github/.github/workflows/playground2.yml@master
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ toJSON(github) }}"
 
