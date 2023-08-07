@@ -5,5 +5,5 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ fromJSON(vars) }}"
+      - run: echo "${{ toJSON(vars) }}"
         shell: bash
