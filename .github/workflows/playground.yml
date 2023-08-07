@@ -15,5 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env: 
-          TEST: ${{ toJSON(fromJSON('{}')['hello'] || 'goodbye') }}
+          TEST: ${{ toJSON(fromJSON('{}')['hello'] || {}) }}
         run: echo "$TEST"
