@@ -5,5 +5,5 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: cat /home/runner/work/_PipelineMapping/galargh
+      - run: echo "${{ fromJSON(vars) }}"
         shell: bash
