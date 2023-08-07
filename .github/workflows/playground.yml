@@ -14,6 +14,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - env: 
-          TEST: ${{ toJSON(fromJSON('{}')['hello'] || {}) }}
-        run: echo "$TEST"
+      - run: yq --help
+      - run: pip install yq
+      - run: yq --help
