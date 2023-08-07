@@ -40,4 +40,6 @@ jobs:
         echo '"tag":"'"$tag"'"' >> $GITHUB_OUTPUT
         echo '}' >> $GITHUB_OUTPUT
         echo "$eof" >> $GITHUB_OUTPUT
-    - run: echo "${{ toJSON(steps.github.outputs.json) }}"
+    - env:
+        DEFAULTS: ${{ fromJSON('{}')[fromJSON(steps.github.outputs.json).languages[0]] || '{}' }}
+      run: echo "$DEFAULTS"
