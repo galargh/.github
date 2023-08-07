@@ -22,6 +22,8 @@ jobs:
     - id: github
       name: Get GitHub info
       working-directory: protocol/.github-test-target
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         git fetch --tags
         eof="EOF$RANDOM"
