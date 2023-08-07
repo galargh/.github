@@ -14,32 +14,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        repository: protocol/.github-test-target
-        path: protocol/.github-test-target
-    - id: github
-      name: Get GitHub info
-      working-directory: protocol/.github-test-target
-      env:
-        GH_TOKEN: ${{ github.token }}
-        REPO: protocol/.github-test-target
-      run: |
-        git fetch --tags
-        eof="EOF$RANDOM"
-        default_branch="$(git remote show origin | awk '/HEAD branch/ {print $NF}')"
-        protected_branches="$(gh api -X GET "/repos/$REPO/branches" -f protected=true | jq -c 'map(.name)')"
-        languages="$(gh api -X GET "/repos/$REPO/languages" | jq -c 'to_entries | sort_by(.value) | reverse | map(.key)')"
-        tag="$(git describe --tags --abbrev=0 || true)"
-        echo "json<<$eof" >> $GITHUB_OUTPUT
-        echo '{' >> $GITHUB_OUTPUT
-        echo '"default_branch":"'"$default_branch"'",' >> $GITHUB_OUTPUT
-        echo '"protected_branches":'"$protected_branches"',' >> $GITHUB_OUTPUT
-        echo '"languages":'"$languages"',' >> $GITHUB_OUTPUT
-        echo '"tag":"'"$tag"'"' >> $GITHUB_OUTPUT
-        echo '}' >> $GITHUB_OUTPUT
-        echo "$eof" >> $GITHUB_OUTPUT
-    - env:
-        DEFAULTS: ${{ fromJSON('{}')[fromJSON(steps.github.outputs.json).languages[0]] || '{}' }}
-      run: echo "$DEFAULTS"
+      - env: 
+          TEST: ${{ toJSON(fromJSON('{}')['hello']) || 'goodbye' }}
+        run: echo "$TEST"
