@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: release
-        uses: pl-strflt/changelog-driven-release@tag-creation-fix
+        uses: pl-strflt/changelog-driven-release@fix-draft-release-target
         with:
           path: CHANGELOG.md
           draft: ${{ github.event_name == 'pull_request' }}
