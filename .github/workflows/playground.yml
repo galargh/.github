@@ -12,5 +12,22 @@ defaults:
 
 jobs:
   playground:
-    uses: ./.github/workflows/playground2.yml
-
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout ${{ github.repository }}
+      uses: actions/checkout@v3
+      with:
+        path: ${{ github.repository }}
+        ref: ${{ github.ref }}
+    - id: source
+      name: Get ${{ github.repository }} GitHub info
+      working-directory: ${{ github.repository }}
+      run: |
+        eof="EOF$RANDOM"
+        tag="$(git describe --tags --abbrev=0 || true)"
+        echo "json<<$eof" >> $GITHUB_OUTPUT
+        echo '{' >> $GITHUB_OUTPUT
+        echo '"tag":"'"$tag"'"' >> $GITHUB_OUTPUT
+        echo '}' >> $GITHUB_OUTPUT
+        echo "$eof" >> $GITHUB_OUTPUT
+    - run: echo "${{ toJSON(steps.source.outputs.json) }}"
