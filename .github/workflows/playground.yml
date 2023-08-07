@@ -18,6 +18,7 @@ jobs:
         with:
           ref: refs/heads/unified-ci-2.0
           repository: pl-strflt/uci
+          fetch-depth: 0
       - run: git fetch origin --tags
       - run: git log --oneline
       - run: git describe --tags --abbrev=0
