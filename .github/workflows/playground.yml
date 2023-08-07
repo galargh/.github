@@ -14,6 +14,11 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: yq --help
-      - run: pip install yq
-      - run: yq --help
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/heads/unified-ci-2.0
+          repository: pl-strflt/uci
+      - run: git fetch origin --tags
+      - run: git log --oneline
+      - run: git describe --tags --abbrev=0
+
