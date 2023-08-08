@@ -12,6 +12,21 @@ defaults:
 
 jobs:
   playground:
-    uses: ./.github/workflows/playground2.yml
-    with:
-      secret: ${{ github.event.inputs.secret }}
+    runs-on: ubuntu-latest
+    steps:
+    - id: pr
+      name: Retrieve PR information
+      env:
+        NUMBER: ${{ inputs.number }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const {data: pr} = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: process.env.NUMBER
+          });
+          core.setOutput('json', JSON.stringify(pr));
+    - env:
+        PR: ${{ steps.pr.outputs.json }}
+      run: echo "$PR"
