@@ -5,10 +5,6 @@ on:
         default: Hello
         type: string
         required: false
-      secret2:
-        default: ${{ secrets.GALARGH_GITHUB_TOKEN }}
-        type: string
-        required: false
 
 jobs:
   playground2:
