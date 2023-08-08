@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       secret:
-        default: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+        default: Hello
         type: string
         required: false
 
