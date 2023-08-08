@@ -5,10 +5,14 @@ on:
         default: Hello
         type: string
         required: false
+      secret2:
+        default: ${{ secrets.GALARGH_GITHUB_TOKEN }}
+        type: string
+        required: false
 
 jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(github.event.inputs) }}"
+      - run: echo "${{ toJSON(inputs) }}"
         shell: bash
