@@ -12,14 +12,6 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: refs/heads/unified-ci-2.0
-          repository: pl-strflt/uci
-          fetch-depth: 0
-      - run: git fetch origin --tags
-      - run: git log --oneline
-      - run: git describe --tags --abbrev=0
-
+    uses: ./.github/workflows/playground2.yml
+    with:
+      secret: ${{ github.event.inputs.secret }}
