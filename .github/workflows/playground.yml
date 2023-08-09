@@ -14,12 +14,32 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-    - id: pr
-      name: Retrieve PR information
-      env:
-        NUMBER: 41
-        PULL_REQUEST: ${{ toJSON(github.event.pull_request) }}
-      uses: actions/github-script@v6
-      with:
-        script: |
-          console.log(JSON.parse(process.env.PULL_REQUEST))
+      - id: pr
+        name: Retrieve PR information
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let pr
+            if (pr == null) {
+              const {data: pulls} = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: 'protocol',
+                repo: '.github-test-target',
+                commit_sha: 'bd2a381ca1f8a6116632987d3f19138d40d30b36'
+              });
+              const open = pulls.filter(p => p.state == 'open');
+              if (open.length == 0) {
+                core.setFailed(`No open PR found for commit ${context.sha}`);
+                return;
+              }
+              if (open.length > 1) {
+                core.setFailed(`Multiple open PRs found for commit ${context.sha}`);
+                return;
+              }
+              pr = open[0];
+            }
+            core.setOutput('json', JSON.stringify(pr));
+      - env:
+          PR: ${{ steps.pr.outputs.json }}
+          LABELS: ${{ fromJSON(steps.pr.outputs.json).labels }}
+          RELEASE: ${{ contains(fromJSON(steps.pr.outputs.json).labels, 'release') }}
+        run: echo Hello
