@@ -40,5 +40,5 @@ jobs:
             core.setOutput('json', JSON.stringify(pr));
       - env:
           PR: ${{ steps.pr.outputs.json }}
-          RELEASE: ${{ contains(fromJSON(steps.pr.outputs.json).labels, 'release') }}
+          RELEASE: ${{ contains(fromJSON(steps.pr.outputs.json).labels.*.name, 'release') }}
         run: echo Hello
