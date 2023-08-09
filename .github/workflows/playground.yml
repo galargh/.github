@@ -18,15 +18,8 @@ jobs:
       name: Retrieve PR information
       env:
         NUMBER: 41
+        PULL_REQUEST: ${{ toJSON(github.event.pull_request) }}
       uses: actions/github-script@v6
       with:
         script: |
-          const {data: pr} = await github.rest.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: process.env.NUMBER
-          });
-          core.setOutput('json', JSON.stringify(pr));
-    - env:
-        PR: ${{ steps.pr.outputs.json }}
-      run: echo "$PR"
+          console.log(process.env.PULL_REQUEST)
