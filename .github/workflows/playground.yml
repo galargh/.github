@@ -16,4 +16,4 @@ jobs:
     steps:
       - uses: actions/setup-go@v3
         with:
-          go-version: latest
+          check-latest: true
