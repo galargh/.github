@@ -14,8 +14,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - uses: actions/setup-go@v3
         with:
-          script: |
-            const semver = require('semver')
-            semver.satisfies('1.2.3', '1.2.x')
+          go-version: latest
