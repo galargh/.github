@@ -14,5 +14,8 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: git remote get-url origin
+      - id: go-version
+        run: go version | awk '{print $3}' | xargs -I{} echo "version={}" | tee -a $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/setup-go@v3
+        if: steps.go-version.outputs.version == ''
