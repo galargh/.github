@@ -43,6 +43,6 @@ jobs:
             }
 
             console.log(versions)
-      - run: ls D:\hostedtoolcache\windows\go\1.21.0\x64
-      - run: ls C:\hostedtoolcache\windows\go\1.21.0\x64
-      - run: ls C:\hostedtoolcache\windows\go\1.20.7\x64
+      - run: ls D:/hostedtoolcache/windows/go/1.21.0/x64
+      - run: ls C:/hostedtoolcache/windows/go/1.21.0/x64
+      - run: ls C:/hostedtoolcache/windows/go/1.20.7/x64
