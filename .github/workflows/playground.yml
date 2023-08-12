@@ -20,7 +20,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const toolPath = `${process.env.RUNNER_TOOL_CACHE}\\go')
+            const toolPath = `${process.env.RUNNER_TOOL_CACHE}\\go`
             console.log(toolPath)
             console.log(fs.existsSync(toolPath))
       - run: ls $RUNNER_TOOL_CACHE/go
