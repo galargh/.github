@@ -22,11 +22,14 @@ jobs:
           script: |
             const fs = require('fs')
             const path = require('path')
+            const os = require('os')
             
             const toolPath = `${process.env.RUNNER_TOOL_CACHE}\\go`
 
             console.log(toolPath)
 
+            const arch = os.arch()
+            
             const versions = []
             if (fs.existsSync(toolPath)) {
               const children = fs.readdirSync(toolPath)
