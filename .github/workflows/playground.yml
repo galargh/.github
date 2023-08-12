@@ -21,7 +21,23 @@ jobs:
         with:
           script: |
             const fs = require('fs')
+            const path = require('path')
+            
             const toolPath = `${process.env.RUNNER_TOOL_CACHE}\\go`
+
             console.log(toolPath)
-            console.log(fs.existsSync(toolPath))
+
+            const versions = []
+            if (fs.existsSync(toolPath)) {
+              const children = fs.readdirSync(toolPath)
+              for (const child of children) {
+                const fullPath = path.join(toolPath, child, arch || '')
+                console.log(fullPath, fs.existsSync(fullPath), fs.existsSync(`${fullPath}.complete`))
+                if (fs.existsSync(fullPath) && fs.existsSync(`${fullPath}.complete`)) {
+                  versions.push(child)
+                }
+              }
+            }
+
+            console.log(versions)
       - run: ls $RUNNER_TOOL_CACHE/go
