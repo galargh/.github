@@ -14,7 +14,11 @@ jobs:
   playground:
     runs-on: windows-latest
     steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
       - uses: actions/github-script@v6
         with:
           script: |
             console.log(process.env.RUNNER_TOOL_CACHE)
+      - run: ls $RUNNER_TOOL_CACHE/go
