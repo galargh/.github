@@ -12,8 +12,9 @@ defaults:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - uses: actions/setup-go@v3
+      - uses: actions/github-script@v6
         with:
-          go-version: stable
+          script: |
+            console.log(process.env.RUNNER_TOOL_CACHE)
