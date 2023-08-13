@@ -21,9 +21,11 @@ jobs:
           script: |
             const request = async function(req, opts) {
               console.log(opts)
-              throw new Error('Request failed')
+              opts.request.retries = 0
+              opts.retries = 0
+              return await req(opts)
             }
             github.hook.wrap('request', request)
 
-            const repos = await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
-
+            await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
+            await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
