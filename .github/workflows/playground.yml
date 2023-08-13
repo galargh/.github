@@ -24,3 +24,6 @@ jobs:
               throw new Error('Request failed')
             }
             github.hook.wrap('request', request)
+
+            const repos = await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
+
