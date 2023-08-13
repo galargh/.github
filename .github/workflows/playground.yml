@@ -27,5 +27,9 @@ jobs:
             }
             github.hook.wrap('request', request)
 
-            await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
-            await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
+            try {
+              await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
+            } catch(e) {}
+            try {
+              await github.rest.repos.listForAuthenticatedUser({affiliation: 'collaborator'})
+            } catch(e) {}
