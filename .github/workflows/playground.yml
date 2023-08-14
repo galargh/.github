@@ -15,5 +15,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: echo "PGDATA=/usr/local/var/postgres" >> $GITHUB_ENV
+      - run: pg_ctl -D "$PGDATA" initdb
       - run: pg_ctl start
-      - run: ps auxw |  grep postgres | grep -- -D
