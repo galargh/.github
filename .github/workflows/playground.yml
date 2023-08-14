@@ -14,6 +14,6 @@ jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: |
-          which postgres
-          echo $PGDATA
+      - run: echo "PGDATA=/usr/local/var/postgres" >> $GITHUB_ENV
+      - run: mkdir -p "$PGDATA"
+      - run: pg_ctl -D "$PGDATA" -l "$PGDATA/server.log" start
