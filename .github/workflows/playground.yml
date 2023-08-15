@@ -14,6 +14,10 @@ jobs:
   playground:
     runs-on: macos-latest
     steps:
-      - run: echo "PGDATA=/usr/local/var/postgres" >> $GITHUB_ENV
-      - run: pg_ctl -D "$PGDATA" initdb
-      - run: pg_ctl start
+      - uses: actions/checkout@v3
+        with:
+          repository: ipld/go-ipld-prime
+          submodules: recursive
+          fetch-depth: 0
+      - run: find . \( -name vendor -o -name '[._].*' -o -name node_modules \) -prune -o -name go.mod -print | sed 's:/go.mod$::'
+      - run: find . -type f -name 'go.mod'
