@@ -14,12 +14,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: ipld/go-ipld-prime
-          submodules: recursive
-          fetch-depth: 0
-      - env:
-          FILE: ${{ format('./{0}/scripts/{1}', github.repository, github.sha) }}
-          OTHER: ${{ env.FILE }}
-        run: echo "$FILE $OTHER"
+      - run: cat "$GITHUB_OUTPUT"
