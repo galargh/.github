@@ -27,3 +27,6 @@ jobs:
       - env:
           JOB: ${{ toJSON(job) }}
         run: jq <<< "$JOB"
+      - env:
+          JOBS: ${{ toJSON(jobs) }}
+        run: jq <<< "$JOBS"
