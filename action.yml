@@ -6,5 +6,7 @@ runs:
     - id: github
       uses: pl-strflt/docker-container-action/.github/actions/github@v1
     - run: echo $GITHUB_ACTION_PATH
+      shell: bash
     - run: git show
+      shell: bash
       workdir: ${{ env.GITHUB_ACTION_PATH }}
