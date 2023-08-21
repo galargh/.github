@@ -1,0 +1,7 @@
+name: "Test"
+description: "Test"
+runs:
+  using: "composite"
+  steps:
+    - id: github
+      uses: pl-strflt/docker-container-action/.github/actions/github@v1
