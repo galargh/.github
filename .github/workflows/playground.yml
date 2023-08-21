@@ -13,5 +13,12 @@ defaults:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - abc
+          - def
     steps:
-      - uses: galargh/.github@master
+      - env:
+          GITHUB: ${{ toJSON(github) }}
+        run: jq <<< "$GITHUB"
