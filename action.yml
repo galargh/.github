@@ -9,4 +9,4 @@ runs:
       shell: bash
     - run: git show
       shell: bash
-      workdir: ${{ env.GITHUB_ACTION_PATH }}
+      working-directory: ${{ env.GITHUB_ACTION_PATH }}
