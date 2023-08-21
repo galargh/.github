@@ -14,5 +14,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ github.ref }}"
-      - run: echo "${{ toJSON(github.event) }}"
+      - uses: galargh/.github@master
