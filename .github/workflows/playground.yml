@@ -18,6 +18,7 @@ jobs:
         target:
           - abc
           - def
+    name: ${{ matrix.target }}
     steps:
       - env:
           GITHUB: ${{ toJSON(github) }}
