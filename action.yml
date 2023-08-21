@@ -9,4 +9,4 @@ runs:
       shell: bash
     - run: ls -a
       shell: bash
-      working-directory: ${{ env.GITHUB_ACTION_PATH }}
+      working-directory: /home/runner/work/_actions
