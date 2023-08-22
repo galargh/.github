@@ -15,8 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     name: ${{ matrix.target }}
     steps:
-      - env:
-          A: ${{ (success() || failure()) && fromJSON('{}').gogenerate == true }}
-          B: ${{ (success() || failure()) && fromJSON('{}').gogenerate == 'true' }}
-          C: ${{ (success() || failure()) && fromJSON('{}').gogenerate != 'false' }}
+      - if: (success() || failure()) && fromJSON('{}').gogenerate == true
+        env:
+          A: ${{ fromJSON('{}').gogenerate == true }}
+          B: ${{ fromJSON('{}').gogenerate == 'true' }}
+          C: ${{ fromJSON('{}').gogenerate != 'false' }}
         run: echo "$A $B $C"
