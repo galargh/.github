@@ -16,7 +16,7 @@ jobs:
     name: ${{ matrix.target }}
     steps:
       - env:
-          A: ${{ fromJSON('{}').gogenerate == true }}
-          B: ${{ fromJSON('{}').gogenerate == 'true' }}
-          C: ${{ fromJSON('{}').gogenerate != 'false' }}
+          A: ${{ (success() || failure()) && fromJSON('{}').gogenerate == true }}
+          B: ${{ (success() || failure()) && fromJSON('{}').gogenerate == 'true' }}
+          C: ${{ (success() || failure()) && fromJSON('{}').gogenerate != 'false' }}
         run: echo "$A $B $C"
