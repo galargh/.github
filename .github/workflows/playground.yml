@@ -15,9 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     name: ${{ matrix.target }}
     steps:
-      - if: (success() || failure()) && fromJSON('{}').gogenerate == true
-        env:
-          A: ${{ fromJSON('{}').gogenerate == true }}
-          B: ${{ fromJSON('{}').gogenerate == 'true' }}
-          C: ${{ fromJSON('{}').gogenerate != 'false' }}
-        run: echo "$A $B $C"
+      - id: go
+        uses: actions/setup-go@v3
+        with:
+          go-version: stable
+      - run: echo ${{ steps.go.outputs.go-version }}
