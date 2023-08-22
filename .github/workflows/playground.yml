@@ -13,20 +13,10 @@ defaults:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
-          - abc
-          - def
     name: ${{ matrix.target }}
     steps:
       - env:
-          GITHUB: ${{ toJSON(github) }}
-        run: jq <<< "$GITHUB"
-      - run: env
-      - env:
-          JOB: ${{ toJSON(job) }}
-        run: jq <<< "$JOB"
-      - env:
-          JOBS: ${{ toJSON(jobs) }}
-        run: jq <<< "$JOBS"
+          A: ${{ fromJSON('{}').gogenerate == true }}
+          B: ${{ fromJSON('{}').gogenerate == 'true' }}
+          C: ${{ fromJSON('{}').gogenerate != 'false' }}
+        run: echo "$A $B $C"
