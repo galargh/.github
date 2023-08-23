@@ -22,5 +22,4 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.13.x
-      - run: go help install
-      - run: go install honnef.co/go/tools/cmd/staticcheck@afd67930eec2a9ed3e9b19f684d17a062285f16a
+      - run: go install honnef.co/go/tools/cmd/staticcheck
