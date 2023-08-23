@@ -10,6 +10,9 @@ defaults:
   run:
     shell: bash
 
+env:
+  GO111MODULE: on
+
 jobs:
   playground:
     runs-on: ubuntu-latest
