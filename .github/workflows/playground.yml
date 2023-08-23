@@ -18,5 +18,5 @@ jobs:
       - id: go
         uses: actions/setup-go@v3
         with:
-          go-version: stable
-      - run: echo ${{ steps.go.outputs.go-version }}
+          go-version: 1.13.x
+      - run: go install honnef.co/go/tools/cmd/staticcheck@afd67930eec2a9ed3e9b19f684d17a062285f16a
