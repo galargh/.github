@@ -6,16 +6,10 @@ on:
   push:
     paths: ['.github/workflows/playground.yml']
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   playground:
     runs-on: windows-latest
     name: ${{ matrix.target }}
     steps:
       - run: whoami
-      - run: pwd
-      - run: echo "$GITHUB_WORKSPACE"
-      - run: cat 'C:\ProgramData\Docker\config\daemon.json'
+      
