@@ -6,14 +6,12 @@ on:
   push:
     paths: ['.github/workflows/playground.yml']
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   playground:
     runs-on: windows-latest
     name: ${{ matrix.target }}
     steps:
-      - run: env
+      - run: Get-Disk
+      - run: Get-Partition
+      - run: Get-Volume
       
