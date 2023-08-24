@@ -11,5 +11,5 @@ jobs:
     runs-on: windows-latest
     name: ${{ matrix.target }}
     steps:
-      - run: whoami
+      - run: env
       
