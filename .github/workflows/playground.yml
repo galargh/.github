@@ -2,16 +2,17 @@ name: Playground
 
 on:
   workflow_dispatch:
+    inputs:
+      test:
+        description: a
+        required: false
   pull_request:
   push:
     paths: ['.github/workflows/playground.yml']
 
 jobs:
   playground:
-    runs-on: windows-latest
-    name: ${{ matrix.target }}
+    runs-on: ubuntu-latest
     steps:
-      - run: Get-Disk
-      - run: Get-Partition
-      - run: Get-Volume
+      - run: echo '${{ toJSON(github.event.inputs) }}'
       
