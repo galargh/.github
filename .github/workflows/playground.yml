@@ -2,10 +2,6 @@ name: Playground
 
 on:
   workflow_dispatch:
-    inputs:
-      test:
-        description: a
-        required: false
   pull_request:
   push:
     paths: ['.github/workflows/playground.yml']
@@ -14,5 +10,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{ toJSON(github.event.inputs) }}'
+      - run: env
       
