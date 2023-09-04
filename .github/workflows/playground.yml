@@ -8,7 +8,7 @@ on:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.repository == 'galargh/.github' && 'ubuntu-22.04' || 'ubuntu-20.04' }}
     steps:
-      - run: env
+      - run: echo '${{ runner.name }}'
       
