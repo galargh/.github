@@ -10,5 +10,4 @@ jobs:
   playground:
     runs-on: ${{ github.repository == 'galargh/.github' && 'ubuntu-22.04' || 'ubuntu-20.04' }}
     steps:
-      - run: echo '${{ runner.name }}'
-      
+      - run: lsb_release -a
