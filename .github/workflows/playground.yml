@@ -14,5 +14,4 @@ jobs:
   playground:
     runs-on: 'windows-latest'
     steps:
-      - run: echo $PATH
-        shell: bash
+      - run: whoami
