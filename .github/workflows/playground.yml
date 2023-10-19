@@ -14,5 +14,4 @@ jobs:
   playground:
     runs-on: 'windows-latest'
     steps:
-      - run: |
-          docker info
+      - run: $env:path
