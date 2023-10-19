@@ -14,5 +14,7 @@ jobs:
   playground:
     runs-on: 'windows-latest'
     steps:
-      - run: whoami /priv
-      - run: whoami /all
+      - run: echo $GITHUB_PATH
+        shell: bash
+      - run: cat $GITHUB_PATH
+        shell: bash
