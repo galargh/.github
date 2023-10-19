@@ -14,5 +14,5 @@ jobs:
   playground:
     runs-on: 'windows-latest'
     steps:
-      - run: $env:path
+      - run: echo $PATH
         shell: bash
