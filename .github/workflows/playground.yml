@@ -21,4 +21,5 @@ jobs:
       - run: echo ${env:PATH}
       - run: echo "C:\Program Files" >> $GITHUB_PATH
         shell: bash
-      - run: echo ${env:PATH}
+      - run: echo $PATH
+        shell: bash
