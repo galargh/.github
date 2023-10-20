@@ -12,7 +12,7 @@ on:
 
 jobs:
   playground:
-    runs-on: 'windows-latest'
+    runs-on: 'ubuntu-latest'
     steps:
-      - run: echo $PATH
+      - run: sysctl kern.ipc.maxsockbuf
         shell: bash
