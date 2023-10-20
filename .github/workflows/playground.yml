@@ -15,8 +15,7 @@ jobs:
     runs-on: 'windows-latest'
     steps:
       - run: |
-          echo "C:/msys64/usr/bin" >> $GITHUB_PATH
-          cat $GITHUB_PATH
-        shell: bash
-      - run: cat $GITHUB_PATH
-        shell: bash
+          $currentPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+          $newPath = "C:\Program Files\PowerShell\9;$currentPath"
+          [Environment]::SetEnvironmentVariable("Path", $newPath, "Machine")
+      - run: echo ${env:PATH}
