@@ -19,3 +19,5 @@ jobs:
           $newPath = "C:\Program Files\PowerShell\9;$currentPath"
           [Environment]::SetEnvironmentVariable("Path", $newPath, "Machine")
       - run: echo ${env:PATH}
+      - run: echo "C:\Program Files\PowerShell\9" >> $GITHUB_PATH
+      - run: echo ${env:PATH}
