@@ -12,7 +12,5 @@ on:
 
 jobs:
   playground:
-    runs-on: 'ubuntu-latest'
-    steps:
-      - uses: galargh/.github/.github/workflows/playground2.yml@master
+    uses: galargh/.github/.github/workflows/playground2.yml@master
             
