@@ -12,7 +12,7 @@ jobs:
     steps:
       - run: echo "${{ toJSON(inputs) }}"
         shell: bash
-      - run: gh run view ${{ github.run_id }}
+      - run: gh run view --repo ${{ github.repository }} ${{ github.run_id }}
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
