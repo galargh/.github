@@ -10,7 +10,7 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: ls /home/runner/work/_temp/_github_workflow
+      - run: ls /home/runner/work/_temp
         shell: bash
       - run: echo "${{ toJSON(github) }}"
         shell: bash
