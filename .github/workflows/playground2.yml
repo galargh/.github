@@ -12,3 +12,4 @@ jobs:
     steps:
       - run: echo "${{ toJSON(inputs) }}"
         shell: bash
+      - run: gh run view ${{ github.job }}
