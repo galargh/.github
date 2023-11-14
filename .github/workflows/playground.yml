@@ -14,11 +14,5 @@ jobs:
   playground:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: cross-platform-actions/action@6785ab118e0f221bdacd2e64a39253e7a1913103 # v0.19.1
-        with:
-          operating_system: 'freebsd'
-          version: '13.2'
-          environment_variables: TIMESCALE_FACTOR GO_VERSION
-          run: |
-            ( false || echo "hello" )
+      - uses: galargh/.github/.github/workflows/playground2.yml@master
             
