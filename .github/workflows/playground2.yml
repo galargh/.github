@@ -12,7 +12,7 @@ jobs:
     steps:
       - run: ls /home/runner/work/_PipelineMapping/galargh
         shell: bash
-      - run: ls /home/runner/work/_actions/actions
+      - run: ls /home/runner/work/_actions/actions/checkout
         shell: bash
       - uses: actions/checkout@v3
       - run: echo "${{ toJSON(github) }}"
