@@ -10,7 +10,7 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJSON(githu) }}"
+      - run: echo "${{ toJSON(github) }}"
         shell: bash
       - run: env
         shell: bash
