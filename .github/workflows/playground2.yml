@@ -13,3 +13,6 @@ jobs:
       - run: echo "${{ toJSON(inputs) }}"
         shell: bash
       - run: gh run view ${{ github.job }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
