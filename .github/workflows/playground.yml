@@ -12,5 +12,8 @@ on:
 
 jobs:
   playground:
-    uses: galargh/.github/.github/workflows/playground2.yml@master
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ join(env.*, ',') }}
+        shell: bash
             
