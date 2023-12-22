@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - run: tmux -V 
-        shell: C:\msys64\usr\bin\bash.exe
+        shell: C:\msys64\usr\bin\bash.exe -l {0}
       - run: |
           echo "Downloading tmux-3.3a.tar.gz"
           curl -L https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz -o tmux-3.3a.tar.gz
@@ -35,4 +35,4 @@ jobs:
           rm tmux-3.3a.tar.gz
           echo "tmux-3.3a installed"
           tmux -V
-        shell: C:\msys64\usr\bin\bash.exe
+        shell: C:\msys64\usr\bin\bash.exe -l {0}
