@@ -16,14 +16,22 @@ jobs:
     steps:
       - run: |
           // download and unpack tmux-3.3a.tar.gz from https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
+          echo "Downloading tmux-3.3a.tar.gz"
           curl -L https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz -o tmux-3.3a.tar.gz
+          echo "Unpacking tmux-3.3a.tar.gz"
           tar -xzf tmux-3.3a.tar.gz
+          echo "Installing tmux-3.3a"
           cd tmux-3.3a
+          echo "Configuring tmux-3.3a"
           ./configure
+          echo "Making tmux-3.3a"
           make
+          echo "Installing tmux-3.3a"
           make install
+          echo "Cleaning up tmux-3.3a"
           cd ..
           rm -rf tmux-3.3a
           rm tmux-3.3a.tar.gz
+          echo "tmux-3.3a installed"
           tmux -V
         shell: bash
