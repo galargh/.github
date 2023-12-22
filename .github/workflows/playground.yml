@@ -12,11 +12,8 @@ on:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - env:
-          ABC: 123
-          DEF: 456
-        run: echo ${{ join(env.*, ',') }}
+      - run: tmux -V
         shell: bash
             
