@@ -1,10 +1,8 @@
 on:
-  workflow_call:
-    inputs:
-      secret:
-        default: Hello
-        type: string
-        required: false
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   playground2:
