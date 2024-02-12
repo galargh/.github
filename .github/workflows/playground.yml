@@ -43,11 +43,10 @@ jobs:
           or a self-hosted runner with similar specs, or a self-hosted runner running linux/arm64, \
           or use Docker Build Cloud instead.
           
-          Alternatively, please run the following command on your local machine to build and publish the base image:
-          ```
+          Alternatively, please run the following commands on your local machine to build and publish the base image:
           git checkout $GITHUB_REF
           docker login ghcr.io
           docker buildx build --platform linux/arm64 --tag $TAG --file balena-base.Dockerfile --target build-base --build-arg BUILD_BASE_BASE_IMAGE=$BUILD_BASE_BASE_IMAGE --build-arg VERSION_OVERRIDE=$VERSION_OVERRIDE --provenance false --push .
-          ```"
+          "
           exit 1
         shell: bash
