@@ -14,41 +14,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Retrieve metadata
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}/build-base
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-      - name: Get version tag
-        id: version
-        run: echo "tag=$(git describe --tags)" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{ join(fromJSON("hello") || ["hello", "goodbye"], "\n") }}"
         shell: bash
-      - name: Print error message
-        env:
-          TAG: ${{ steps.metadata.outputs.tags }}
-          BUILD_BASE_BASE_IMAGE: 123:456
-          VERSION_OVERRIDE: ${{ steps.version.outputs.tag }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            core.error(`No suitable runner found for building the base image for the build stage.
-            Please ensure that a runner capable of building for arm64 in less than 6 hours is available.
-            This can be either a GitHub hosted large runner (8+ cores, 32+ GB RAM), or a self-hosted runner with similar specs, or a self-hosted runner running linux/arm64, or you can use Docker Build Cloud instead.
-
-            Alternatively, please run the following command on your local machine to build and publish the base image:
-              git checkout $GITHUB_REF
-              docker login ghcr.io
-              docker buildx build --platform linux/arm64 --tag ${process.env.TAG} --file base.Dockerfile --target build-base --build-arg BUILD_BASE_BASE_IMAGE=${process.env.BUILD_BASE_BASE_IMAGE} --build-arg VERSION_OVERRIDE=${process.env.VERSION_OVERRIDE} --provenance false --push .
-            `, {
-              title: 'Missing suitable runner',
-              file: '.github/workflows/playground.yml',
-              startLine: 38,
-              endLine: 50
-            })
