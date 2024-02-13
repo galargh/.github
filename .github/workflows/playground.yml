@@ -15,5 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${{ join(fromJSON("hello") || ["hello", "goodbye"], "\n") }}"
+          echo "${{ join(fromJSON('hello') || ['hello', 'goodbye'], '\n') }}"
         shell: bash
