@@ -14,6 +14,18 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "${{ toJSON(*) }}"
+      - run: env
         shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          ENV_CONTEXT: ${{ toJSON(env) }}
+          VARS_CONTEXT: ${{ toJSON(vars) }}
+          JOB_CONTEXT: ${{ toJSON(job) }}
+          JOBS_CONTEXT: ${{ toJSON(jobs) }}
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+          SECRETS_CONTEXT: ${{ toJSON(secrets) }}
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
+          INPUTS_CONTEXT: ${{ toJSON(inputs) }}
