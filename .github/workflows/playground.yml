@@ -21,7 +21,7 @@ jobs:
           ENV_CONTEXT: ${{ toJSON(env) }}
           VARS_CONTEXT: ${{ toJSON(vars) }}
           JOB_CONTEXT: ${{ toJSON(job) }}
-          JOBS_CONTEXT: ${{ toJSON(jobs) }}
+          # JOBS_CONTEXT: ${{ toJSON(jobs) }} # reusable
           STEPS_CONTEXT: ${{ toJSON(steps) }}
           RUNNER_CONTEXT: ${{ toJSON(runner) }}
           SECRETS_CONTEXT: ${{ toJSON(secrets) }}
