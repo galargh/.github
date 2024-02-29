@@ -15,5 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${{ join(fromJSON('hello') || fromJSON('["hello", "goodbye"]'), '\n') }}"
+          echo "${{ toJSON(*) }}"
         shell: bash
