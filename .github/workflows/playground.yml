@@ -14,18 +14,23 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: env
+      - id: execute-python
+        run: |
+          eof="EOF$RANDOM"
+          status=0
+          {
+            echo "output<<$eof";
+            echo "python python tools/check_data.py $BRANCH" || status=$?; # Save the exit code of the python script
+            echo "$eof";
+          } |& tee -a $GITHUB_OUTPUT # |& is a shorthand for 2>&1 | which redirects both stdout and stderr
+          echo "status=$status" | tee -a $GITHUB_OUTPUT
+          exit $status # Exit with the status of the python script
         shell: bash
+        continue-on-error: true # If the step fails, the workflow will continue
+      - run: |
+          echo "EXECUTE_PYTHON_STATUS=$EXECUTE_PYTHON_STATUS"
+          echo "EXECUTE_PYTHON_OUTPUT=$EXECUTE_PYTHON_OUTPUT"
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          ENV_CONTEXT: ${{ toJSON(env) }}
-          VARS_CONTEXT: ${{ toJSON(vars) }}
-          JOB_CONTEXT: ${{ toJSON(job) }}
-          # JOBS_CONTEXT: ${{ toJSON(jobs) }} # reusable
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-          SECRETS_CONTEXT: ${{ toJSON(secrets) }}
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-          NEEDS_CONTEXT: ${{ toJSON(needs) }}
-          INPUTS_CONTEXT: ${{ toJSON(inputs) }}
+          EXECUTE_PYTHON_STATUS: ${{ steps.execute-python.outputs.status }}
+          EXECUTE_PYTHON_OUTPUT: ${{ steps.execute-python.outputs.output }}
+        shell: bash
