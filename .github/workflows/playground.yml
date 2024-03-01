@@ -20,7 +20,7 @@ jobs:
           status=0
           {
             echo "output<<$eof";
-            echo "python python tools/check_data.py $BRANCH" || status=$?; # Save the exit code of the python script
+            echo "python tools/check_data.py $BRANCH" || status=$?; # Save the exit code of the python script
             echo "$eof";
           } |& tee -a $GITHUB_OUTPUT # |& is a shorthand for 2>&1 | which redirects both stdout and stderr
           echo "status=$status" | tee -a $GITHUB_OUTPUT
