@@ -14,23 +14,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - id: execute-python
-        run: |
-          eof="EOF$RANDOM"
-          status=0
-          {
-            echo "output<<$eof";
-            echo "python tools/check_data.py $BRANCH" || status=$?; # Save the exit code of the python script
-            echo "$eof";
-          } |& tee -a $GITHUB_OUTPUT # |& is a shorthand for 2>&1 | which redirects both stdout and stderr
-          echo "status=$status" | tee -a $GITHUB_OUTPUT
-          exit $status # Exit with the status of the python script
-        shell: bash
-        continue-on-error: true # Continue even if the python command fails
-      - run: |
-          echo "EXECUTE_PYTHON_STATUS=$EXECUTE_PYTHON_STATUS"
-          echo "EXECUTE_PYTHON_OUTPUT=$EXECUTE_PYTHON_OUTPUT"
-        env:
-          EXECUTE_PYTHON_STATUS: ${{ steps.execute-python.outputs.status }}
-          EXECUTE_PYTHON_OUTPUT: ${{ steps.execute-python.outputs.output }}
+      - run: git --version
         shell: bash
