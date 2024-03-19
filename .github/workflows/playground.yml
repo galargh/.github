@@ -13,17 +13,8 @@ on:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        tests:
-          - group: unit
-            paths: [1, 2, 3]
-          - group: integration
-            paths: [4, 5, 6]
-        include:
-          - tests:
-              group: unit
-              secret: hello
     steps:
-      - run: git --version
+      - run: |
+          sudo ulimit -n 256000
+          sudo ulimit -Hn 512000
         shell: bash
