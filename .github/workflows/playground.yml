@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          sudo su -
-          echo "* soft nofile 256000" >> /etc/security/limits.conf
-          echo "* hard nofile 512000" >> /etc/security/limits.conf
-          sysctl -p
+          ulimit -n 65536
+          ulimit -Hn 512000
         shell: bash
