@@ -15,6 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          ulimit -n 65536
-          ulimit -Hn 512000
+          env
         shell: bash
