@@ -14,6 +14,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          env
+      - uses: actions/checkout@v4
+        with:
+          repository: ipfs/iptb
+          ref: uci/copy-templates
+          fetch-depth: 0
+      - run: git diff origin/master --patch --no-color --unified=0
         shell: bash
