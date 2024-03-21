@@ -19,5 +19,5 @@ jobs:
           repository: ipfs/iptb
           ref: uci/copy-templates
           fetch-depth: 0
-      - run: git diff origin/master | grep '[+-]' 
+      - run: git diff origin/master | grep '^[+-]' 
         shell: bash
