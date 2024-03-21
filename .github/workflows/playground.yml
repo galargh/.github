@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: ipfs/iptb
+          repository: ipfs/js-ipfs-utils
           ref: uci/copy-templates
           fetch-depth: 0
       - run: git diff origin/master | grep '^[+-]' 
