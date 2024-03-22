@@ -19,5 +19,5 @@ jobs:
           PATH: |
             /var/tmp/filecoin-proof-parameters/
         run: |
-          echo "key=$KEY" | tee -a $GITHUB_OUTPUT
-          # echo "path<<EOF\n$PATH\nEOF" | tee -a $GITHUB_OUTPUT
+          echo "key=v26-2k-lotus-params" | tee -a $GITHUB_OUTPUT
+          echo "path=/var/tmp/filecoin-proof-parameters/" | tee -a $GITHUB_OUTPUT
