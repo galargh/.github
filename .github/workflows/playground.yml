@@ -14,10 +14,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: ipfs/js-ipfs-utils
-          ref: uci/copy-templates
-          fetch-depth: 0
-      - run: git diff origin/master | grep '^[+-]' 
-        shell: bash
+      - env:
+          KEY: filecoin-proof-parameters
+          PATH: |
+            /var/tmp/filecoin-proof-parameters/
+        run: |
+          echo "key=$KEY" | tee -a $GITHUB_OUTPUT
+          echo "path<<EOF\n$PATH\nEOF" | tee -a $GITHUB_OUTPUT
