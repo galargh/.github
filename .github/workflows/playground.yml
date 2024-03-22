@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          KEY: filecoin-proof-parameters
-          PATH: |
+          CACHE_KEY: filecoin-proof-parameters
+          CACHE_PATH: |
             /var/tmp/filecoin-proof-parameters/
         run: |
           echo -e "key=$CACHE_KEY" | tee -a $GITHUB_OUTPUT
