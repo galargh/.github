@@ -20,4 +20,4 @@ jobs:
             /var/tmp/filecoin-proof-parameters/
         run: |
           echo "key=$KEY" | tee -a $GITHUB_OUTPUT
-          echo "path<<EOF\n$PATH\nEOF" | tee -a $GITHUB_OUTPUT
+          # echo "path<<EOF\n$PATH\nEOF" | tee -a $GITHUB_OUTPUT
