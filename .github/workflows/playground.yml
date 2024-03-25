@@ -12,12 +12,8 @@ on:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: macos-13
     steps:
-      - env:
-          CACHE_KEY: filecoin-proof-parameters
-          CACHE_PATH: |
-            /var/tmp/filecoin-proof-parameters/
-        run: |
-          echo -e "key=$CACHE_KEY" | tee -a $GITHUB_OUTPUT
-          echo -e "path<<EOF\n$CACHE_PATH\nEOF" | tee -a $GITHUB_OUTPUT
+      - run: |
+          env
+          
