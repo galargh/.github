@@ -10,10 +10,12 @@ on:
       - published
       - released
 
+permissions:
+  contents: none
+
 jobs:
   playground:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
-      - run: |
-          env
+      - uses: actions/checkout@v4
           
