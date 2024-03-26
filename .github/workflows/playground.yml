@@ -10,9 +10,6 @@ on:
       - published
       - released
 
-permissions:
-  contents: none
-
 jobs:
   playground:
     runs-on: ubuntu-latest
