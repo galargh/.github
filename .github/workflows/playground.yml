@@ -14,5 +14,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - run: sort --version
+        shell: bash
           
