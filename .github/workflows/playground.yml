@@ -13,7 +13,9 @@ on:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    permissions:
+      contents: ${{ github.event_name == 'workflow_dispatch' && 'write' || 'read' }}
     steps:
-      - run: apt install coreutils -y && sort --version
+      - run: env
         shell: bash
           
