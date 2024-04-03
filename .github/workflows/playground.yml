@@ -13,9 +13,7 @@ on:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    permissions:
-      contents: ${{ github.event_name == 'workflow_dispatch' && 'write' || 'read' }}
     steps:
-      - run: env
+      - run: ps aux
         shell: bash
           
