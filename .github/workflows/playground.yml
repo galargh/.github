@@ -12,7 +12,16 @@ on:
 
 jobs:
   playground:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name:
+        - A
+        - B
+        - C
+        - D
+        - E
     steps:
       - run: ps aux
         shell: bash
