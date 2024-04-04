@@ -17,7 +17,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: gh api -X PATCH /repos/galargh/.github/check-runs/23453625668
+      - run: gh api -X PATCH /repos/galargh/.github/check-runs/23453625057
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
