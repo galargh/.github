@@ -10,19 +10,15 @@ on:
       - published
       - released
 
+permissions:
+  checks: write
+
 jobs:
   playground:
-    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        name:
-        - A
-        - B
-        - C
-        - D
-        - E
     steps:
-      - run: ps aux
+      - run: gh api -X PATCH /repos/galargh/.github/check-runs/23453625668
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         shell: bash
           
