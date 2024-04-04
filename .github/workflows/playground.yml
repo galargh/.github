@@ -27,10 +27,7 @@ jobs:
           started_at="$(jq -r '.started_at' <<< "$check")"
           conclusion="$(jq -r '.conclusion' <<< "$check")"
           completed_at="$(jq -r '.completed_at' <<< "$check")"
-          output="$(jq '.output' <<< "$check")"
-          actions="$(jq '.actions' <<< "$check")"
-          echo "name: $name, head_sha: $head_sha, details_url: $details_url, external_id: $external_id, status: $status, started_at: $started_at, conclusion: $conclusion, completed_at: $completed_at, output: $output, actions: $actions"
-          gh api -X POST /repos/galargh/.github/check-runs -F name="$name" -F head_sha="$head_sha" -F details_url="$details_url" -F external_id="$external_id" -F status="$status" -F started_at="$started_at" -F conclusion="$conclusion" -F completed_at="$completed_at" -f output="$output" -f actions="$actions"
+          gh api -X POST /repos/galargh/.github/check-runs -F name="$name" -F head_sha="$head_sha" -F details_url="$details_url" -F external_id="$external_id" -F status="$status" -F started_at="$started_at" -F conclusion="$conclusion" -F completed_at="$completed_at"
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
