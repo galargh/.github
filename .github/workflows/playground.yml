@@ -17,7 +17,19 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: gh api -X PATCH /repos/galargh/.github/check-runs/23453625057 -f completed_at='2000-01-01T00:00:00Z'
+      - run: |
+          check="$(gh api -X PATCH /repos/galargh/.github/check-runs/23453625057)"
+          name="$(jq -r '.name' <<< "$check")"
+          head_sha="$(jq -r '.head_sha' <<< "$check")"
+          details_url="$(jq -r '.details_url' <<< "$check")"
+          external_id="$(jq -r '.external_id' <<< "$check")"
+          status="$(jq -r '.status' <<< "$check")"
+          started_at="$(jq -r '.started_at' <<< "$check")"
+          conclusion="$(jq -r '.conclusion' <<< "$check")"
+          completed_at="$(jq -r '.completed_at' <<< "$check")"
+          output="$(jq -r '.output' <<< "$check")"
+          actions="$(jq -r '.actions' <<< "$check")"
+          gh api -X POST /repos/galargh/.github/check-runs -F name="$name" -F head_sha="$head_sha" -F details_url="$details_url" -F external_id="$external_id" -F status="$status" -F started_at="$started_at" -F conclusion="$conclusion" -F completed_at="$completed_at" -F output="$output" -F actions="$actions"
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
