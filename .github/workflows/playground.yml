@@ -17,18 +17,6 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          check="$(gh api -X PATCH /repos/galargh/.github/check-runs/23453625057)"
-          name="$(jq -r '.name' <<< "$check")"
-          head_sha="$(jq -r '.head_sha' <<< "$check")"
-          details_url="$(jq -r '.details_url' <<< "$check")"
-          external_id="$(jq -r '.external_id' <<< "$check")"
-          status="$(jq -r '.status' <<< "$check")"
-          started_at="$(jq -r '.started_at' <<< "$check")"
-          conclusion="$(jq -r '.conclusion' <<< "$check")"
-          completed_at="$(jq -r '.completed_at' <<< "$check")"
-          gh api -X POST /repos/galargh/.github/check-runs -F name="$name" -F head_sha="$head_sha" -F details_url="$details_url" -F external_id="$external_id" -F status="$status" -F started_at="$started_at" -F conclusion="$conclusion" -F completed_at="$completed_at"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - run: echo '${{ github.event.pull_reqeust.number || github.event.pull_requests[0].number || "" }}'
         shell: bash
           
