@@ -16,7 +16,10 @@ permissions:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test: [1, 2]
     steps:
-      - run: echo '${{ github.event.pull_reqeust.number || github.event.pull_requests[0].number }}'
+      - run: echo '${{ github.job }}'
         shell: bash
           
