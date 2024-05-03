@@ -20,6 +20,10 @@ jobs:
       matrix:
         test: [1, 2]
     steps:
-      - run: echo '${{ github.job }}'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'filecoin-project/lotus'
+          submodules: 'recursive'
+      - run: cat ./.git/modules/extern/filecoin-ffi/HEAD
         shell: bash
           
