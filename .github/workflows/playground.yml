@@ -19,5 +19,7 @@ jobs:
     steps:
       - env:
           _GITHUB_REF: hello
-        run: GITHUB_REF=$_GITHUB_REF echo "$GITHUB_REF"
+        run: |
+          export GITHUB_REF=$_GITHUB_REF 
+          echo "$GITHUB_REF"
           
