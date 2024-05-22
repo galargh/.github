@@ -18,6 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          GITHUB_REF: hello
-        run: echo "$GITHUB_REF"
+          _GITHUB_REF: hello
+        run: GITHUB_REF=$_GITHUB_REF echo "$GITHUB_REF"
           
