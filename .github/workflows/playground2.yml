@@ -8,9 +8,13 @@ on:
 jobs:
   playground2:
     runs-on: ubuntu-latest
+    if: |
+      github.event.workflow_run.event == 'pull_request' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.repository_id == matrix.head.repo.id
     strategy:
       fail-fast: false
       matrix:
         include: ${{ github.event.workflow_run.pull_requests }}
     steps:
-      - run: echo "${{ matrix.number }} ${{ matrix.head }}"
+      - run: echo "${{ toJSON(matrix) }}"
