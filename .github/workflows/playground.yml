@@ -16,6 +16,13 @@ permissions:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [a, b, c]
+        exclude:
+          - package: a
+          - package: b
+          - package: c
     steps:
       - env:
           _GITHUB_REF: hello
