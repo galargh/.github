@@ -1,9 +1,4 @@
 on:
-  merge_group:
-  push:
-    branches: [ main ]
-  pull_request:
-  workflow_dispatch:
   workflow_run:
     workflows: 
       - Playground
@@ -13,5 +8,9 @@ on:
 jobs:
   playground2:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        number: ${{ github.event.workflow_run.pull_requests.*.number }}
     steps:
-      - run: echo "${{ toJSON(github.event) }}"
+      - run: echo "${{ matrix.number }}"
