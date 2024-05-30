@@ -16,9 +16,10 @@ permissions:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    if: '[]' != '[]'
     strategy:
       matrix:
-        package: [a, b, c]
+        package: ${{ fromJson('[]') }}
         exclude:
           - package: a
           - package: b
