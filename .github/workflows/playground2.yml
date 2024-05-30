@@ -5,6 +5,10 @@ on:
   pull_request:
   workflow_dispatch:
   workflow_run:
+    workflows: 
+      - Playground
+    types:
+      - completed
 
 jobs:
   playground2:
