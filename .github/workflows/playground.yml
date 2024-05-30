@@ -23,6 +23,7 @@ jobs:
           export GITHUB_REF=$_GITHUB_REF 
           echo "$GITHUB_REF"
           echo "$GITHUB_EVENT_PATH"
+          yq --help
   save_event:
     name: Save event
     runs-on: ubuntu-latest
