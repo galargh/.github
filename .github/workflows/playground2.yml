@@ -4,21 +4,10 @@ on:
     branches: [ main ]
   pull_request:
   workflow_dispatch:
+  workflow_run:
 
 jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: ls /home/runner/work/_PipelineMapping/galargh
-        shell: bash
-      - run: ls /home/runner/work/_actions/actions/checkout
-        shell: bash
-      - uses: actions/checkout@v3
-      - run: echo "${{ toJSON(github) }}"
-        shell: bash
-      - run: env
-        shell: bash
-      - run: gh run view --repo ${{ github.repository }} ${{ github.run_id }}
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - run: echo "${{ toJSON(github.event) }}"
