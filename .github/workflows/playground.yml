@@ -31,6 +31,7 @@ jobs:
           echo "$GITHUB_REF"
           echo "$GITHUB_EVENT_PATH"
           yq --help
+          echo "${{ toJSON(matrix) }}"
   save_event:
     name: Save event
     runs-on: ubuntu-latest
