@@ -22,4 +22,5 @@ jobs:
         run: |
           export GITHUB_REF=$_GITHUB_REF 
           echo "$GITHUB_REF"
+          echo "$GITHUB_EVENT_PATH"
           
