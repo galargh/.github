@@ -10,11 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.event.workflow_run.event == 'pull_request' &&
-        github.event.workflow_run.conclusion == 'success' &&
-        github.repository_id == matrix.head.repo.id
+        github.event.workflow_run.conclusion == 'success'
     strategy:
       fail-fast: false
       matrix:
         include: ${{ github.event.workflow_run.pull_requests }}
     steps:
-      - run: echo "${{ toJSON(matrix) }}"
+      - uses: actions/github-script@v6
+        name: Comment on failure
+        if: github.repository_id == matrix.head.repo.id
+        env:
+          ISSUE_NUMBER: ${{ matrix.number }}
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: process.env.ISSUE_NUMBER,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Thanks for submitting this PR!\n\nUnfortunately, it has some linter errors, so we can't merge it yet. Can you please fix them?\n\nRunning pnpm lint:fix in the root of the repository may fix them automatically."
+            })
