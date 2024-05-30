@@ -11,6 +11,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        number: ${{ github.event.workflow_run.pull_requests.*.number }}
+        include: ${{ github.event.workflow_run.pull_requests }}
     steps:
-      - run: echo "${{ matrix.number }}"
+      - run: echo "${{ matrix.number }} ${{ matrix.head }}"
