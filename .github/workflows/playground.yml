@@ -16,7 +16,7 @@ permissions:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    if: false
+    if: true
     strategy:
       matrix:
         package: ${{ fromJson('[]') }}
