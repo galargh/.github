@@ -16,23 +16,14 @@ permissions:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    if: true
-    strategy:
-      matrix:
-        package: ${{ fromJson('[]') }}
-        exclude:
-          - package: a
-          - package: b
-          - package: c
     steps:
-      - env:
-          _GITHUB_REF: hello
-        run: |
-          export GITHUB_REF=$_GITHUB_REF 
-          echo "$GITHUB_REF"
-          echo "$GITHUB_EVENT_PATH"
-          yq --help
-          echo "${{ toJSON(matrix) }}"
+      - run: echo "hello" > hello
+        shell: bash
+      - uses: actions/cache@v4
+        with:
+          key: abcdef
+          path: hello
+          
   save_event:
     name: Save event
     runs-on: ubuntu-latest
