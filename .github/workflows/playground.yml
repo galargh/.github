@@ -21,7 +21,7 @@ jobs:
         shell: bash
       - uses: actions/cache@v4
         with:
-          key: abcdef
+          key: abcdef123
           path: hello
           
   save_event:
