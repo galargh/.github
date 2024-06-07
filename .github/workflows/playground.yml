@@ -18,16 +18,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          ref: "refs/pull/61/head"
+          ref: "refs/pull/61/merge"
           sparse-checkout: |
             !.github/actions/*
           sparse-checkout-cone-mode: false
-      - id: head
-        run: git rev-parse HEAD | xargs -I {} -0 echo "head={}" | tee -a $GITHUB_OUTPUT
+      - run: git ls-files
         shell: bash
-      - uses: actions/checkout@v4
-      - run: git merge ${{ steps.head.outputs.head }} --allow-unrelated-histories
+      - run: git sparse-checkout disable
+        shell: bash
+      - run: git ls-files
         shell: bash
       - run: ls .github/**/*
         shell: bash
