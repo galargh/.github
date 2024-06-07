@@ -22,5 +22,10 @@ jobs:
           sparse-checkout: |
             .github/actions/*
           sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            !.github/actions/*
+          sparse-checkout-cone-mode: false
       - run: ls .github/**/*
         shell: bash
