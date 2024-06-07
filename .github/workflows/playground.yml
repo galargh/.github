@@ -24,11 +24,9 @@ jobs:
           sparse-checkout: |
             !.github/actions/*
           sparse-checkout-cone-mode: false
-      - run: git ls-files
+      - run: ls **/*
         shell: bash
       - run: git sparse-checkout disable
         shell: bash
-      - run: git ls-files
-        shell: bash
-      - run: ls .github/**/*
+      - run: ls **/*
         shell: bash
