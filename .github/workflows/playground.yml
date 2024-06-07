@@ -24,7 +24,7 @@ jobs:
             !.github/actions/*
           sparse-checkout-cone-mode: false
       - id: head
-        run: git rev-parse HEAD | xargs -I {} -0 "echo head={}" | tee -a $GITHUB_OUTPUT
+        run: git rev-parse HEAD | xargs -I {} -0 echo "head={}" | tee -a $GITHUB_OUTPUT
         shell: bash
       - uses: actions/checkout@v4
       - run: git merge ${{ steps.head.outputs.head }}
