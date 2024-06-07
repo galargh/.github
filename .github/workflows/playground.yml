@@ -22,11 +22,11 @@ jobs:
         with:
           ref: "refs/pull/61/merge"
           sparse-checkout: |
-            !.github/actions/*
+            !.github/*
           sparse-checkout-cone-mode: false
-      - run: ls **/*
+      - run: ls ./**/*
         shell: bash
       - run: git sparse-checkout disable
         shell: bash
-      - run: ls **/*
+      - run: ls ./**/*
         shell: bash
