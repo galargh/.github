@@ -19,11 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          filter: |
-            .github/actions/*
-      - uses: actions/checkout@v4
-        with:
-          filter: |
+          ref: "refs/pull/61/merge"
+          sparse-checkout: |
             !.github/actions/*
+          sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+      - run:  git merge main
+        shell: bash
       - run: ls .github/**/*
         shell: bash
