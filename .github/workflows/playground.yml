@@ -24,9 +24,12 @@ jobs:
           sparse-checkout: |
             !.github/*
           sparse-checkout-cone-mode: false
-      - run: ls ./**/*
+      - run: ls .github/**/*
+        continue-on-error: true
         shell: bash
       - run: git sparse-checkout disable
         shell: bash
-      - run: ls ./**/*
+      - run: ls .github/**/*
+        shell: bash
+      - run: ls .github/workflows/playground.yml
         shell: bash
