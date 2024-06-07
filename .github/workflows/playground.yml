@@ -18,14 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rm -rf .git
-        shell: bash
-      - uses: actions/checkout@v4
         with:
-          ref: "refs/pull/61/merge"
+          ref: "refs/pull/61/head"
           sparse-checkout: |
             !.github/actions/*
           sparse-checkout-cone-mode: false
-          clean: false
+      - id: head
+        run: git rev-parse HEAD | xargs -i {} -0 "echo head={}" | tee -a $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/checkout@v4
+      - run: git merge ${{ steps.head.outputs.head }}
+        shell: bash
       - run: ls .github/**/*
         shell: bash
