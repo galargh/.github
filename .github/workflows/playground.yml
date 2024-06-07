@@ -24,7 +24,7 @@ jobs:
           sparse-checkout: |
             !.github/actions/*
           sparse-checkout-cone-mode: false
-      - run:  git checkout $GITHUB_REF -- .github/actions
+      - run:  git checkout master -- .github/actions
         shell: bash
       - run: ls .github/**/*
         shell: bash
