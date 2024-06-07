@@ -27,7 +27,7 @@ jobs:
         run: git rev-parse HEAD | xargs -I {} -0 echo "head={}" | tee -a $GITHUB_OUTPUT
         shell: bash
       - uses: actions/checkout@v4
-      - run: git merge ${{ steps.head.outputs.head }}
+      - run: git merge ${{ steps.head.outputs.head }} --allow-unrelated-histories
         shell: bash
       - run: ls .github/**/*
         shell: bash
