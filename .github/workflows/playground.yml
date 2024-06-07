@@ -31,5 +31,7 @@ jobs:
         shell: bash
       - run: ls .github/**/*
         shell: bash
-      - run: ls .github/workflows/playground.yml
+      - run: cat .github/workflows/playground.yml
+        shell: bash
+      - run: git status
         shell: bash
