@@ -18,13 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: rm -rf .git
+        shell: bash
       - uses: actions/checkout@v4
         with:
           ref: "refs/pull/61/merge"
           sparse-checkout: |
             !.github/actions/*
           sparse-checkout-cone-mode: false
-      - run:  git checkout master -- .github/actions
-        shell: bash
+          clean: false
       - run: ls .github/**/*
         shell: bash
