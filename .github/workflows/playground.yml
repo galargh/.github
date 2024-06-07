@@ -21,13 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: "refs/pull/61/merge"
-          sparse-checkout: |
-            !.github/*
-          sparse-checkout-cone-mode: false
-      - run: ls .github/**/*
-        continue-on-error: true
-        shell: bash
-      - run: git sparse-checkout disable
+      - run: git checkout $GITHUB_SHA --no-overlay -- .github
         shell: bash
       - run: ls .github/**/*
         shell: bash
