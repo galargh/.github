@@ -18,14 +18,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          ref: "refs/pull/61/merge"
-      - run: git checkout $GITHUB_SHA --no-overlay -- .github
-        shell: bash
-      - run: ls .github/**/*
-        shell: bash
-      - run: cat .github/workflows/playground.yml
-        shell: bash
-      - run: git status
-        shell: bash
