@@ -17,15 +17,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          ref: "refs/pull/61/merge"
-      - run: git checkout $GITHUB_SHA --no-overlay -- .github
-        shell: bash
-      - run: ls .github/**/*
-        shell: bash
-      - run: cat .github/workflows/playground.yml
-        shell: bash
-      - run: git status
+      - run: |
+          current_version=v1.28.0-rc1
+          if [[ $current_version =~ -dev$ ]]; then
+            echo "Skipping $project because it's a dev version"
+            continue
+          fi
         shell: bash
