@@ -18,5 +18,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo $GOPATH
+          echo $HOME
         shell: bash
