@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - run: |
           echo $HOME
