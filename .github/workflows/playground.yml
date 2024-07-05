@@ -18,7 +18,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          which gcc
-          gcc --version
-          pkg-config --libs glib-2.0
+          locate libm.so
+        shell: bash
+  playground2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          locate libc.so
         shell: bash
