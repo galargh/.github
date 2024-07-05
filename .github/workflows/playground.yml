@@ -14,15 +14,9 @@ permissions:
   checks: write
 
 jobs:
-  playground:
-    runs-on: macos-latest
-    steps:
-      - run: |
-          sudo find / -name libm.so
-        shell: bash
   playground2:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          sudo find / -name libc.so
+          ls /usr/lib
         shell: bash
