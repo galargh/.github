@@ -18,5 +18,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          ls /usr/lib
+          echo $CPATH
         shell: bash
