@@ -18,11 +18,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          locate libm.so
+          sudo find / -name libm.so
         shell: bash
   playground2:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          locate libc.so
+          sudo find / -name libc.so
         shell: bash
