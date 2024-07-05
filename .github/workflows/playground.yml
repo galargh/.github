@@ -18,9 +18,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          current_version=v1.28.0-rc1
-          if [[ $current_version =~ -rc$ && "$TARGET_REF" == 'refs/heads/releases' ]]; then
-            echo "Skipping $project because it's an RC version on the releases branch"
-            continue
-          fi
+          sudo ls
         shell: bash
