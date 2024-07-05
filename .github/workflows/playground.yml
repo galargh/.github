@@ -18,12 +18,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          go env
-          go install github.com/filecoin-project/go-paramfetch/paramfetch@latest
-          echo "--"
-          ls
-          echo "--"
-          ls $GOPATH
-          echo "--"
-          ls $GOPATH/bin
+          echo $GOPATH
         shell: bash
