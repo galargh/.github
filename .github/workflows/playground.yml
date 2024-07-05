@@ -18,5 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          sudo apt-get update
+          go env
+          go install github.com/filecoin-project/go-paramfetch/paramfetch@latest
+          paramfetch --help
         shell: bash
