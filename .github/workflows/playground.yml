@@ -18,6 +18,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          ls "/Applications" | grep "Xcode_"
-          sudo xcode-select -s "/Applications/Xcode_14.3.1.app"
+          which gcc
+          gcc --version
+          pkg-config --libs glib-2.0
         shell: bash
