@@ -20,6 +20,10 @@ jobs:
       - run: |
           go env
           go install github.com/filecoin-project/go-paramfetch/paramfetch@latest
+          echo "--"
+          ls
+          echo "--"
           ls $GOPATH
+          echo "--"
           ls $GOPATH/bin
         shell: bash
