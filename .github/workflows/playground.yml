@@ -17,6 +17,10 @@ jobs:
   playground2:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/pulls/63/merge
       - run: |
-          echo $CPATH
+          git rev-parse refs/pulls/63/merge
         shell: bash
