@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   playground2:
+    if: fromJSON('{}')["version.json"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
