@@ -1,7 +1,0 @@
-name: action
-description: Perform action
-
-runs:
-  using: "composite"
-  steps:
-    - uses: galorgh/.github/.github/actions/action@master
