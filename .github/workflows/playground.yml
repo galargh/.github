@@ -26,6 +26,7 @@ jobs:
         with:
           ref: "refs/pull/${{ github.event.number }}/merge"
           persist-credentials: false
+      - run: ls -la .github/actions
       - if: github.event_name == 'pull_request_target'
         run: git checkout --no-overlay $GITHUB_SHA -- .github/actions
       - run: ls -la .github/actions
