@@ -28,7 +28,7 @@ jobs:
             const fs = require("fs");
             const path = require("path");
 
-            const cacheDir = fs.mkdtemp(
+            const cacheDir = fs.mkdtempSync(
               path.resolve(os.tmpdir(), "console-action-test-"),
             );
             const history = path.resolve(cacheDir, "console-history.txt");
