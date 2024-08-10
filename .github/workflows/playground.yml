@@ -13,6 +13,10 @@ on:
 permissions:
   checks: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   playground2:
     runs-on: windows-latest
@@ -30,3 +34,6 @@ jobs:
             const history = path.resolve(cacheDir, "console-history.txt");
 
             fs.rmSync(cacheDir, { force: true, recursive: true });
+        run: |
+          echo "$SCRIPT" > script.js
+      - run: node script.js
