@@ -30,7 +30,7 @@ jobs:
       - run: if [[ '${{ matrix.package }}' == 'a' ]]; then exit 1; fi
   playground2:
     needs: playground
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - run: echo '${{ toJSON(needs) }}'
