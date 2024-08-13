@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   playground:
-    if: false
+    if: true
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,7 +27,7 @@ jobs:
          - a
          - b
     steps:
-      - run: echo 'Hello'
+      - run: if [[ '${{ matrix.package }}' == 'b' ]]; then exit 1; fi
   playground2:
     needs: playground
     if: always()
