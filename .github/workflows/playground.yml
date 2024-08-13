@@ -21,6 +21,11 @@ jobs:
   playground:
     if: false
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+         - a
+         - b
     steps:
       - run: echo 'Hello'
   playground2:
@@ -28,4 +33,4 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Goodbye'
+      - run: echo '${{ needs.playground.status }}'
