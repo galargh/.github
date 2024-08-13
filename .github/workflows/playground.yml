@@ -33,4 +33,4 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{ needs.playground.status }}'
+      - run: echo '${{ toJSON(needs) }}'
