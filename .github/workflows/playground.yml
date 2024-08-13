@@ -24,7 +24,8 @@ jobs:
     steps:
       - run: echo 'Hello'
   playground2:
-    needs: ${{ fromJSON(false && '["playground"]' || '[]') }}
+    needs: playground
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Goodbye'
