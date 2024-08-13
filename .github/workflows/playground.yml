@@ -18,22 +18,13 @@ defaults:
     shell: bash
 
 jobs:
-  playground2:
-    runs-on: windows-latest
+  playground:
+    if: false
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - env:
-          SCRIPT: |
-            const os = require("os");
-            const fs = require("fs");
-            const path = require("path");
-
-            const cacheDir = fs.mkdtempSync(
-              path.resolve(os.tmpdir(), "console-action-test-"),
-            );
-            const history = path.resolve(cacheDir, "console-history.txt");
-
-            fs.rmSync(cacheDir, { force: true, recursive: true });
-        run: |
-          echo "$SCRIPT" > script.js
-      - run: node script.js
+      - run: echo 'Hello'
+  playground2:
+    needs: ${{ fromJSON(false && '["playground"]' || '[]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Goodbye'
