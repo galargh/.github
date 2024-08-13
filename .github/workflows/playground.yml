@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   playground:
-    if: true
+    if: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
