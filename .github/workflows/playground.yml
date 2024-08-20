@@ -27,4 +27,4 @@ jobs:
          - a
          - b
     steps:
-      - run: du --help
+      - run: find --help
