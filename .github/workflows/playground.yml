@@ -21,10 +21,7 @@ jobs:
   playground:
     if: true
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-         - a
-         - b
     steps:
-      - run: find --help
+      - id: download
+        uses: actions/download-path@v4
+      - run: echo '${{ steps.download.outputs.download-path }}'
