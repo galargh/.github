@@ -23,5 +23,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: download
-        uses: actions/download-path@v4
+        uses: actions/download-artifacts@v4
       - run: echo '${{ steps.download.outputs.download-path }}'
