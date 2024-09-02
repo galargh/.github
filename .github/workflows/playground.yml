@@ -13,15 +13,12 @@ on:
 permissions:
   checks: write
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   playground:
     if: true
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - id: download
-        uses: actions/download-artifact@v4
-      - run: echo '${{ steps.download.outputs.download-path }}'
+      - run: node <<< "const path = require('path'); console.log(path.sep);"
+      - run: node <<< "const path = require('path'); console.log(path.sep);"
+        shell: bash
+
