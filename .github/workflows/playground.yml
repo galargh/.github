@@ -20,14 +20,12 @@ defaults:
 jobs:
   playground:    
     environment:
-      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+      - id: deployment
+        run: echo "page_url=some URL" | tee -a $GITHUB_OUTPUT
       
