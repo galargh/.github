@@ -18,14 +18,12 @@ defaults:
     shell: bash
 
 jobs:
-  playground:    
-    environment:
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    # Specify runner + deployment step
+  playground:  
     runs-on: ubuntu-latest
-    
+    environment:
+      test_output: ${{ steps.test_step.outputs.test_output }}    
     steps:
-      - id: deployment
-        run: echo "page_url=some URL" | tee -a $GITHUB_OUTPUT
+      - id: test_step
+        uses: ./github/actions/action
+      - run: echo "$test_output"
       
