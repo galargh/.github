@@ -13,14 +13,18 @@ on:
 permissions:
   checks: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   playground:
-    if: true
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    environment:
+      key: ${{ steps.step.outputs.value }}
     steps:
-      - run: echo "const path = require('path'); console.log(path.sep);" > script.js
-        shell: bash
-      - run: node script.js
-      - run: node script.js
-        shell: bash
-
+      - run: echo "$key"
+      - id: step
+        run: echo "key=value" | tee -a $GITHUB_OUTPUT
+      - run: echo "$key"
+      
