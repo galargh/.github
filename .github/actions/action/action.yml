@@ -1,20 +1,10 @@
 name: action
 description: Perform action
 
-inputs:
-  test_input:
-    description: "Test Input"
-    required: false
-    default: ""
-
 outputs:
   test_output:
     description: "Test Output"
-    value: ${{ steps.test_job.outputs.test_output }}
 
 runs:
-  using: "composite"
-  steps:
-    - id: test_job
-      run: echo "test_output=The input was: ${{ inputs.test_input }}" | tee -a $GITHUB_OUTPUT
-      shell: bash
+  using: 'node20'
+  main: 'index.js'
