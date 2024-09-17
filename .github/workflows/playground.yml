@@ -20,6 +20,8 @@ defaults:
 jobs:
   playground:  
     runs-on: ubuntu-latest
+    env:
+      TEST: ${{toJSON(fromJSON('{\n}'))}}
     steps:
-      - run: echo '${{toJSON(fromJSON('{\n}'))}}'
+      - run: echo "$TEST"
       
