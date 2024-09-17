@@ -20,8 +20,6 @@ defaults:
 jobs:
   playground:  
     runs-on: ubuntu-latest
-    environment:
-      test_output: ${{ steps.test_step.outputs.test_output }}    
     steps:
       - run: echo '${{toJSON(fromJSON("{\n}"))}}'
       
