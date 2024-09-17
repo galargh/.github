@@ -23,5 +23,5 @@ jobs:
     environment:
       test_output: ${{ steps.test_step.outputs.test_output }}    
     steps:
-      - run: echo '${{fromJSON(toJSON("{\n}"))}}'
+      - run: echo '${{toJSON(fromJSON("{\n}"))}}'
       
