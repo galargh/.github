@@ -23,7 +23,5 @@ jobs:
     environment:
       test_output: ${{ steps.test_step.outputs.test_output }}    
     steps:
-      - id: test_step
-        uses: ./github/actions/action
-      - run: echo "$test_output"
+      - run: echo '${{fromJSON(toJSON("{\n}"))}}'
       
