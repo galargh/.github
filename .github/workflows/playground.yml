@@ -19,9 +19,9 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: ubuntu-latest
-    env:
-      TEST: ${{toJSON(fromJSON('{}'))}}
+    runs-on: ubuntu-24.04-arm64
     steps:
-      - run: echo "$TEST"
+      - run: lld --version
+      - run: sudo apt-get install --no-install-recommends -y libc6
+      - run: lld --version
       
