@@ -21,7 +21,7 @@ jobs:
   playground:  
     runs-on: ubuntu-24.04-arm
     steps:
-      - run: lld --version
+      - run: ldd --version
       - run: sudo apt-get install --no-install-recommends -y libc6
-      - run: lld --version
+      - run: ldd --version
       
