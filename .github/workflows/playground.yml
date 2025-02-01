@@ -22,6 +22,6 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
       - run: ldd --version
-      - run: sudo apt-get install --no-install-recommends -y libc6-dev=2.35
+      - run: sudo apt-get install --no-install-recommends -y libc6-dev=2.35-0ubuntu3.8
       - run: ldd --version
       
