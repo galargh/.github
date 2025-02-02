@@ -19,10 +19,9 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     steps:
-      - run: ls /etc/apt/sources.list.d/ubuntu.sources/
-      # - run: ldd --version
+      - run: ldd --version
       # - run: sudo apt-get update
       # - run: sudo apt-get install --no-install-recommends -y --allow-downgrades libc6-dev=2.35-* libc6=2.35-*
       # - run: ldd --version
