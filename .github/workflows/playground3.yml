@@ -20,12 +20,14 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
       - id: random
+        env:
+          ref: ${{ github.event.pull_request.head.ref }}
         run: |
-          git checkout -B "$GITHUB_REF_NAME"
           echo "value=$RANDOM" | tee .random | tee -a $GITHUB
           git add .random
           git commit -m "chore: update random value"
-          git push origin "$GITHUB_REF_NAME"
+          git checkout -B "$ref"
+          git push origin "$ref"
       - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           number: ${{ github.event.pull_request.number }}
