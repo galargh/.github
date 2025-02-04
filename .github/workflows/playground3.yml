@@ -1,0 +1,35 @@
+on:
+  pull_request_target:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  playground3:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for writing to PRs
+      pull-requests: write # required for commenting on PRs
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      - id: random
+        env:
+          ref: ${{ github.event.pull_request.head.ref }}
+        run: |
+          echo "value=$RANDOM" | tee .random | tee -a $GITHUB
+          git add .random
+          git commit -m "chore: update random value"
+          git checkout -B "$ref"
+          git push origin "$ref"
+      - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        with:
+          number: ${{ github.event.pull_request.number }}
+          message: ${{ steps.random.outputs.value }}
+      
