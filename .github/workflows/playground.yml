@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    paths: ['.github/workflows/playground.yml']
+    paths: ['.github/workflows/playground.yml', '**/*.yml']
   release:
     types:
       - published
@@ -13,19 +13,31 @@ on:
 permissions:
   checks: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  playground:
-    runs-on: ubuntu-latest
+  playground:  
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+    outputs:
+      test: ${{ runner.os }}-${{ runner.arch }}
+      ${{ runner.os }}-${{ runner.arch }}: test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          ref: "refs/pull/61/merge"
-      - run: git checkout $GITHUB_SHA --no-overlay -- .github
-        shell: bash
-      - run: ls .github/**/*
-        shell: bash
-      - run: cat .github/workflows/playground.yml
-        shell: bash
-      - run: git status
-        shell: bash
+      - run: ldd --version
+  next:
+    needs: ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+    steps:
+      - run: echo ${{ fromJSON(needs) }}
+      
