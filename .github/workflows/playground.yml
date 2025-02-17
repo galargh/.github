@@ -19,25 +19,8 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      matrix:
-        runner:
-          - ubuntu-latest
-          - ubuntu-24.04-arm
-    outputs:
-      test: ${{ runner.os }}-${{ runner.arch }}
-      ${{ runner.os }}-${{ runner.arch }}: test
+    runs-on: ubuntu-latest
     steps:
       - run: man time
-  next:
-    needs: ${{ matrix.runner }}
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      matrix:
-        runner:
-          - ubuntu-latest
-          - ubuntu-24.04-arm
-    steps:
-      - run: echo ${{ fromJSON(needs) }}
+
       
