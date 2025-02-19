@@ -21,6 +21,6 @@ jobs:
   playground:  
     runs-on: windows-latest
     steps:
-      - run: which time
+      - run: date
 
       
