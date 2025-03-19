@@ -22,18 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name:
-          - a
-          - b
-          - c
-        runner:
-          - 1
-          - 2
-        exclude:
-          - runner: 1
-          - runner: 2
-        include:
-          - name: a
+        root:
+          - name:
+              - a
+              - b
+              - c
+            runner:
+              - 1
+              - 2
     steps:
       - run: echo '${{ toJSON(matrix) }}'
 
