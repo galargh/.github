@@ -20,7 +20,21 @@ defaults:
 jobs:
   playground:  
     runs-on: windows-latest
+    strategy:
+      matrix:
+        name:
+          - a
+          - b
+          - c
+        runner:
+          - 1
+          - 2
+        exclude:
+          - runner: 1
+          - runner: 2
+        include:
+          - name: a
     steps:
-      - run: date
+      - run: echo ${{ toJSON(matrix) }}
 
       
