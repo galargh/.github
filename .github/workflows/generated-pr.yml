@@ -1,0 +1,12 @@
+name: Close Generated PRs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    uses: ipdxco/unified-github-workflows/.github/workflows/reusable-generated-pr.yml@required-uci-test
