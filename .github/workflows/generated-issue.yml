@@ -1,0 +1,12 @@
+name: Close Generated Issues
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    uses: ipdxco/unified-github-workflows/.github/workflows/reusable-generated-issue.yml@required-uci-test
