@@ -20,17 +20,7 @@ defaults:
 jobs:
   playground:  
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        root:
-          - name:
-              - a
-              - b
-              - c
-            runner:
-              - 1
-              - 2
     steps:
-      - run: echo '${{ toJSON(matrix) }}'
+      - run: yq --help
 
       
