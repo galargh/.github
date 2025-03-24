@@ -21,6 +21,7 @@ jobs:
   playground:  
     runs-on: ubuntu-latest
     steps:
-      - run: yq --help
+      - run: echo "repositories: []" > test.yml
+      - run: yq -o json . test.yml
 
       
