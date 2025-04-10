@@ -21,8 +21,10 @@ jobs:
   playground:  
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "repositories: []" > test.yml
-          yq -o json . test.yml
+      - id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          registry-url: https://npm.pkg.github.com
+      - run: cat .npmrc
 
       
