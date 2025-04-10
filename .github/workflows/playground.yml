@@ -25,6 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: https://npm.pkg.github.com
-      - run: cat .npmrc
+      - run: cat /home/runner/work/_temp/.npmrc
 
       
