@@ -21,10 +21,8 @@ jobs:
   playground:  
     runs-on: ubuntu-latest
     steps:
-      - id: setup-node
-        uses: actions/setup-node@v4
-        with:
-          registry-url: https://npm.pkg.github.com
-      - run: cat /home/runner/work/_temp/.npmrc
+      - uses: actions/checkout@v4
+      - run: git fetch origin main
+      - run: git diff --name-only --diff-filter=A master -- .github
 
       
