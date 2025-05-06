@@ -22,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: git fetch origin master
       - run: git diff --name-only --diff-filter=A origin/master -- .github
       - run: echo ""
 
