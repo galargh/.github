@@ -23,6 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: git fetch origin master
-      - run: git diff --color=never --no-ext-diff --default-prefix --relative master --
+      - run: git diff --color=never --no-ext-diff --default-prefix --relative origin/master --
 
       
