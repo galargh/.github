@@ -21,8 +21,11 @@ jobs:
   playground:  
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: git fetch origin master
-      - run: git diff --name-only --diff-filter=A master -- .github
+      - run: echo "${{ github.event_path }}"
+      - run: echo "${{ github.workspace }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: github-event
+          path: ${{ github.event_path }}
 
       
