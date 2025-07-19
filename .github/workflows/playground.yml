@@ -28,11 +28,6 @@ jobs:
       fail-fast: false
     steps:
       - run: |
-          brew update
-          brew unlink curl
-          brew upgrade curl
-          brew link curl --force
-      - run: |
           curl --version
       
           release_url="https://api.github.com/repos/filecoin-project/filecoin-ffi/releases/assets/251348243"
@@ -57,6 +52,6 @@ jobs:
           echo "asset url:"
           echo "${asset_url}"
           
-          curl -H "Authorization: token ${{ github.token }}" --retry 3 --output "${tar_path}" "${asset_url}"
+          curl --http1.1 -H "Authorization: token ${{ github.token }}" --retry 3 --output "${tar_path}" "${asset_url}"
           
           tar -xzf "${tar_path}"
