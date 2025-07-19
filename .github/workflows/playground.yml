@@ -19,9 +19,17 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: macos-13
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - macos-14
+          - macos-13
+      fail-fast: false
     steps:
       - run: |
+          curl --version
+      
           release_url="https://api.github.com/repos/filecoin-project/lotus/releases/assets/243593317"
 
           echo "release url:"
