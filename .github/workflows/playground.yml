@@ -30,7 +30,7 @@ jobs:
       - run: |
           curl --version
       
-          release_url="https://api.github.com/repos/filecoin-project/filecoin-ffi/releases/assets/251348243'
+          release_url="https://api.github.com/repos/filecoin-project/filecoin-ffi/releases/assets/251348243"
 
           echo "release url:"
           echo "${release_url}"
