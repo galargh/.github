@@ -22,28 +22,26 @@ jobs:
     runs-on: macos-13
     steps:
       - run: |
-          __release_tag_url="https://api.github.com/repos/filecoin-project/lotus/releases/tags/v1.32.2"
-          __release_name="lotus-Darwin-standard"
+          release_tag_url="https://api.github.com/repos/filecoin-project/lotus/releases/tags/v1.32.2"
+          release_name="lotus-Darwin-standard"
           
-          __release_response=$(curl -H "Authorization: token ${{ github.token }}" \
+          release_response=$(curl -H "Authorization: token ${{ github.token }}" \
               --retry 3 \
-              --location "${__release_tag_url}")
+              --location "${release_tag_url}")
           
-          __release_url=$(echo "${__release_response}" | jq -r ".assets[] | select(.name | contains(\"${__release_name}\")) | .url")
+          release_url=$(echo "${release_response}" | jq -r ".assets[] | select(.name | contains(\"${release_name}\")) | .url")
           
-          __tar_path="/tmp/${__release_name}_$(basename "${__release_url}").tar.gz"
+          tar_path="/tmp/${release_name}_$(basename "${release_url}").tar.gz"
           
-          __asset_url=$(curl -H "Authorization: token ${{ github.token }}" \
+          asset_url=$(curl -H "Authorization: token ${{ github.token }}" \
               --head \
               --retry 3 \
               --header "Accept:application/octet-stream" \
               --location \
               --output /dev/null \
               -w "%{url_effective}" \
-              "${__release_url}")
+              "${release_url}")
           
-          curl -H "Authorization: token ${{ github.token }}" --retry 3 --output "${__tar_path}" "${__asset_url}"
+          curl -H "Authorization: token ${{ github.token }}" --retry 3 --output "${tar_path}" "${asset_url}"
           
-          tar -xzf "${__tar_path}"
-
-      
+          tar -xzf "${tar_path}"
