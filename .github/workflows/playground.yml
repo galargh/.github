@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-13
     steps:
       - run: |
-          release_url="https://api.github.com/repos/filecoin-project/lotus/releases/assets/243593317'
+          release_url="https://api.github.com/repos/filecoin-project/lotus/releases/assets/243593317"
 
           echo "release url:"
           echo "${release_url}"
