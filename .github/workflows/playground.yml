@@ -28,6 +28,7 @@ jobs:
       fail-fast: false
     steps:
       - run: |
+          brew update
           brew unlink curl
           brew upgrade curl
           brew link curl --force
