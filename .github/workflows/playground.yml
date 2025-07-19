@@ -27,7 +27,7 @@ jobs:
           - macos-13
       fail-fast: false
     steps:
-      - run: sudo apt-get install curl -y
+      - run: sudo apt get install curl -y
       - run: |
           curl --version
       
