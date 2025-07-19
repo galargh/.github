@@ -29,9 +29,18 @@ jobs:
               --retry 3 \
               --location "${release_tag_url}")
           
+          echo "release response:"
+          echo "${release_response}"
+          
           release_url=$(echo "${release_response}" | jq -r ".assets[] | select(.name | contains(\"${release_name}\")) | .url")
           
+          echo "release url:"
+          echo "${release_url}"
+          
           tar_path="/tmp/${release_name}_$(basename "${release_url}").tar.gz"
+          
+          echo "tar path:"
+          echo "${tar_path}"
           
           asset_url=$(curl -H "Authorization: token ${{ github.token }}" \
               --head \
@@ -41,6 +50,9 @@ jobs:
               --output /dev/null \
               -w "%{url_effective}" \
               "${release_url}")
+          
+          echo "asset url:"
+          echo "${asset_url}"
           
           curl -H "Authorization: token ${{ github.token }}" --retry 3 --output "${tar_path}" "${asset_url}"
           
