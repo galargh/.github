@@ -22,6 +22,28 @@ jobs:
     runs-on: macos-13
     steps:
       - run: |
-          curl -H 'Authorization: token ${{ github.token }}' --retry 3 --output test.tar.gz 'https://release-assets.githubusercontent.com/github-production-release-asset/223221398/57be375c-dcfc-4722-9a95-d2bb0ec2565e'
+          __release_tag_url="https://api.github.com/repos/filecoin-project/lotus/releases/tags/v1.32.2"
+          __release_name="lotus-Darwin-standard"
+          
+          __release_response=$(curl -H "Authorization: token ${{ github.token }}" \
+              --retry 3 \
+              --location "${__release_tag_url}")
+          
+          __release_url=$(echo "${__release_response}" | jq -r ".assets[] | select(.name | contains(\"${__release_name}\")) | .url")
+          
+          __tar_path="/tmp/${__release_name}_$(basename "${__release_url}").tar.gz"
+          
+          __asset_url=$(curl -H "Authorization: token ${{ github.token }}" \
+              --head \
+              --retry 3 \
+              --header "Accept:application/octet-stream" \
+              --location \
+              --output /dev/null \
+              -w "%{url_effective}" \
+              "${__release_url}")
+          
+          curl -H "Authorization: token ${{ github.token }}" --retry 3 --output "${__tar_path}" "${__asset_url}"
+          
+          tar -xzf "${__tar_path}"
 
       
