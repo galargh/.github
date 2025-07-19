@@ -27,7 +27,10 @@ jobs:
           - macos-13
       fail-fast: false
     steps:
-      - run: brew reinstall curl
+      - run: |
+          brew uninstall curl
+          brew install curl@7.86
+          brew link curl@7.86 --force
       - run: |
           curl --version
       
