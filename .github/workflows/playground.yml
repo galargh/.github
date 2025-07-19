@@ -23,7 +23,7 @@ jobs:
     steps:
       - run: |
           release_tag_url="https://api.github.com/repos/filecoin-project/lotus/releases/tags/v1.32.2"
-          release_name="lotus-Darwin-standard"
+          release_name="lotus_v1.32.2_darwin_all.tar.gz"
           
           release_response=$(curl -H "Authorization: token ${{ github.token }}" \
               --retry 3 \
