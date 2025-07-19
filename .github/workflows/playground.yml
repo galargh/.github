@@ -29,8 +29,8 @@ jobs:
     steps:
       - run: |
           brew unlink curl
-          brew install curl@7.86
-          brew link curl@7.86 --force
+          brew upgrade curl
+          brew link curl --force
       - run: |
           curl --version
       
