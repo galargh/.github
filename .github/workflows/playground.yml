@@ -28,8 +28,7 @@ jobs:
       fail-fast: false
     steps:
       - run: |
-          brew uninstall curl
-          brew install curl@7.86
+          brew install curl@7.86 --force
           brew link curl@7.86 --force
       - run: |
           curl --version
