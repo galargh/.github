@@ -19,8 +19,9 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: windows-2019
+    runs-on: macos-13
     steps:
-      - run: echo "$RUNNER_ARCH"
+      - run: |
+          curl -H 'Authorization: token ${{ github.token }}' --retry 3 --output test.tar.gz 'https://release-assets.githubusercontent.com/github-production-release-asset/223221398/57be375c-dcfc-4722-9a95-d2bb0ec2565e'
 
       
