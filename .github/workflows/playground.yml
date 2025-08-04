@@ -23,40 +23,8 @@ jobs:
     strategy:
       matrix:
         runner:
-          - macos-14
-          - macos-13
+          - ubuntu-latest
       fail-fast: false
     steps:
       - run: |
-          brew unlink curl
-          brew update
-          brew upgrade curl
-          brew link curl --force
-      - run: |
-          curl --version
-      
-          release_url="https://api.github.com/repos/filecoin-project/filecoin-ffi/releases/assets/251348243"
-
-          echo "release url:"
-          echo "${release_url}"
-          
-          tar_path="/tmp/${release_name}_$(basename "${release_url}").tar.gz"
-          
-          echo "tar path:"
-          echo "${tar_path}"
-          
-          asset_url=$(curl -H "Authorization: token ${{ github.token }}" \
-              --head \
-              --retry 3 \
-              --header "Accept:application/octet-stream" \
-              --location \
-              --output /dev/null \
-              -w "%{url_effective}" \
-              "${release_url}")
-          
-          echo "asset url:"
-          echo "${asset_url}"
-          
-          curl -H "Accept:application/octet-stream" -H "Authorization: token ${{ github.token }}" --retry 3 --output "${tar_path}" "${asset_url}"
-          
-          tar -xzf "${tar_path}"
+          echo "${{ false != null }}"
