@@ -28,4 +28,9 @@ jobs:
       fail-fast: false
     steps:
       - run: |
-          echo "${{ vars.test }}"
+          touch release.json
+          mkdir abc
+          touch abc/release.json
+          for f in **/release.json; do
+            echo "$f";
+          done
