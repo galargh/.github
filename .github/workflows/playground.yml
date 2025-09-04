@@ -33,6 +33,7 @@ jobs:
           touch abc/release.json
           mkdir abc/def
           touch abc/def/release.json
-          for f in release.json **/release.json; do
+          shopt -s globstar
+          for f in **/release.json; do
             echo "$f";
           done
