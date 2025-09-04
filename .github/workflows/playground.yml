@@ -31,6 +31,8 @@ jobs:
           touch release.json
           mkdir abc
           touch abc/release.json
-          for f in **/release.json; do
+          mkdir abc/def
+          touch abc/def/release.json
+          for f in release.json **/release.json; do
             echo "$f";
           done
