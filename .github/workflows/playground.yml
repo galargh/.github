@@ -69,4 +69,4 @@ jobs:
           pattern: outputs-test-${{ matrix.letter }}-*
           path: /tmp/outputs
           merge-multiple: false
-      - run: ls -la /tmp/outputs
+      - run: ls -la /tmp/outputs/*
