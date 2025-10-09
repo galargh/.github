@@ -37,7 +37,7 @@ jobs:
       - name: Set job result output
         if: ${{ always() }}
         run: |
-          echo "${{ job.name }}=${{ job.status }}" >> $GITHUB_OUTPUT
+          echo "${{ job.id }}=${{ job.status }}" >> $GITHUB_OUTPUT
   aggregate:
     if: ${{ !cancelled() }}
     needs: playground
