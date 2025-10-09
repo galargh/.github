@@ -18,6 +18,9 @@ defaults:
   run:
     shell: bash
 
+env:
+  ABC: 123
+
 jobs:
   playground:  
     runs-on: ubuntu-latest
@@ -32,7 +35,7 @@ jobs:
       fail-fast: false
     name: test-${{ matrix.letter }}-${{ matrix.number }}
     steps:
-      - run: echo "OK"
+      - run: echo '${{ toJSON(env) }}'
       
       - name: Set result output
         if: ${{ always() }}
