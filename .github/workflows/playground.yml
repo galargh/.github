@@ -39,13 +39,16 @@ jobs:
         run: |
           echo "result=${{ job.status }}" >> $GITHUB_OUTPUT
           echo "job=${{ github.job}}" >> $GITHUB_OUTPUT
+          cp $GITHUB_OUTPUT outputs-test-${{ matrix.letter }}-${{ matrix.number }}.txt
+          echo $GITHUB_OUTPUT
+      
 
       - name: Upload outputs
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: outputs-test-${{ matrix.letter }}-${{ matrix.number }}
-          path: ${{ env.GITHUB_OUTPUT }}
+          path: outputs-test-${{ matrix.letter }}-${{ matrix.number }}.txt
           
   aggregate:
     if: ${{ !cancelled() }}
