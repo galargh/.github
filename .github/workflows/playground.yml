@@ -44,4 +44,4 @@ jobs:
       fail-fast: false
     name: aggregate-${{ matrix.letter }}
     steps:
-      - run: echo '${{ fromJSON(needs.playground) }}'
+      - run: echo '${{ toJSON(needs.playground) }}'
