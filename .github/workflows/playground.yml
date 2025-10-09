@@ -36,6 +36,10 @@ jobs:
     name: test-${{ matrix.letter }}-${{ matrix.number }}
     steps:
       - run: echo '${{ toJSON(env) }}'
+
+      - uses: actions/checkout@v5
+
+      - uses: ./.github/actions/action2
       
       - name: Set result output
         if: ${{ always() }}
