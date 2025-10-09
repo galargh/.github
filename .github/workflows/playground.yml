@@ -51,3 +51,4 @@ jobs:
     name: aggregate-${{ matrix.letter }}
     steps:
       - run: echo '${{ toJSON(needs.playground) }}'
+      - run: echo '${{ toJSON(jobs) }}'
