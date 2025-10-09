@@ -20,20 +20,28 @@ defaults:
 
 jobs:
   playground:  
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        runner:
-          - ubuntu-latest
+        letter:
+          - A
+          - B
+        number:
+          - 1
+          - 2
       fail-fast: false
+    name: test-${{ matrix.letter }}-${{ matrix.number }}
     steps:
-      - run: |
-          touch release.json
-          mkdir abc
-          touch abc/release.json
-          mkdir abc/def
-          touch abc/def/release.json
-          shopt -s globstar
-          for f in **/release.json; do
-            echo "$f";
-          done
+      - run: echo "OK"
+  aggregate:
+    needs: playground
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        letter:
+          - A
+          - B
+      fail-fast: false
+    name: aggregate-${{ matrix.letter }}
+    steps:
+      - run: echo '${{ fromJSON(needs.playground) }}'
