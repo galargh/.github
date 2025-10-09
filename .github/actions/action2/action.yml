@@ -1,6 +1,12 @@
 name: action
 description: Perform action
 
+inputs:
+  abc:
+    required: false
+    description: abc
+    default: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
 runs:
   using: "composite"
   steps:
