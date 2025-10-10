@@ -1,0 +1,11 @@
+name: test
+runs:
+  using: composite
+  steps:
+    - run: exit 1
+      shell: bash
+
+    - if: ${{ always() }}
+      run: echo "result=${{ job.status }}"
+      shell: bash
+      
