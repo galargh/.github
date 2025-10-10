@@ -6,6 +6,6 @@ runs:
       shell: bash
 
     - if: ${{ always() }}
-      run: echo "result=${{ job.status }}"
+      run: echo "result=${{ github.action_status }}"
       shell: bash
       
