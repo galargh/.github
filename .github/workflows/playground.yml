@@ -31,14 +31,14 @@ jobs:
     needs: playground
     runs-on: ubuntu-latest
     steps:
-      - if: needs.playground.status != 'success'
+      - if: needs.playground.result != 'success'
         run: exit 1
   playground3:
     if: ${{ always() }}
     needs: playground
     runs-on: ubuntu-latest
     steps:
-      - if: needs.playground.status != 'success'
+      - if: needs.playground.result != 'success'
         run: exit 1
     
     
