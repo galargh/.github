@@ -34,7 +34,7 @@ jobs:
       - if: needs.playground.result != 'success'
         run: exit 1
   playground3:
-    if: ${{ always() }}
+    if: ${{ false }}
     needs: playground
     runs-on: ubuntu-latest
     steps:
