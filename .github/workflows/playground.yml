@@ -25,7 +25,8 @@ jobs:
   playground:  
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 60
+      - timeout-minutes: 1
+        run: sleep 120
   playground2:
     if: ${{ !cancelled() }}
     needs: playground
@@ -34,7 +35,7 @@ jobs:
       - if: needs.playground.result != 'success'
         run: exit 1
   playground3:
-    if: ${{ false }}
+    if: ${{ !cancelled() }}
     needs: playground
     runs-on: ubuntu-latest
     steps:
