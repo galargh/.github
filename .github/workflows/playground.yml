@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         name: [Playground 1, Playground 2, Playground 3]
-    name: playground [required]
+    name: playground (required) [required]
     with:
       name: ${{ matrix.name }}
 
