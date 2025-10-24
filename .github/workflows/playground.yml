@@ -38,7 +38,7 @@ jobs:
           - package: Playground 3
             description: Playground 3
             required: true
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }} a
     with:
       name: ${{ matrix.package }}
 
