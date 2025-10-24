@@ -1,0 +1,18 @@
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: The name of the playground
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  playground4:
+    runs-on: ubuntu-latest
+    name: ${{ inputs.name }}
+    steps:
+      - run: echo "Hello, ${{ inputs.name }}!"

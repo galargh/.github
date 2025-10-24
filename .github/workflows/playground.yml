@@ -22,23 +22,13 @@ env:
   ABC: 123
 
 jobs:
-  playground:  
-    runs-on: ubuntu-latest
-    steps:
-      - run: sleep 60
-  playground2:
-    if: ${{ !cancelled() }}
-    needs: playground
-    runs-on: ubuntu-latest
-    steps:
-      - if: needs.playground.result != 'success'
-        run: exit 1
-  playground3:
-    if: ${{ always() }}
-    needs: playground
-    runs-on: ubuntu-latest
-    steps:
-      - if: needs.playground.result != 'success'
-        run: exit 1
-    
-    
+  playground:
+    uses: ./.github/workflows/playground4.yml
+    strategy:
+      matrix:
+        name: [Playground 1, Playground 2, Playground 3]
+    name: playground [required]
+    with:
+      name: ${{ matrix.name }}
+
+
