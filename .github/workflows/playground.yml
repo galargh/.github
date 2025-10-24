@@ -27,17 +27,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - package: Playground 1
-            description: Playground 1
-            required: true
-          - package: Playground 2
-            description: Playground 2
-            required: true
-          - package: Playground 3
-            description: Playground 3
-            required: true
-    name: Playground ${{ '1' }}
+          - name: backend
+            install-bigquery-tools: false
+          - name: packages
+            install-bigquery-tools: true
+
+    name: ${{ '1' }}
     with:
-      name: ${{ matrix.package }}
+      name: ${{ matrix.name }}
 
 
