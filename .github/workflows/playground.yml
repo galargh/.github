@@ -32,7 +32,7 @@ jobs:
           - name: packages
             install-bigquery-tools: true
 
-    name: '${{ '1' }}'
+    name: "${{ '1' }}"
     with:
       name: ${{ matrix.name }}
 
