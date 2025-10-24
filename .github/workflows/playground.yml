@@ -26,8 +26,17 @@ jobs:
     uses: ./.github/workflows/playground4.yml
     strategy:
       matrix:
-        name: [Playground 1, Playground 2, Playground 3]
-    name: playground (required) [required]
+        include:
+          - name: Playground 1
+            description: Playground 1
+            required: true
+          - name: Playground 2
+            description: Playground 2
+            required: true
+          - name: Playground 3
+            description: Playground 3
+            required: true
+    name: playground (${{ matrix.required }}) [required]
     with:
       name: ${{ matrix.name }}
 
