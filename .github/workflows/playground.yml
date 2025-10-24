@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         service:
-          - Playground 1
+          - Playground 2
         include:
           - package: Playground 1
             description: Playground 1
