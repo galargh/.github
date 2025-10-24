@@ -26,6 +26,8 @@ jobs:
     uses: ./.github/workflows/playground4.yml
     strategy:
       matrix:
+        name:
+          - Playground 1
         include:
           - package: Playground 1
             description: Playground 1
