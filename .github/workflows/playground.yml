@@ -26,18 +26,20 @@ jobs:
     uses: ./.github/workflows/playground4.yml
     strategy:
       matrix:
+        name:
+          - Playground 1
         include:
-          - name: Playground 1
+          - package: Playground 1
             description: Playground 1
             required: true
-          - name: Playground 2
+          - package: Playground 2
             description: Playground 2
             required: true
-          - name: Playground 3
+          - package: Playground 3
             description: Playground 3
             required: true
-    name: playground (${{ matrix.required }}) [required]
+    name: ${{ matrix.name }}
     with:
-      name: ${{ matrix.name }}
+      name: ${{ matrix.package }}
 
 
