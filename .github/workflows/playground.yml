@@ -23,17 +23,13 @@ env:
 
 jobs:
   playground:
-    uses: ./.github/workflows/playground4.yml
-    strategy:
-      matrix:
-        include:
-          - name: backend
-            install-bigquery-tools: false
-          - name: packages
-            install-bigquery-tools: true
-
-    name: 1${{ '' }}
-    with:
-      name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          path: abc
+      - run: ls -la
+      - run: git status
 
 
