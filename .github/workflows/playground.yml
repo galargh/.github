@@ -32,10 +32,10 @@ jobs:
       dind:
         image: docker:dind
         options: --privileged
-        # ports:
+        ports:
           # Forward the test port 27018 from the DIND container to the job container's host
           # The format is [Job Container Port]:[Service Container Port]
-          # - 27018:27018
+          - 27018:27018
 
     steps:
       # 1. Install Docker Client and network utility
@@ -59,10 +59,6 @@ jobs:
       # 2. Start the Nginx server
       - name: 🚀 Start Nginx server (via DIND)
         run: |
-          # Use the DIND service name for the Docker Host connection
-          # export DOCKER_HOST="tcp://dind:2375"
-          echo "Starting Nginx server exposed on DIND port 27018..."
-
           # Expose Nginx port 80 to DIND container's port 27018
           docker run -d \
             --name nginx-server \
