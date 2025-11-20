@@ -52,7 +52,13 @@ jobs:
       - name: Start MongoDB
         run: |
           atlas config set silence_storage_warning true
-          atlas deployments setup mongodb-atlas --type local --port 27018 --bindIpAll --force
+          atlas deployments setup mongodb-atlas --type local --port 27018 --force
+
+          echo ""
+          echo "=== Setup socat forwarder on port 27019 ==="
+          # MongoDB binds to 127.0.0.1:27018 inside dind
+          # We'll use socat to forward from 0.0.0.0:27019 -> 127.0.0.1:27018
+          docker run -d --name mongodb-atlas-proxy --network host alpine/socat tcp-listen:27019,fork,reuseaddr,bind=0.0.0.0 tcp-connect:127.0.0.1:27018
 
           sleep 3
 
@@ -61,54 +67,49 @@ jobs:
           docker ps -a
 
           echo ""
-          echo "=== Debug: Check port bindings ==="
-          docker port mongodb-atlas
+          echo "=== Debug: Check socat logs ==="
+          docker logs mongodb-atlas-proxy
 
           echo ""
           echo "=== Debug: Test from main container ==="
           apt-get install -y netcat-openbsd
-          nc -zv dind 27018 && echo "✅ Port 27018 is accessible from main container" || echo "❌ Port 27018 is NOT accessible from main container"
+          echo "Testing port 27018 (direct MongoDB, should fail):"
+          nc -zv dind 27018 && echo "✅ Port 27018 is accessible" || echo "❌ Port 27018 is NOT accessible (expected)"
+          echo "Testing port 27019 (socat proxy, should work):"
+          nc -zv dind 27019 && echo "✅ Port 27019 is accessible" || echo "❌ Port 27019 is NOT accessible"
 
-          echo ""
-          echo "=== Debug: Network inspection ==="
-          docker network ls
-          echo ""
-          echo "--- mongodb-atlas container network ---"
-          docker inspect mongodb-atlas | grep -A 20 NetworkSettings
-
-      - name: localhost:27018 is reachable
+      - name: localhost:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host localhost --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host localhost --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-
-      - name: 0.0.0.0:27018 is reachable
+      - name: 0.0.0.0:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host 0.0.0.0 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host 0.0.0.0 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: 127.0.0.1:27018 is reachable
+      - name: 127.0.0.1:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host 127.0.0.1 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host 127.0.0.1 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: dind:27018 is reachable
+      - name: dind:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host dind --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host dind --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: mongodb-atlas:27018 is reachable
+      - name: mongodb-atlas:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host mongodb-atlas --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host mongodb-atlas --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: mongodb-atlas-proxy:27018 is reachable
+      - name: mongodb-atlas-proxy:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host mongodb-atlas-proxy --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host mongodb-atlas-proxy --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: host.docker.internal:27018 is reachable
+      - name: host.docker.internal:27019 is reachable
         continue-on-error: true
         run: |
-          mongosh --host host.docker.internal --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host host.docker.internal --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
