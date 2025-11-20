@@ -65,26 +65,39 @@ jobs:
 
           docker ps
 
-      # 2.5. Inspect Docker networks
-      - name: 🔍 Inspect Docker networks
+      # 2.5. Debug connectivity and ports
+      - name: 🔍 Debug connectivity
         run: |
-          echo "=== Listing all Docker networks ==="
-          docker network ls
+          echo "=== Installing debugging tools ==="
+          apt-get install -y netcat-openbsd iputils-ping
 
           echo ""
-          echo "=== Inspecting each network ==="
-          for network in $(docker network ls --format '{{.Name}}'); do
-            echo ""
-            echo "--- Network: $network ---"
-            docker network inspect $network
-          done
+          echo "=== Testing DNS resolution ==="
+          getent hosts dind || echo "DNS resolution failed"
+
+          echo ""
+          echo "=== Ping test to dind ==="
+          ping -c 3 dind || echo "Ping failed"
+
+          echo ""
+          echo "=== Check if port 27018 is open on dind ==="
+          nc -zv dind 27018 || echo "Port 27018 is not open"
+
+          echo ""
+          echo "=== Get nginx container IP ==="
+          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
+          echo "Nginx IP: $NGINX_IP"
+
+          echo ""
+          echo "=== Try to curl nginx directly by IP ==="
+          curl -v --connect-timeout 5 http://$NGINX_IP:80 || echo "Direct connection to nginx failed"
 
       # 3. Test the server connection from main container
       - name: 📡 Curl Nginx from main container
         run: |
           MAX_RETRIES=10
           DELAY=2
-          URL=http://nginx-server:27018
+          URL=http://dind:27018
 
           echo "Attempting to connect to $URL..."
 
@@ -92,6 +105,8 @@ jobs:
             echo "Attempt $i/$MAX_RETRIES: Curling $URL..."
 
             # Curl from the main ubuntu container to the dind service
+            # nginx-server is on dind's internal bridge network (172.17.0.2)
+            # dind service is on github_network (172.18.0.3) with port 27018 exposed
             curl -s --fail --connect-timeout 5 $URL
 
             if [ $? -eq 0 ]; then
