@@ -103,21 +103,30 @@ jobs:
       # 2.6. Check port binding on dind
       - name: 🔍 Check dind port binding
         run: |
+          echo "=== Check if socat forwarder is running ==="
+          docker ps -a | grep port-forwarder
+
+          echo ""
+          echo "=== Check socat logs ==="
+          docker logs port-forwarder || echo "No logs available"
+
+          echo ""
+          echo "=== Verify socat can reach nginx from within dind ==="
+          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
+          echo "Nginx IP: $NGINX_IP"
+          docker run --rm --network=host alpine sh -c "apk add --no-cache curl && curl -v --connect-timeout 3 http://$NGINX_IP:80"
+
+          echo ""
+          echo "=== Check what's listening on port 27018 inside dind ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat && netstat -tlnp | grep 27018 || echo 'Nothing listening on 27018'"
+
+          echo ""
           echo "=== Install required tools in main container ==="
           apt-get install -y netcat-openbsd
 
           echo ""
           echo "=== Check if anything is listening on 27018 from main container ==="
           nc -zv dind 27018 && echo "✅ Port 27018 is open" || echo "❌ Port 27018 is closed"
-
-          echo ""
-          echo "=== Get nginx container's bridge IP ==="
-          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
-          echo "Nginx IP on bridge network: $NGINX_IP"
-
-          echo ""
-          echo "=== Try direct connection to nginx IP (will likely timeout) ==="
-          timeout 3 bash -c "cat < /dev/null > /dev/tcp/$NGINX_IP/80" && echo "✅ Can reach nginx" || echo "❌ Cannot reach nginx (expected - different network)"
 
       # 3. Test the server connection from main container
       - name: 📡 Curl Nginx from main container
