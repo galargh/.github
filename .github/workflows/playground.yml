@@ -58,72 +58,65 @@ jobs:
           which mongosh
           docker run -d --name mongodb-atlas-proxy --network host alpine/socat tcp-listen:27018,fork,reuseaddr,bind=0.0.0.0 tcp-connect:${MONGODB_ATLAS_IP}:27018
 
+          sleep 3
+
+          echo ""
+          echo "=== Debug: Check containers ==="
+          docker ps -a
+
+          echo ""
+          echo "=== Debug: Check socat proxy logs ==="
+          docker logs mongodb-atlas-proxy
+
+          echo ""
+          echo "=== Debug: Test connection from within dind's network namespace ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27018 && echo 'Port 27018 is open on localhost inside dind' || echo 'Port 27018 is NOT open on localhost inside dind'"
+
+          echo ""
+          echo "=== Debug: Test from main container ==="
+          apt-get install -y netcat-openbsd
+          nc -zv dind 27018 && echo "✅ Port 27018 is accessible from main container" || echo "❌ Port 27018 is NOT accessible from main container"
+
+          echo ""
+          echo "=== Debug: Network inspection ==="
+          docker network ls
+          echo ""
+          echo "--- mongodb-atlas container network ---"
+          docker inspect mongodb-atlas | grep -A 20 NetworkSettings
+
       - name: localhost:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host localhost --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: localhost:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host localhost --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
       - name: 0.0.0.0:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host 0.0.0.0 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: 0.0.0.0:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host 0.0.0.0 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
       - name: 127.0.0.1:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host 127.0.0.1 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: 127.0.0.1:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host 127.0.0.1 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
       - name: dind:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host dind --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: dind:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host dind --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
       - name: mongodb-atlas:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host mongodb-atlas --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: mongodb-atlas:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host mongodb-atlas --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
       - name: mongodb-atlas-proxy:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host mongodb-atlas-proxy --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: mongodb-atlas-proxy:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host mongodb-atlas-proxy --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
       - name: host.docker.internal:27018 is reachable
         continue-on-error: true
         run: |
           mongosh --host host.docker.internal --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-      - name: host.docker.internal:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host host.docker.internal --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
