@@ -49,7 +49,7 @@ jobs:
 
           apt-get update && apt-get install -y mongodb-org mongodb-atlas-cli docker-ce-cli
 
-      - name: Start MongoDB
+      - name: Start MongoDB Atlas
         run: |
           atlas config set silence_storage_warning true
           atlas deployments setup mongodb-atlas --type local --port 27018 --force
