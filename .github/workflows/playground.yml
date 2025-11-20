@@ -72,15 +72,25 @@ jobs:
       # 3. Test the server connection using localhost
       - name: 📡 Ping the server using localhost and port forwarding
         run: |
-          echo "Attempting to connect to localhost:27018..."
+          MAX_RETRIES=10
+          DELAY=2
+          URL=dind:27018
 
-          # The port forwarding makes it accessible on localhost
-          # curl --fail localhost:27018
-          curl --fail dind:27018
+          echo "Attempting to connect to $URL..."
 
-          if [ $? -eq 0 ]; then
-            echo "✅ Success: Received response from Nginx via localhost:27018."
-          else
-            echo "❌ Failure: Could not connect to the server."
-            exit 1
-          fi
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i/$MAX_RETRIES: Pinging $URL..."
+
+            # Use a short timeout to fail fast if the connection isn't open
+            curl -s --fail --connect-timeout 5 $URL
+
+            if [ $? -eq 0 ]; then
+              echo "✅ Success: Received response from Nginx via $URL."
+              exit 0 # Success, exit the script
+            fi
+
+            sleep $DELAY
+          done
+
+          echo "❌ Failure: Could not connect to the server after $MAX_RETRIES attempts."
+          exit 1 # Failure, exit the job
