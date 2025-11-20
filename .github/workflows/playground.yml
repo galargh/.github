@@ -55,14 +55,31 @@ jobs:
       # 2. Start the Nginx server
       - name: 🚀 Start Nginx server (via DIND)
         run: |
-          # Expose Nginx port 80 to DIND container's port 27018
+          # Run nginx on the default bridge network
           docker run -d \
             --name nginx-server \
-            -p 27018:80 \
             nginx:alpine
 
-          sleep 5
+          sleep 2
 
+          # Get nginx container's IP on the bridge network
+          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
+          echo "Nginx is running at $NGINX_IP:80"
+
+          docker ps
+
+          echo ""
+          echo "=== Start socat forwarder to expose nginx on dind's external interface ==="
+          # Run socat with host networking to forward traffic from 0.0.0.0:27018 to nginx's bridge IP
+          docker run -d \
+            --name port-forwarder \
+            --network=host \
+            alpine/socat \
+            tcp-listen:27018,fork,reuseaddr,bind=0.0.0.0 tcp-connect:${NGINX_IP}:80
+
+          sleep 3
+
+          echo "Port forwarder started - forwarding 0.0.0.0:27018 -> ${NGINX_IP}:80"
           docker ps
 
       # 2.5. Debug connectivity and ports
