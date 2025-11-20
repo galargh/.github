@@ -65,19 +65,19 @@ jobs:
 
           docker ps
 
-      # 3. Test the server connection using localhost
-      - name: 📡 Ping the server using localhost and port forwarding
+      # 3. Test the server connection from main container
+      - name: 📡 Curl Nginx from main container
         run: |
           MAX_RETRIES=10
           DELAY=2
-          URL=dind:27018
+          URL=http://dind:27018
 
           echo "Attempting to connect to $URL..."
 
           for i in $(seq 1 $MAX_RETRIES); do
-            echo "Attempt $i/$MAX_RETRIES: Pinging $URL..."
+            echo "Attempt $i/$MAX_RETRIES: Curling $URL..."
 
-            # Use a short timeout to fail fast if the connection isn't open
+            # Curl from the main ubuntu container to the dind service
             curl -s --fail --connect-timeout 5 $URL
 
             if [ $? -eq 0 ]; then
