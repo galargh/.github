@@ -65,6 +65,20 @@ jobs:
 
           docker ps
 
+      # 2.5. Inspect Docker networks
+      - name: 🔍 Inspect Docker networks
+        run: |
+          echo "=== Listing all Docker networks ==="
+          docker network ls
+
+          echo ""
+          echo "=== Inspecting each network ==="
+          for network in $(docker network ls --format '{{.Name}}'); do
+            echo ""
+            echo "--- Network: $network ---"
+            docker network inspect $network
+          done
+
       # 3. Test the server connection from main container
       - name: 📡 Curl Nginx from main container
         run: |
