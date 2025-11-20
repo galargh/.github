@@ -60,7 +60,7 @@ jobs:
       - name: 🚀 Start Nginx server (via DIND)
         run: |
           # Use the DIND service name for the Docker Host connection
-          # export DOCKER_HOST="tcp://dind:2375"
+          export DOCKER_HOST="tcp://dind:2375"
           echo "Starting Nginx server exposed on DIND port 27018..."
 
           # Expose Nginx port 80 to DIND container's port 27018
