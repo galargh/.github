@@ -52,30 +52,10 @@ jobs:
       - name: Start MongoDB
         run: |
           atlas config set silence_storage_warning true
-          atlas deployments setup mongodb-atlas --type local --force
-
-          sleep 3
-
-          echo ""
-          echo "=== Get github network name ==="
-          GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --port 27018 --format "{{.Name}}")
-          echo "GitHub network: $GITHUB_NETWORK"
-
-          echo ""
-          echo "=== Connect mongodb-atlas to github network ==="
-          docker network connect $GITHUB_NETWORK mongodb-atlas
-
-          echo ""
-          echo "=== Check mongodb-atlas network configuration ==="
-          docker inspect mongodb-atlas --format='{{range $net,$v := .NetworkSettings.Networks}}{{printf "%s: %s\n" $net $v.IPAddress}}{{end}}'
-
-          echo ""
-          echo "=== Test from main container ==="
-          apt-get install -y netcat-openbsd
-          echo "Testing mongodb-atlas:27018 (MongoDB's internal port):"
-          nc -zv mongodb-atlas 27018 && echo "✅ mongodb-atlas:27018 is accessible" || echo "❌ mongodb-atlas:27018 is NOT accessible"
-
-      - name: mongodb-atlas:27018 is reachable
-        run: |
-          mongosh --host mongodb-atlas --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet
-
+          atlas deployments setup mongodb-atlas --type local --port 27018 --force
+          GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --format "{{.Name}}")
+          if [ -n "$GITHUB_NETWORK" ]; then
+            docker network connect $GITHUB_NETWORK mongodb-atlas
+            socat TCP-LISTEN:27018,reuseaddr,fork TCP:mongodb-atlas:27018 &
+          fi
+          mongosh --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
