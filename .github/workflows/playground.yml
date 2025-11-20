@@ -58,7 +58,7 @@ jobs:
 
           echo ""
           echo "=== Get github network name ==="
-          GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --format "{{.Name}}")
+          GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --port 27017 --format "{{.Name}}")
           echo "GitHub network: $GITHUB_NETWORK"
 
           echo ""
