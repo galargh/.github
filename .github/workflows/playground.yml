@@ -52,11 +52,7 @@ jobs:
       - name: Start MongoDB
         run: |
           atlas config set silence_storage_warning true
-          atlas deployments setup mongodb-atlas --type local --port 27018 --force
-          MONGODB_ATLAS_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongodb-atlas)
-          echo "MONGODB_ATLAS_IP: $MONGODB_ATLAS_IP"
-          which mongosh
-          docker run -d --name mongodb-atlas-proxy --network host alpine/socat tcp-listen:27018,fork,reuseaddr,bind=0.0.0.0 tcp-connect:${MONGODB_ATLAS_IP}:27018
+          atlas deployments setup mongodb-atlas --type local --port 27018 --bindIpAll --force
 
           sleep 3
 
@@ -65,12 +61,8 @@ jobs:
           docker ps -a
 
           echo ""
-          echo "=== Debug: Check socat proxy logs ==="
-          docker logs mongodb-atlas-proxy
-
-          echo ""
-          echo "=== Debug: Test connection from within dind's network namespace ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27018 && echo 'Port 27018 is open on localhost inside dind' || echo 'Port 27018 is NOT open on localhost inside dind'"
+          echo "=== Debug: Check port bindings ==="
+          docker port mongodb-atlas
 
           echo ""
           echo "=== Debug: Test from main container ==="
