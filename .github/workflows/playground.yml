@@ -71,6 +71,8 @@ jobs:
 
           sleep 5
 
+          docker ps
+
       # 3. Test the server connection using localhost
       - name: 📡 Ping the server using localhost and port forwarding
         run: |
@@ -78,7 +80,7 @@ jobs:
 
           # The port forwarding makes it accessible on localhost
           # curl --fail localhost:27018
-          curl --fail 0.0.0.0:27018
+          curl --fail dind:27018
 
           if [ $? -eq 0 ]; then
             echo "✅ Success: Received response from Nginx via localhost:27018."
