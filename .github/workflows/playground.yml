@@ -58,7 +58,8 @@ jobs:
           echo "=== Setup socat forwarder on port 27019 ==="
           # MongoDB binds to 127.0.0.1:27018 inside dind
           # We'll use socat to forward from 0.0.0.0:27019 -> 127.0.0.1:27018
-          docker run -d --name mongodb-atlas-proxy --network host alpine/socat tcp-listen:27019,fork,reuseaddr,bind=0.0.0.0 tcp-connect:127.0.0.1:27018
+          # Note: Without specifying bind, socat listens on all interfaces (0.0.0.0)
+          docker run -d --name mongodb-atlas-proxy --network host alpine/socat TCP-LISTEN:27019,fork,reuseaddr TCP:127.0.0.1:27018
 
           sleep 3
 
@@ -72,7 +73,11 @@ jobs:
 
           echo ""
           echo "=== Debug: What's listening on port 27019 inside dind? ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache lsof && lsof -i :27019 || echo 'Nothing on 27019'"
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat-nat && netstat -tlnp | grep 27019 || echo 'Nothing on 27019'"
+
+          echo ""
+          echo "=== Debug: Check all listening ports ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat-nat && netstat -tlnp"
 
           echo ""
           echo "=== Debug: Test localhost:27019 from within dind ==="
