@@ -56,8 +56,10 @@ jobs:
           GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --format "{{.Name}}")
           if [ -n "$GITHUB_NETWORK" ]; then
             docker network connect $GITHUB_NETWORK mongodb-atlas
-            sleep 10
-            mongosh --host mongodb-atlas --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+            echo "Testing mongodb-atlas:27017 is reachable"
+            mongosh --host mongodb-atlas --port 27017 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+            echo "Testing localhost:28018 is reachable"
+            mongosh --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
             socat TCP-LISTEN:27018,reuseaddr,fork TCP:mongodb-atlas:27018 &
           fi
           mongosh --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
