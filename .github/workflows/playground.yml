@@ -52,101 +52,30 @@ jobs:
       - name: Start MongoDB
         run: |
           atlas config set silence_storage_warning true
-          atlas deployments setup mongodb-atlas --type local --port 27018 --force
-
-          echo ""
-          echo "=== Setup socat forwarder on port 27019 ==="
-          # MongoDB binds to 127.0.0.1:27018 inside dind
-          # We'll use socat to forward from 0.0.0.0:27019 -> 127.0.0.1:27018
-          # Note: Without specifying bind, socat listens on all interfaces (0.0.0.0)
-          docker run -d --name mongodb-atlas-proxy --network host alpine/socat TCP-LISTEN:27019,fork,reuseaddr TCP:127.0.0.1:27018
+          atlas deployments setup mongodb-atlas --type local --force
 
           sleep 3
 
           echo ""
-          echo "=== Debug: Check containers ==="
-          docker ps -a
+          echo "=== Get github network name ==="
+          GITHUB_NETWORK=$(docker network ls --filter "name=github_network" --format "{{.Name}}")
+          echo "GitHub network: $GITHUB_NETWORK"
 
           echo ""
-          echo "=== Debug: Check socat logs ==="
-          docker logs mongodb-atlas-proxy
+          echo "=== Connect mongodb-atlas to github network ==="
+          docker network connect $GITHUB_NETWORK mongodb-atlas
 
           echo ""
-          echo "=== Debug: What's listening on port 27019 inside dind? ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache net-tools && netstat -tlnp | grep 27019 || echo 'Nothing on 27019'"
+          echo "=== Check mongodb-atlas network configuration ==="
+          docker inspect mongodb-atlas --format='{{range $net,$v := .NetworkSettings.Networks}}{{printf "%s: %s\n" $net $v.IPAddress}}{{end}}'
 
           echo ""
-          echo "=== Debug: Check all listening ports ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache net-tools && netstat -tlnp"
+          echo "=== Test from main container ==="
+          apt-get install -y netcat-openbsd
+          echo "Testing mongodb-atlas:27017 (MongoDB's internal port):"
+          nc -zv mongodb-atlas 27017 && echo "✅ mongodb-atlas:27017 is accessible" || echo "❌ mongodb-atlas:27017 is NOT accessible"
 
-          echo ""
-          echo "=== Debug: Test localhost:27019 from within dind ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27019 && echo '✅ Port 27019 works on localhost inside dind' || echo '❌ Port 27019 not accessible on localhost inside dind'"
-
-          echo ""
-          echo "=== Debug: Test localhost:27018 from within dind ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27018 && echo '✅ Port 27018 works on localhost inside dind' || echo '❌ Port 27018 not accessible on localhost inside dind'"
-
-          echo ""
-          echo "=== Debug: Check network interfaces inside dind ==="
-          docker run --rm --network=host alpine sh -c "ip addr show"
-
-          echo ""
-          echo "=== Debug: Check iptables rules ==="
-          docker run --rm --network=host --privileged alpine sh -c "apk add --no-cache iptables && iptables -L -n -v"
-
-          echo ""
-          echo "=== Debug: Try connecting to the bridge IP directly ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv 172.18.0.1 27019 && echo 'Bridge IP works' || echo 'Bridge IP fails'"
-
-          echo ""
-          echo "=== Debug: Test from main container ==="
-          apt-get install -y netcat-openbsd curl
-          echo "Testing port 27018 (direct MongoDB, should fail):"
-          nc -zv dind 27018 && echo "✅ Port 27018 is accessible" || echo "❌ Port 27018 is NOT accessible (expected)"
-          echo "Testing port 27019 (socat proxy, should work):"
-          nc -zv dind 27019 && echo "✅ Port 27019 is accessible" || echo "❌ Port 27019 is NOT accessible"
-
-          echo ""
-          echo "=== Debug: Try connecting to 172.18.0.3 directly (dind's IP) ==="
-          nc -zv 172.18.0.3 27019 && echo "✅ Direct IP works" || echo "❌ Direct IP fails"
-
-          echo ""
-          echo "=== Debug: Check if we can reach dind at all ==="
-          ping -c 2 dind
-
-      - name: localhost:27019 is reachable
-        continue-on-error: true
+      - name: mongodb-atlas:27017 is reachable
         run: |
-          mongosh --host localhost --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: 0.0.0.0:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host 0.0.0.0 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: 127.0.0.1:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host 127.0.0.1 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: dind:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host dind --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: mongodb-atlas:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host mongodb-atlas --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: mongodb-atlas-proxy:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host mongodb-atlas-proxy --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
-
-      - name: host.docker.internal:27019 is reachable
-        continue-on-error: true
-        run: |
-          mongosh --host host.docker.internal --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+          mongosh --host mongodb-atlas --port 27017 --eval 'db.runCommand({ ping: 1 })' --quiet
 
