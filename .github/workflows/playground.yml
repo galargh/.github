@@ -54,6 +54,8 @@ jobs:
           atlas config set silence_storage_warning true
           atlas deployments setup mongodb-atlas --type local --port 27018 --force
           MONGODB_ATLAS_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongodb-atlas)
+          echo "MONGODB_ATLAS_IP: $MONGODB_ATLAS_IP"
+          which mongosh
           docker run -d --name mongodb-atlas-proxy --network host alpine/socat tcp-listen:27018,fork,reuseaddr,bind=0.0.0.0 tcp-connect:${MONGODB_ATLAS_IP}:27018
 
       - name: localhost:27018 is reachable
