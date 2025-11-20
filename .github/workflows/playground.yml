@@ -92,12 +92,28 @@ jobs:
           docker run --rm --network=host alpine sh -c "ip addr show"
 
           echo ""
+          echo "=== Debug: Check iptables rules ==="
+          docker run --rm --network=host --privileged alpine sh -c "apk add --no-cache iptables && iptables -L -n -v"
+
+          echo ""
+          echo "=== Debug: Try connecting to the bridge IP directly ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv 172.18.0.1 27019 && echo 'Bridge IP works' || echo 'Bridge IP fails'"
+
+          echo ""
           echo "=== Debug: Test from main container ==="
-          apt-get install -y netcat-openbsd
+          apt-get install -y netcat-openbsd curl
           echo "Testing port 27018 (direct MongoDB, should fail):"
           nc -zv dind 27018 && echo "✅ Port 27018 is accessible" || echo "❌ Port 27018 is NOT accessible (expected)"
           echo "Testing port 27019 (socat proxy, should work):"
           nc -zv dind 27019 && echo "✅ Port 27019 is accessible" || echo "❌ Port 27019 is NOT accessible"
+
+          echo ""
+          echo "=== Debug: Try connecting to 172.18.0.3 directly (dind's IP) ==="
+          nc -zv 172.18.0.3 27019 && echo "✅ Direct IP works" || echo "❌ Direct IP fails"
+
+          echo ""
+          echo "=== Debug: Check if we can reach dind at all ==="
+          ping -c 2 dind
 
       - name: localhost:27019 is reachable
         continue-on-error: true
