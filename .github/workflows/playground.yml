@@ -70,7 +70,7 @@ jobs:
         run: |
           MAX_RETRIES=10
           DELAY=2
-          URL=http://dind:27018
+          URL=http://nginx-server:27018
 
           echo "Attempting to connect to $URL..."
 
