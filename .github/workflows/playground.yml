@@ -34,122 +34,83 @@ jobs:
         options: --privileged
 
     steps:
-      # 1. Install Docker Client and network utility
-      - name: 🛠️ Install docker-ce-cli and curl
+      - name: Set up test env
         run: |
-          apt-get update
-          apt-get install -y ca-certificates curl gnupg lsb-release
+          set -e
+          apt-get update && apt-get install -y lsb-release curl gpg
 
-          install -m 0755 -d /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
+          # Add MongoDB repository
+          curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+          echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/debian $(lsb_release -cs)/mongodb-org/7.0 main" | tee -a /etc/apt/sources.list.d/mongodb-org-7.0.list
 
-          echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-            tee /etc/apt/sources.list.d/docker.list > /dev/null
+          # Add Docker repository
+          curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee -a /etc/apt/sources.list.d/docker.list
 
-          apt-get update
-          apt-get install -y docker-ce-cli curl
+          apt-get update && apt-get install -y mongodb-org mongodb-atlas-cli docker-ce-cli
 
-      # 2. Start the Nginx server
-      - name: 🚀 Start Nginx server (via DIND)
+      - name: Start MongoDB
         run: |
-          # Run nginx on the default bridge network
-          docker run -d \
-            --name nginx-server \
-            nginx:alpine
+          atlas config set silence_storage_warning true
+          atlas deployments setup mongodb-atlas --type local --port 27018 --force
+          docker run -d --name mongodb-atlas-proxy --network host alpine/socat -dd TCP-LISTEN:27019,fork,bind=0.0.0.0,reuseaddr TCP:127.0.0.1:27018
 
-          sleep 2
-
-          # Get nginx container's IP on the bridge network
-          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
-          echo "Nginx is running at $NGINX_IP:80"
-
-          docker ps
-
-          echo ""
-          echo "=== Start socat forwarder to expose nginx on dind's external interface ==="
-          # Run socat with host networking to forward traffic from 0.0.0.0:27018 to nginx's bridge IP
-          docker run -d \
-            --name port-forwarder \
-            --network=host \
-            alpine/socat \
-            tcp-listen:27018,fork,reuseaddr,bind=0.0.0.0 tcp-connect:${NGINX_IP}:80
-
-          sleep 3
-
-          echo "Port forwarder started - forwarding 0.0.0.0:27018 -> ${NGINX_IP}:80"
-          docker ps
-
-      # 2.5. Debug connectivity and ports
-      - name: 🔍 Debug connectivity
+      - name: localhost:27018 is reachable
+        continue-on-error: true
         run: |
-          echo "=== Check what ports are published on nginx container ==="
-          docker port nginx-server
+          mongosh --host localhost --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-          echo ""
-          echo "=== Check nginx is working ==="
-          docker exec nginx-server wget -q -O- http://localhost:80 && echo "✅ Nginx is working inside its container"
-
-          echo ""
-          echo "=== Check what dind itself is listening on by running netstat from another container ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat-nat && netstat -tlnp | grep 27018 || echo 'Port 27018 not found in netstat'"
-
-          echo ""
-          echo "=== Try to connect to port 27018 from within dind's network namespace ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache curl && curl -v --connect-timeout 3 http://localhost:27018 || echo 'Cannot connect to localhost:27018'"
-
-      # 2.6. Check port binding on dind
-      - name: 🔍 Check dind port binding
+      - name: localhost:27019 is reachable
+        continue-on-error: true
         run: |
-          echo "=== Check if socat forwarder is running ==="
-          docker ps -a | grep port-forwarder
+          mongosh --host localhost --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-          echo ""
-          echo "=== Check socat logs ==="
-          docker logs port-forwarder || echo "No logs available"
-
-          echo ""
-          echo "=== Verify socat can reach nginx from within dind ==="
-          NGINX_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx-server)
-          echo "Nginx IP: $NGINX_IP"
-          docker run --rm --network=host alpine sh -c "apk add --no-cache curl && curl -v --connect-timeout 3 http://$NGINX_IP:80"
-
-          echo ""
-          echo "=== Check what's listening on port 27018 inside dind ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat && netstat -tlnp | grep 27018 || echo 'Nothing listening on 27018'"
-
-          echo ""
-          echo "=== Install required tools in main container ==="
-          apt-get install -y netcat-openbsd
-
-          echo ""
-          echo "=== Check if anything is listening on 27018 from main container ==="
-          nc -zv dind 27018 && echo "✅ Port 27018 is open" || echo "❌ Port 27018 is closed"
-
-      # 3. Test the server connection from main container
-      - name: 📡 Curl Nginx from main container
+      - name: 0.0.0.0:27018 is reachable
+        continue-on-error: true
         run: |
-          MAX_RETRIES=10
-          DELAY=2
-          URL=http://dind:27018
+          mongosh --host 0.0.0.0 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-          echo "Attempting to connect to $URL..."
+      - name: 0.0.0.0:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host 0.0.0.0 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-          for i in $(seq 1 $MAX_RETRIES); do
-            echo "Attempt $i/$MAX_RETRIES: Curling $URL..."
+      - name: 127.0.0.1:27018 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host 127.0.0.1 --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-            # Curl from the main ubuntu container to the dind service
-            curl -s --fail --connect-timeout 5 $URL
+      - name: 127.0.0.1:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host 127.0.0.1 --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-            if [ $? -eq 0 ]; then
-              echo "✅ Success: Received response from Nginx via $URL."
-              exit 0 # Success, exit the script
-            fi
+      - name: dind:27018 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host dind --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-            sleep $DELAY
-          done
+      - name: dind:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host dind --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
 
-          echo "❌ Failure: Could not connect to the server after $MAX_RETRIES attempts."
-          exit 1 # Failure, exit the job
+      - name: mongodb-atlas:27018 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host mongodb-atlas --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+
+      - name: mongodb-atlas:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host mongodb-atlas --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+
+      - name: mongodb-atlas-proxy:27018 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host mongodb-atlas-proxy --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+
+      - name: mongodb-atlas-proxy:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host mongodb-atlas-proxy --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
