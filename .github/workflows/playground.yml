@@ -73,11 +73,11 @@ jobs:
 
           echo ""
           echo "=== Debug: What's listening on port 27019 inside dind? ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat-nat && netstat -tlnp | grep 27019 || echo 'Nothing on 27019'"
+          docker run --rm --network=host alpine sh -c "apk add --no-cache net-tools && netstat -tlnp | grep 27019 || echo 'Nothing on 27019'"
 
           echo ""
           echo "=== Debug: Check all listening ports ==="
-          docker run --rm --network=host alpine sh -c "apk add --no-cache netstat-nat && netstat -tlnp"
+          docker run --rm --network=host alpine sh -c "apk add --no-cache net-tools && netstat -tlnp"
 
           echo ""
           echo "=== Debug: Test localhost:27019 from within dind ==="
