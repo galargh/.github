@@ -71,6 +71,22 @@ jobs:
           docker logs mongodb-atlas-proxy
 
           echo ""
+          echo "=== Debug: What's listening on port 27019 inside dind? ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache lsof && lsof -i :27019 || echo 'Nothing on 27019'"
+
+          echo ""
+          echo "=== Debug: Test localhost:27019 from within dind ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27019 && echo '✅ Port 27019 works on localhost inside dind' || echo '❌ Port 27019 not accessible on localhost inside dind'"
+
+          echo ""
+          echo "=== Debug: Test localhost:27018 from within dind ==="
+          docker run --rm --network=host alpine sh -c "apk add --no-cache netcat-openbsd && nc -zv localhost 27018 && echo '✅ Port 27018 works on localhost inside dind' || echo '❌ Port 27018 not accessible on localhost inside dind'"
+
+          echo ""
+          echo "=== Debug: Check network interfaces inside dind ==="
+          docker run --rm --network=host alpine sh -c "ip addr show"
+
+          echo ""
           echo "=== Debug: Test from main container ==="
           apt-get install -y netcat-openbsd
           echo "Testing port 27018 (direct MongoDB, should fail):"
