@@ -24,12 +24,64 @@ env:
 jobs:
   playground:
     runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:22.04
+
+    services:
+      dind:
+        image: docker:dind
+        options: --privileged
+        ports:
+          # Forward the test port 27018 from the DIND container to the job container's host
+          # The format is [Job Container Port]:[Service Container Port]
+          - 27018:27018
+
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/checkout@v5
-        with:
-          path: abc
-      - run: ls -la
-      - run: git status
+      # 1. Install Docker Client and network utility
+      - name: 🛠️ Install docker-ce-cli and curl
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg lsb-release
 
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
 
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+            tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          apt-get update
+          apt-get install -y docker-ce-cli curl
+
+      # 2. Start the Nginx server
+      - name: 🚀 Start Nginx server (via DIND)
+        run: |
+          # Use the DIND service name for the Docker Host connection
+          # export DOCKER_HOST="tcp://dind:2375"
+          echo "Starting Nginx server exposed on DIND port 27018..."
+
+          # Expose Nginx port 80 to DIND container's port 27018
+          docker run -d \
+            --name nginx-server \
+            -p 27018:80 \
+            nginx:alpine
+
+          sleep 5
+
+      # 3. Test the server connection using localhost
+      - name: 📡 Ping the server using localhost and port forwarding
+        run: |
+          echo "Attempting to connect to localhost:27018..."
+
+          # The port forwarding makes it accessible on localhost
+          curl --fail localhost:27018
+
+          if [ $? -eq 0 ]; then
+            echo "✅ Success: Received response from Nginx via localhost:27018."
+          else
+            echo "❌ Failure: Could not connect to the server."
+            exit 1
+          fi
