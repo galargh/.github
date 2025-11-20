@@ -115,3 +115,13 @@ jobs:
         continue-on-error: true
         run: |
           mongosh --host mongodb-atlas-proxy --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+
+      - name: host.docker.internal:27018 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host host.docker.internal --port 27018 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
+
+      - name: host.docker.internal:27019 is reachable
+        continue-on-error: true
+        run: |
+          mongosh --host host.docker.internal --port 27019 --eval 'db.runCommand({ ping: 1 })' --quiet 2>/dev/null
