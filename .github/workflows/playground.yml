@@ -24,6 +24,7 @@ env:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    environment: ''
 
     container:
       image: debian:bookworm-slim
