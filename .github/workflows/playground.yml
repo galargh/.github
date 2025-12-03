@@ -26,8 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ''
 
-    # container:
-    #  image: debian:bookworm-slim
+    container:
+     image: debian:bookworm-slim
+     volumes:
+       - /home/runner/.docker:/github/home/.docker
 
     steps:
       - run: echo "$HOME"
