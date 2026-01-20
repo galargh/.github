@@ -44,7 +44,7 @@ env:
 
 concurrency:
   group: ${{ github.event.inputs.workflow_group }}
-  cancel-in-progress: ${{ github.event.inputs.workflow_cancel_in_progress }}
+  cancel-in-progress: ${{ github.event.inputs.workflow_cancel_in_progress == true }}
 
 jobs:
   playground:
