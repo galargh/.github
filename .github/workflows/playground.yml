@@ -43,18 +43,18 @@ env:
   ABC: 123
 
 concurrency:
-  group: ${{ inputs.workflow_group }}
-  cancel-in-progress: ${{ inputs.workflow_cancel_in_progress }}
+  group: ${{ github.event.inputs.workflow_group }}
+  cancel-in-progress: ${{ github.event.inputs.workflow_cancel_in_progress }}
 
 jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ inputs.secret }}"
+      - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
-      - run: echo "${{ inputs.secret }}"
+      - run: echo "${{ github.event.inputs.secret }}"
   playground2:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ inputs.secret }}"
+      - run: echo "${{ github.event.inputs.secret }}"
       
