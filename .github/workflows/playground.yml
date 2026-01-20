@@ -49,6 +49,9 @@ concurrency:
 jobs:
   playground:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.event.inputs.job_group }}
+      cancel-in-progress: ${{ github.event.inputs.cancel_in_progress }}
     steps:
       - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
