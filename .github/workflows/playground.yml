@@ -2,6 +2,27 @@ name: Playground
 
 on:
   workflow_dispatch:
+    inputs:
+      workflow_group:
+        type: string
+        description: Workflow concurrency group
+        default: workflow
+      workflow_cancel_in_progress:
+        type: boolean
+        description: Workflow concurrency cancel in progress
+        default: false
+      job_group:
+        type: string
+        description: Job concurrency group
+        default: job
+      job_cancel_in_progress:
+        type: boolean
+        description: Job cancel in progress
+        default: false
+      secret:
+        type: string
+        description: Secret
+        default: 123
   workflow_call:
   pull_request:
   push:
@@ -21,18 +42,19 @@ defaults:
 env:
   ABC: 123
 
+concurrency:
+  group: ${{ inputs.workflow_group }}
+  cancel-in-progress: ${{ inputs.workflow_cancel_in_progress }}
+
 jobs:
   playground:
     runs-on: ubuntu-latest
-    environment: ''
-
-    container:
-     image: debian:bookworm-slim
-     volumes:
-       - /home/runner/.docker:/github/home/.docker
-
     steps:
-      - run: echo "$HOME"
-      - run: ls $HOME
-      - run: ls $HOME/.docker
-      - run: cat ~/.docker/config.json
+      - run: echo "${{ inputs.secret }}"
+      - run: sleep 60
+      - run: echo "${{ inputs.secret }}"
+  playground2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ inputs.secret }}"
+      
