@@ -52,6 +52,15 @@ jobs:
     concurrency:
       group: ${{ github.event.inputs.job_group }}
       cancel-in-progress: ${{ github.event.inputs.cancel_in_progress == true }}
+    strategy:
+      matrix:
+        include:
+          - ${{ if false }}:
+            name: a
+            number: 1
+          - ${{ if true }}:
+            name: b
+            number: 2
     steps:
       - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
