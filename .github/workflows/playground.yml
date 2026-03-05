@@ -37,7 +37,7 @@ jobs:
           - dev
           - prod
         exclude:
-          - environment: ${{ 'dev' == 'dev' && 'prod' || 'n/a' }}
-          - environment: ${{ 'dev' == 'prod' && 'dev' || 'n/a' }}
+          - environment: ${{ 'dev' == 'dev' && 'prod' || '' }}
+          - environment: ${{ 'dev' == 'prod' && 'dev' || '' }}
     steps:
       - run: echo "Hello, World!"
