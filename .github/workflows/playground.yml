@@ -34,10 +34,7 @@ jobs:
           - xi-frontend-nginx
         environment:
           - ci
-          - dev
-          - prod
-        exclude:
-          - environment: ${{ 'dev' == 'dev' && 'prod' || '' }}
-          - environment: ${{ 'dev' == 'prod' && 'dev' || '' }}
+          - ${{ 'dev' == 'dev' && 'dev' || '' }}
+          - ${{ 'dev' == 'prod' && 'prod' || '' }}
     steps:
       - run: echo "Hello, World!"
