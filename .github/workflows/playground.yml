@@ -54,13 +54,16 @@ jobs:
       cancel-in-progress: ${{ github.event.inputs.cancel_in_progress == true }}
     strategy:
       matrix:
-        include:
-          - ${{ if false }}:
-            name: a
-            number: 1
-          - ${{ if true }}:
-            name: b
-            number: 2
+        service:
+          - bigquery-server
+          - livekit-agent
+          - xi-backend-server
+          - xi-frontend-nextjs
+          - xi-frontend-nginx
+        environment:
+          - ci
+          - ${{ 'dev' == 'dev' && 'dev' }}
+          - ${{ 'dev' == 'prod' && 'prod' }}
     steps:
       - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
