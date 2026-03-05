@@ -62,8 +62,11 @@ jobs:
           - xi-frontend-nginx
         environment:
           - ci
-          - ${{ 'dev' == 'dev' && 'dev' }}
-          - ${{ 'dev' == 'prod' && 'prod' }}
+          - dev
+          - prod
+        exclude:
+          - environment: ${{ 'dev' == 'dev' && 'prod' }}
+          - environment: ${{ 'dev' == 'prod' && 'dev' }}
     steps:
       - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
