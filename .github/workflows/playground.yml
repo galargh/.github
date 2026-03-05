@@ -42,9 +42,9 @@ defaults:
 env:
   ABC: 123
 
-concurrency:
-  group: ${{ github.event.inputs.workflow_group }}
-  cancel-in-progress: ${{ github.event.inputs.workflow_cancel_in_progress == true }}
+# concurrency:
+#   group: ${{ github.event.inputs.workflow_group }}
+#   cancel-in-progress: ${{ github.event.inputs.workflow_cancel_in_progress == true }}
 
 jobs:
   playground:
