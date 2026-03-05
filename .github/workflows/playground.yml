@@ -65,8 +65,8 @@ jobs:
           - dev
           - prod
         exclude:
-          - environment: ${{ 'dev' == 'dev' && 'prod' }}
-          - environment: ${{ 'dev' == 'prod' && 'dev' }}
+          - environment: ${{ 'dev' == 'dev' && 'prod' || 'n/a' }}
+          - environment: ${{ 'dev' == 'prod' && 'dev' || 'n/a' }}
     steps:
       - run: echo "${{ github.event.inputs.secret }}"
       - run: sleep 60
