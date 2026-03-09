@@ -26,15 +26,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service:
-          - bigquery-server
-          - livekit-agent
-          - xi-backend-server
-          - xi-frontend-nextjs
-          - xi-frontend-nginx
-        environment:
-          - ci
-          - ${{ 'dev' == 'dev' && 'dev' || '' }}
-          - ${{ 'dev' == 'prod' && 'prod' || '' }}
+        include:
+          - service: a
+            environment: 1
+          - service: b
+            environment: 2
+        exclude:
+          - service: a
     steps:
       - run: echo "Hello, World!"
