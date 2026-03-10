@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
   pull_request:
-  push:
-    paths: ['.github/workflows/playground.yml', '**/*.yml']
+    types: [opened, synchronize, labeled]
   release:
     types:
       - published
@@ -23,15 +22,8 @@ env:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - service: a
-            environment: 1
-          - service: b
-            environment: 2
-        exclude:
-          - service: a
-    steps:
-      - run: echo "Hello, World!"
+    if: github.event.action != 'labeled' || github.event.label.name == 'label'
+    concurrency:
+      group: abc
+      cancel-in-progress: true
+    uses: ./.github/workflows/playground2.yml
