@@ -1,16 +1,9 @@
 on:
-  workflow_run:
-    workflows: 
-      - Playground
-    types:
-      - completed
+  workflow_call:
 
 jobs:
   playground2:
     runs-on: ubuntu-latest
-    if: |
-      github.event.workflow_run.event == 'pull_request' &&
-        github.event.workflow_run.conclusion == 'success'
     steps:
-      - run: echo "${{ toJSON(github.event) }}"
+      - run: sleep 60
         shell: bash
