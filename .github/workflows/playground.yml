@@ -23,15 +23,14 @@ env:
 
 jobs:
   playground:
+    if: false
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - service: a
-            environment: 1
-          - service: b
-            environment: 2
-        exclude:
-          - service: a
+    steps:
+      - run: echo "Hello, World!"
+      
+  playground2:
+    needs: playground
+    if: ${{ !cancelled() && true || needs.playground.result == 'success' }}
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Hello, World!"
