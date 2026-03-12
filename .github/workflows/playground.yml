@@ -23,7 +23,7 @@ env:
 
 jobs:
   playground:
-    if: ${{ inputs.dry-run == false }}
+    if: ${{ inputs.dry-run == true }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello, World!"
