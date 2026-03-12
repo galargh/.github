@@ -23,14 +23,14 @@ env:
 
 jobs:
   playground:
-    if: false
+    if: ${{ inputs.dry-run == false }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello, World!"
       
   playground2:
     needs: playground
-    if: ${{ !cancelled() && true || needs.playground.result == 'success' }}
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello, World!"
