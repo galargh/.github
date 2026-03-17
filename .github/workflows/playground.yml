@@ -27,4 +27,4 @@ env:
 
 jobs:
   playground:
-    uses: ./.github/workflows/playground.yml@43b24e70a382cc76ae98835413bf61e749ccee1e
+    uses: ./.github/workflows/playground2.yml
