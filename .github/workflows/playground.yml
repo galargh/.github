@@ -30,9 +30,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "$GITHUB_EVENT_NAME"
-      
-  playground2:
-    uses: ./.github/workflows/playground.yml
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.count == 0 }}
-    with:
-      count: 1
