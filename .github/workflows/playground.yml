@@ -3,6 +3,10 @@ name: Playground
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      count:
+        type: number
+        default: 0
   pull_request:
   push:
     paths: ['.github/workflows/playground.yml', '**/*.yml']
@@ -29,4 +33,6 @@ jobs:
       
   playground2:
     uses: ./.github/workflows/playground.yml
-    if: ${{ github.event_name != 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'workflow_dispatch' && inputs.count == 0 }}
+    with:
+      count: 1
