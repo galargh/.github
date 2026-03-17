@@ -23,14 +23,10 @@ env:
 
 jobs:
   playground:
-    if: ${{ inputs.dry-run == true }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello, World!"
+      - run: echo "$GITHUB_EVENT_NAME"
       
   playground2:
-    needs: playground
-    if: ${{ !failure() && !cancelled() }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello, World!"
+    uses: ./.github/workflows/playground.yml
+    if: ${{ github.event_name != 'workflow_dispatch' }}
