@@ -13,5 +13,6 @@ jobs:
     #   github.event.workflow_run.event == 'pull_request' &&
     #     github.event.workflow_run.conclusion == 'success'
     steps:
+      - run: echo "$GITHUB_EVENT_NAME"
       - run: echo "${{ toJSON(github.event) }}"
         shell: bash
