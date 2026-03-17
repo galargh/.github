@@ -27,6 +27,4 @@ env:
 
 jobs:
   playground:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "$GITHUB_EVENT_NAME"
+    uses: ./.github/workflows/playground.yml@43b24e70a382cc76ae98835413bf61e749ccee1e
