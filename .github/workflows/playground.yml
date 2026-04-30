@@ -37,7 +37,7 @@ jobs:
   result:
     needs: [playground]
     runs-on: ubuntu-latest
-    if: ${{ !cancelled() && !failure() }}
+    if: ${{ !cancelled() && !failure() && needs.playground.result != 'cancelled' }}
     steps:
       - run: echo "${{ needs.playground.result }}"
     
