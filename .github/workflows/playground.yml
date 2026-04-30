@@ -27,4 +27,18 @@ env:
 
 jobs:
   playground:
-    uses: ./.github/workflows/playground2.yml
+    runs-on: ubuntu-latest
+    concurrency:
+      group: playground
+      cancel-in-progress: true
+    steps:
+      - run: sleep 60
+
+  result:
+    needs: [playground]
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() && !failure() }}
+    steps:
+      - run: echo "${{ needs.playground.result }}"
+    
+      
