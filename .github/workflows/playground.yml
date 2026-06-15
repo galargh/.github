@@ -27,19 +27,20 @@ env:
 
 jobs:
   playground:
-    environment: github
     runs-on: ubuntu-latest
-    concurrency:
-      group: playground
-      cancel-in-progress: true
     steps:
-      - run: sleep 60
+      - uses: actions/checkout@v6
+      - run: git fetch --depth=2 origin "$GITHUB_SHA"
+      - run: git show HEAD
+      - run: git show HEAD~1
 
-  result:
-    needs: [playground]
+
+  playground2:
     runs-on: ubuntu-latest
-    if: ${{ !cancelled() && !failure() && needs.playground.result != 'cancelled' }}
     steps:
-      - run: echo "${{ needs.playground.result }}"
-    
+      - uses: actions/checkout@v6
+      - run: git fetch --depth=2 origin HEAD
+      - run: git show HEAD
+      - run: git show HEAD~1
+
       
