@@ -29,18 +29,4 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: git fetch --depth=2 origin "$GITHUB_SHA"
-      - run: git show HEAD
-      - run: git show HEAD~1
-
-
-  playground2:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - run: git fetch --depth=2 origin HEAD
-      - run: git show HEAD
-      - run: git show HEAD~1
-
-      
+      - run: echo "ci: $CI"
