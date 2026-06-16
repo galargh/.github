@@ -29,4 +29,5 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "ci: $CI"
+      - run: |
+          echo "ci: $CI"
