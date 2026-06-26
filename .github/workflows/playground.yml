@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          git fetch --no-recurse-submodules  --deepen=${{ github.event.pull_request.commits }}
+          git fetch --no-recurse-submodules --no-tags --deepen=${{ github.event.pull_request.commits }}
       - run: |
           git show HEAD
       - run: | 
@@ -46,3 +46,5 @@ jobs:
            echo "$GITHUB_BASE_REF"
       - run: |
            git log --oneline "origin/$GITHUB_BASE_REF..HEAD"
+      - run: |
+          git log HEAD^1..HEAD^2 --oneline
