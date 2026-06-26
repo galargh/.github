@@ -40,3 +40,7 @@ jobs:
           git diff HEAD~1
       - run: |
           git log
+      - run: |
+           echo "$GITHUB_BASE_REF"
+      - run: |
+           git show "$GITHUB_BASE_REF"
