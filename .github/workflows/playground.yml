@@ -29,5 +29,10 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
       - run: |
-          echo "ci: $CI"
+          git show HEAD
+      - run: |
+          git log
