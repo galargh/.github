@@ -29,5 +29,20 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - run: |
-          echo "ci: $CI"
+          EXPECTED=$((1 + ${{ github.event.pull_request.commits || 1 }}))
+          AVAILABLE=$(git rev-list --count HEAD)
+          echo "Expected commits: $EXPECTED, available commits: $AVAILABLE"
+          if [ "$AVAILABLE" -lt "$EXPECTED" ]; then
+            DEPTH=$((EXPECTED - AVAILABLE))
+            git fetch origin "$GITHUB_REF" --deepen="$DEPTH" --no-tags --no-recurse-submodules
+          fi
+      - if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          git log HEAD^1..HEAD^2 --oneline
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          git log HEAD~1..HEAD --oneline
