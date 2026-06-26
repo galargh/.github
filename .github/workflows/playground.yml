@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          git fetch --deepen=1
+          git fetch --no-recurse-submodules  --deepen=1
       - run: |
           git show HEAD
       - run: | 
@@ -45,4 +45,4 @@ jobs:
       - run: |
            echo "$GITHUB_BASE_REF"
       - run: |
-           git show "$GITHUB_BASE_REF"
+           git show "origin/$GITHUB_BASE_REF"
