@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          git fetch --no-recurse-submodules  --deepen=1
+          git fetch --no-recurse-submodules  --deepen=${{ github.event.pull_request.commits }}
       - run: |
           git show HEAD
       - run: | 
