@@ -33,18 +33,16 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          git fetch --no-recurse-submodules --no-tags --deepen=${{ github.event.pull_request.commits }}
-      - run: |
-          git show HEAD
-      - run: | 
-          git show HEAD~1
-      - run: |
-          git diff HEAD~1
-      - run: |
-          git log
-      - run: |
-           echo "$GITHUB_BASE_REF"
-      - run: |
-           git log --oneline "origin/$GITHUB_BASE_REF..HEAD"
-      - run: |
+          EXPECTED=$((1 + ${{ github.event.pull_request.commits || 1 }}))
+          AVAILABLE=$(git rev-list --count HEAD)
+          echo "Expected commits: $EXPECTED, available commits: $AVAILABLE"
+          if [ "$AVAILABLE" -lt "$EXPECTED" ]; then
+            DEPTH=$((EXPECTED - AVAILABLE))
+            git fetch origin "$GITHUB_REF" --deepen="$DEPTH" --no-tags --no-recurse-submodules
+          fi
+      - if: ${{ github.event_name == 'pull_request' }}
+        run: |
           git log HEAD^1..HEAD^2 --oneline
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          git log HEAD~1..HEAD --oneline
