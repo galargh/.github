@@ -34,5 +34,9 @@ jobs:
           fetch-depth: 2
       - run: |
           git show HEAD
+      - run: | 
+          git show HEAD~1
+      - run: |
+          git diff HEAD~1
       - run: |
           git log
