@@ -28,10 +28,12 @@ env:
 jobs:
   playground:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        name: [1, 2, 3]
     steps:
-      - run: exit 1
+      - run: echo "$(echo '[}' | jq -r '.[]')"
         continue-on-error: true
-      - run: echo "${{ job.status }}"
+      - run: echo "$(jq -rn --argjson services '[}' 'services[]')"
+        continue-on-error: true
+      - run: echo "$(jq -rn 'env.SERVICES | fromjson | .[]')"
+        env:
+          SERVICES: '[}'
+        continue-on-error: true
