@@ -29,11 +29,7 @@ jobs:
   playground:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "$(echo '[}' | jq -r '.[]')"
-        continue-on-error: true
-      - run: echo "$(jq -rn --argjson services '[}' 'services[]')"
-        continue-on-error: true
-      - run: echo "$(jq -rn 'env.SERVICES | fromjson | .[]')"
-        env:
-          SERVICES: '[}'
-        continue-on-error: true
+      - id: abc
+        run: echo "xyz"
+      - run: echo "123"
+        if: ${{ fromJson(steps.abc.outputs.xyz).boom }}
